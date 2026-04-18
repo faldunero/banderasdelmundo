@@ -57,10 +57,10 @@
         }
         
         /* Buscador */
-        .caja-busqueda { width: 100%; max-width: 450px; position: relative; margin: 20px 0 40px; }
-        #entradaBusqueda { width: 100%; padding: 18px 50px 18px 18px; border-radius: 15px; border: 2px solid var(--borde); font-size: 16px; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
+        .caja-busqueda { width: 100%; max-width: 360px; position: relative; margin: 10px 0 30px; }
+        #entradaBusqueda { width: 100%; padding: 11px 40px 11px 14px; border-radius: 11px; border: 1.5px solid var(--borde); font-size: 13px; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
         #entradaBusqueda:focus { border-color: var(--azul); }
-        #btnReiniciar { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--borde); color: var(--gris); font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.2s; }
+        #btnReiniciar { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; border-radius: 50%; border: none; background: var(--borde); color: var(--gris); font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.2s; }
         #btnReiniciar:hover { background: #e5e7eb; color: var(--texto); }
         #btnReiniciar.visible { display: flex; }
         #resultados { position: absolute; width: 100%; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; margin-top: 5px; }
@@ -258,6 +258,11 @@
             box-shadow: none;
         }
         .btn-instrucciones.secundario:hover { background: #f0f7ff; color: var(--azul); box-shadow: 0 3px 10px rgba(9,132,227,0.15); }
+        .btn-instrucciones.jugar {
+            background: #27ae60; border-color: #27ae60; color: #fff;
+            box-shadow: 0 4px 10px rgba(39,174,96,0.25);
+        }
+        .btn-instrucciones.jugar:hover { background: #229a54; border-color: #229a54; box-shadow: 0 6px 14px rgba(39,174,96,0.35); }
 
         .acciones-header {
             display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
@@ -343,6 +348,46 @@
             .modal-caja h1 { font-size: 22px; }
             .modal-caja .meta { grid-template-columns: 1fr; }
         }
+
+        /* ===== Modal "A jugar" (carta sacada) ===== */
+        .modal-caja-jugar { max-width: 420px; text-align: center; }
+        .modal-caja-jugar .etiqueta-tipo {
+            display: inline-block;
+            font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--azul);
+            background: #f0f7ff;
+            padding: 5px 12px;
+            border-radius: 999px;
+            margin-bottom: 14px;
+        }
+        .modal-caja-jugar .etiqueta-tipo.truco { color: #e67e22; background: #fff4e6; }
+        .carta-robada-wrap {
+            display: flex; justify-content: center; align-items: center;
+            margin: 4px 0 20px;
+            perspective: 1000px;
+        }
+        .carta-robada {
+            width: 240px; max-width: 70vw;
+            height: auto;
+            border-radius: 18px;
+            filter: drop-shadow(0 20px 35px rgba(0,0,0,0.22));
+            animation: cartaIn 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.25);
+        }
+        @keyframes cartaIn {
+            from { opacity: 0; transform: translateY(20px) rotateY(-18deg) scale(0.92); }
+            to   { opacity: 1; transform: translateY(0)    rotateY(0)       scale(1); }
+        }
+        .carta-robada.clickable { cursor: pointer; transition: transform 0.2s ease; }
+        .carta-robada.clickable:hover { transform: translateY(-4px) scale(1.01); }
+        .descripcion-carta {
+            font-size: 13px; line-height: 1.6; color: #4b5563;
+            margin: 0 auto 20px; max-width: 320px;
+        }
+        .descripcion-carta strong { color: var(--texto); }
+        .acciones-jugar {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+        }
+        .acciones-jugar .btn-instrucciones { margin: 0; }
     </style>
 </head>
 <body>
@@ -352,6 +397,17 @@
     </header>
 
     <div class="acciones-header">
+        <button id="btnJugar" class="btn-instrucciones jugar" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3"/>
+                <circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="16" cy="16" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="16" cy="8" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="8" cy="16" r="1.3" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+            </svg>
+            A jugar
+        </button>
         <button id="btnInstrucciones" class="btn-instrucciones" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M2 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H2z"/>
@@ -442,6 +498,31 @@
         <div class="acciones-nav">
             <button id="btnNuevaBusqueda" class="primario">Nueva búsqueda</button>
             <button id="btnCerrar">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal: A jugar — carta sacada al azar -->
+    <div class="modal-overlay" id="modalJugar" role="dialog" aria-modal="true" aria-labelledby="tituloJugar">
+        <div class="modal-caja modal-caja-jugar">
+            <button class="btn-cerrar-modal" id="btnCerrarJugar" title="Cerrar" aria-label="Cerrar">✕</button>
+            <span class="etiqueta-tipo" id="tipoCartaRobada">Carta de país</span>
+            <h1 id="tituloJugar">Te tocó…</h1>
+            <div class="carta-robada-wrap">
+                <img id="cartaRobada" class="carta-robada" src="" alt="">
+            </div>
+            <p class="descripcion-carta" id="descCartaRobada"></p>
+            <div class="acciones-jugar">
+                <button id="btnOtraCarta" class="btn-instrucciones jugar" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 12a9 9 0 0 1 15.5-6.3M21 12a9 9 0 0 1-15.5 6.3"/>
+                        <path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/>
+                    </svg>
+                    Otra carta
+                </button>
+                <button id="btnVerDetalleRobada" class="btn-instrucciones secundario" type="button">
+                    Ver detalle
+                </button>
+            </div>
         </div>
     </div>
 
@@ -600,9 +681,22 @@
         const galeria = document.getElementById('galeria');
         const btnReset = document.getElementById('btnReiniciar');
         const btnInstrucciones = document.getElementById('btnInstrucciones');
+        const btnJugar = document.getElementById('btnJugar');
         const lnkCartas = document.getElementById('lnkCartas');
         const acciones = document.querySelector('.acciones-header');
         const modal = document.getElementById('modalInstrucciones');
+        const modalJugar = document.getElementById('modalJugar');
+
+        // Cartas especiales del mazo (con sus frecuencias reales)
+        const cartasEspeciales = [
+            { id: "ES-01", peso: 2, nombre: "Robo de turno",  archivo: "ES-01_robo_turno.png",
+              desc: "Juegas <strong>otro turno</strong> inmediatamente. ¡Roba otra carta!" },
+            { id: "ES-02", peso: 3, nombre: "Pierde turno",   archivo: "ES-02_pierde_turno.png",
+              desc: "El <strong>siguiente jugador</strong> pierde su turno." },
+            { id: "ES-03", peso: 3, nombre: "Descarta carta", archivo: "ES-03_descarta_carta.png",
+              desc: "Elige a otro jugador, que debe poner <strong>1 carta ganada</strong> en el pozo." }
+        ];
+        let paisSacado = null;
 
         // --- Galería de miniaturas agrupadas por continente + ordenadas por ID numérico
         (function construirGaleria() {
@@ -706,7 +800,74 @@
         modal.addEventListener('click', (e) => { if (e.target === modal) cerrarModal(); });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('visible')) cerrarModal();
+            if (e.key === 'Escape' && modalJugar.classList.contains('visible')) cerrarModalJugar();
         });
+
+        // --- Simulación de juego: "A jugar" -----------------------------
+        // Mazo real: 72 cartas de país + 8 cartas especiales (Pierde 3, Descarta 3, Robo 2)
+        function sacarCartaAlAzar() {
+            const esEspecial = Math.random() < (8 / 80);
+            const img = document.getElementById('cartaRobada');
+            // reinicia la animación en cada tirada
+            img.style.animation = 'none';
+            void img.offsetWidth;
+            img.style.animation = '';
+
+            if (esEspecial) {
+                const totalPeso = cartasEspeciales.reduce((s, c) => s + c.peso, 0);
+                let r = Math.random() * totalPeso;
+                let carta = cartasEspeciales[0];
+                for (const c of cartasEspeciales) {
+                    r -= c.peso;
+                    if (r <= 0) { carta = c; break; }
+                }
+                paisSacado = null;
+                document.getElementById('tipoCartaRobada').innerText = 'Carta de truco';
+                document.getElementById('tipoCartaRobada').classList.add('truco');
+                document.getElementById('tituloJugar').innerText = '¡Carta especial!';
+                img.src = `cartas_especiales_png/${carta.archivo}`;
+                img.alt = carta.nombre;
+                img.classList.remove('clickable');
+                img.onclick = null;
+                document.getElementById('descCartaRobada').innerHTML = carta.desc;
+                document.getElementById('btnVerDetalleRobada').style.display = 'none';
+            } else {
+                const p = dbPaises[Math.floor(Math.random() * dbPaises.length)];
+                paisSacado = p;
+                document.getElementById('tipoCartaRobada').innerText = 'Carta de país';
+                document.getElementById('tipoCartaRobada').classList.remove('truco');
+                document.getElementById('tituloJugar').innerText = '¡Te tocó!';
+                const idCarta = p.id.substring(0, 5);
+                img.src = `cartas_png/${idCarta}.png`;
+                img.alt = `Carta ${idCarta} — ${p.nombre}`;
+                img.classList.add('clickable');
+                img.onclick = () => verDetalleRobada();
+                document.getElementById('descCartaRobada').innerHTML =
+                    'Di en voz alta <strong>país</strong>, <strong>capital</strong> y <strong>continente</strong>. Pincha la carta o "Ver detalle" para verificar.';
+                document.getElementById('btnVerDetalleRobada').style.display = 'inline-flex';
+            }
+        }
+
+        function abrirModalJugar() {
+            sacarCartaAlAzar();
+            modalJugar.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+        function cerrarModalJugar() {
+            modalJugar.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+        function verDetalleRobada() {
+            if (!paisSacado) return;
+            cerrarModalJugar();
+            mostrarDetalle(paisSacado);
+        }
+
+        btnJugar.onclick = abrirModalJugar;
+        document.getElementById('btnCerrarJugar').onclick = cerrarModalJugar;
+        document.getElementById('btnOtraCarta').onclick = sacarCartaAlAzar;
+        document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
+        modalJugar.addEventListener('click', (e) => { if (e.target === modalJugar) cerrarModalJugar(); });
 
         function mostrarCarta(p) {
             paisActual = p;
