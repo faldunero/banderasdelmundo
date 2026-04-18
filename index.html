@@ -181,6 +181,8 @@
         .barra-poblacion { height: 8px; display: flex; background: #eee; border-radius: 10px; overflow: hidden; margin: 10px 0 40px; }
         .cuadricula { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; border-top: 1px solid var(--borde); padding-top: 30px; }
         .dato-item { background: #fcfcfc; border: 1px solid var(--borde); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+        .dato-item.ancho-total { grid-column: 1 / -1; }
+        .dato-item .valor.muted { color: var(--gris); font-weight: 500; font-style: italic; }
         .etiqueta { display: block; font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--gris); letter-spacing: 1.2px; }
         .valor { display: block; font-size: 16px; font-weight: 600; color: var(--texto); line-height: 1.3; }
         
@@ -648,6 +650,7 @@
             <div class="dato-item"><span class="etiqueta">Población</span><span class="valor" id="txtPob"></span></div>
             <div class="dato-item"><span class="etiqueta">Independencia</span><span class="valor" id="txtIndep"></span></div>
             <div class="dato-item"><span class="etiqueta">Colores</span><span class="valor" id="txtColores"></span></div>
+            <div class="dato-item ancho-total"><span class="etiqueta">Limita con</span><span class="valor" id="txtFronteras"></span></div>
         </div>
 
         <div class="bloque-info" id="cajaExportaciones" style="margin-top: 20px;">
@@ -661,17 +664,6 @@
                 Principales exportaciones
             </h2>
             <div class="chips" id="chipsMaterias"></div>
-        </div>
-
-        <div class="bloque-info" id="cajaFronteras">
-            <h2>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2a8 8 0 0 0-8 8c0 5 8 12 8 12s8-7 8-12a8 8 0 0 0-8-8z"/>
-                    <circle cx="12" cy="10" r="2.5"/>
-                </svg>
-                Países limítrofes
-            </h2>
-            <div class="chips" id="chipsFronteras"></div>
         </div>
 
         <div class="bloque-info" id="cajaClima">
@@ -1169,22 +1161,15 @@
                 cajaExp.style.display = 'none';
             }
 
-            // Chips de países limítrofes
-            const chipsFr = document.getElementById('chipsFronteras');
+            // Limita con (estilo igual a Capital / Independencia)
+            const txtFr   = document.getElementById('txtFronteras');
             const listaFr = (typeof FRONTERAS !== 'undefined') ? FRONTERAS[p.id] : null;
-            chipsFr.innerHTML = '';
             if (listaFr && listaFr.length) {
-                listaFr.forEach(f => {
-                    const span = document.createElement('span');
-                    span.className = 'chip frontera';
-                    span.textContent = f;
-                    chipsFr.appendChild(span);
-                });
+                txtFr.textContent = listaFr.join(', ');
+                txtFr.classList.remove('muted');
             } else {
-                const span = document.createElement('span');
-                span.className = 'chip sin-fronteras';
-                span.textContent = 'Sin fronteras terrestres (país insular)';
-                chipsFr.appendChild(span);
+                txtFr.textContent = 'Sin fronteras terrestres (país insular)';
+                txtFr.classList.add('muted');
             }
 
             // Clima
