@@ -231,39 +231,38 @@
             .mini:hover { transform: scale(1.8); }
         }
 
-        /* ===== Botón "Cómo se juega" ===== */
+        /* ===== Botones del header (Cómo se juega / Ver cartas) ===== */
         .btn-instrucciones {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            border-radius: 14px;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
             background: var(--azul);
             color: #fff;
-            border: none;
+            border: 1px solid var(--azul);
             font-family: inherit;
             font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 1px;
+            font-size: 11px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
+            text-decoration: none;
             cursor: pointer;
-            margin: 4px 0 28px;
-            box-shadow: 0 6px 16px rgba(9,132,227,0.25);
+            box-shadow: 0 4px 10px rgba(9,132,227,0.22);
             transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .btn-instrucciones:hover { background: #0779c8; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(9,132,227,0.35); }
-        .btn-instrucciones svg { width: 16px; height: 16px; }
+        .btn-instrucciones:hover { background: #0779c8; border-color: #0779c8; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(9,132,227,0.32); }
+        .btn-instrucciones svg { width: 13px; height: 13px; }
         .btn-instrucciones.secundario {
-            background: #fff; color: var(--azul); border: 1px solid var(--azul);
+            background: #fff; color: var(--azul); border-color: var(--azul);
             box-shadow: none;
         }
-        .btn-instrucciones.secundario:hover { background: #f0f7ff; box-shadow: 0 4px 14px rgba(9,132,227,0.15); }
+        .btn-instrucciones.secundario:hover { background: #f0f7ff; color: var(--azul); box-shadow: 0 3px 10px rgba(9,132,227,0.15); }
 
         .acciones-header {
-            display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-            margin: 4px 0 28px;
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+            margin: 4px 0 24px;
         }
-        .acciones-header .btn-instrucciones { margin: 0; }
 
         /* ===== Modal de instrucciones ===== */
         .modal-overlay {
