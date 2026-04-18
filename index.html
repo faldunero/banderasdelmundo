@@ -10,7 +10,51 @@
             --texto: #1e272e; --gris: #718093; --azul: #0984e3;
             --borde: #f1f2f6; --rosa: #fd79a8; --celeste: #74b9ff;
         }
-        body { font-family: 'Inter', sans-serif; color: var(--texto); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; background: #fff; }
+        body { font-family: 'Inter', sans-serif; color: var(--texto); margin: 0; padding: 0 20px 20px; display: flex; flex-direction: column; align-items: center; background: #fff; }
+
+        /* Banner superior: se integra al fondo blanco, sin bordes ni sombras */
+        .hero {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            background: #fff;
+        }
+        .hero img {
+            display: block;
+            width: 100%;
+            max-width: 960px;
+            height: auto;
+        }
+        @media (max-width: 520px) {
+            .hero img { max-width: 100%; }
+        }
+
+        /* Footer global con logotipo Ludolab */
+        .creditos {
+            width: 100%;
+            text-align: center;
+            padding: 36px 0 28px;
+            margin-top: 50px;
+            border-top: 1px solid var(--borde);
+        }
+        .creditos a {
+            display: inline-block;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0.9;
+        }
+        .creditos a:hover { opacity: 1; transform: translateY(-1px); }
+        .creditos img { height: 42px; width: auto; display: block; }
+        .creditos .tagline {
+            display: block;
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gris);
+        }
         
         /* Buscador */
         .caja-busqueda { width: 100%; max-width: 450px; position: relative; margin: 20px 0 40px; }
@@ -190,6 +234,10 @@
 </head>
 <body>
 
+    <header class="hero">
+        <img src="imagenes/banner_04.png" alt="Banderas del Mundo — Ludolab">
+    </header>
+
     <div class="caja-busqueda">
         <input type="text" id="entradaBusqueda" placeholder="Buscar país o ID...">
         <button id="btnReiniciar" type="button" title="Reiniciar búsqueda" aria-label="Reiniciar búsqueda">✕</button>
@@ -273,6 +321,13 @@
             </div>
         </footer>
     </div>
+
+    <footer class="creditos">
+        <a href="https://ludolab.cl" target="_blank" rel="noopener" title="ludolab.cl">
+            <img src="imagenes/logotipo.png" alt="ludolab.cl — Juega, Aprende, Explora">
+        </a>
+        <span class="tagline">© Ludolab · Juega · Aprende · Explora</span>
+    </footer>
 
     <script>
         const dbPaises = [
