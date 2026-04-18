@@ -115,6 +115,39 @@
         .resumen h2 { font-size: 14px; text-transform: uppercase; color: var(--azul); margin-top: 0; }
         .resumen p { font-size: 15px; line-height: 1.8; color: #4b5563; text-align: justify; }
 
+        /* Sección materias primas exportadas */
+        .exportaciones {
+            background: #fcfcfc; padding: 22px 25px; border-radius: 20px;
+            border: 1px solid var(--borde); margin-bottom: 20px;
+        }
+        .exportaciones h2 {
+            font-size: 14px; text-transform: uppercase; color: var(--azul);
+            margin: 0 0 14px; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .exportaciones h2 svg { width: 16px; height: 16px; }
+        .chips-materias { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip-materia {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 13px;
+            background: #fff;
+            border: 1px solid var(--borde);
+            border-radius: 999px;
+            font-size: 13px; font-weight: 600; color: var(--texto);
+            transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .chip-materia:hover {
+            transform: translateY(-1px);
+            border-color: #d0d7df;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .chip-materia::before {
+            content: "";
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--azul);
+            opacity: 0.55;
+        }
+
         .barra-poblacion { height: 8px; display: flex; background: #eee; border-radius: 10px; overflow: hidden; margin: 10px 0 40px; }
         .cuadricula { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; border-top: 1px solid var(--borde); padding-top: 30px; }
         .dato-item { background: #fcfcfc; border: 1px solid var(--borde); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
@@ -587,6 +620,19 @@
             <div class="dato-item"><span class="etiqueta">Colores</span><span class="valor" id="txtColores"></span></div>
         </div>
 
+        <div class="exportaciones" id="cajaExportaciones" style="margin-top: 20px;">
+            <h2>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 3h5v5"/>
+                    <path d="M21 3l-7 7"/>
+                    <path d="M8 21H3v-5"/>
+                    <path d="M3 21l7-7"/>
+                </svg>
+                Principales exportaciones
+            </h2>
+            <div class="chips-materias" id="chipsMaterias"></div>
+        </div>
+
         <div class="acciones-nav">
             <button id="btnNuevaBusqueda" class="primario">Nueva búsqueda</button>
             <button id="btnCerrar">Cerrar</button>
@@ -734,6 +780,7 @@
     </footer>
 
     <script src="significados.js"></script>
+    <script src="materias.js"></script>
     <script>
         const dbPaises = [
             { id: "AM-01AR", nombre: "Argentina", cap: "Buenos Aires", cont: "América", ind: "9 de julio", pob: "46.0M", muj: 51.2, hom: 48.8, col: "Celeste, Blanco", iso: "ar", lat: -34.6037, lon: -58.3816, res: "Argentina es el país hispanohablante más extenso del mundo. Alberga las Cataratas del Iguazú y la Patagonia con sus glaciares. Es mundialmente famosa por el tango, el fútbol y la carne asada." },
@@ -1049,6 +1096,23 @@
             document.getElementById('txtPob').innerText = p.pob;
             document.getElementById('txtIndep').innerText = p.ind;
             document.getElementById('txtColores').innerText = p.col;
+
+            // Chips de materias primas exportadas
+            const chips = document.getElementById('chipsMaterias');
+            const caja  = document.getElementById('cajaExportaciones');
+            const lista = (typeof MATERIAS_EXPORT !== 'undefined') ? MATERIAS_EXPORT[p.id] : null;
+            chips.innerHTML = '';
+            if (lista && lista.length) {
+                lista.forEach(m => {
+                    const span = document.createElement('span');
+                    span.className = 'chip-materia';
+                    span.textContent = m;
+                    chips.appendChild(span);
+                });
+                caja.style.display = '';
+            } else {
+                caja.style.display = 'none';
+            }
         }
 
         // --- Listeners --------------------------------------------------
