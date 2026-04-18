@@ -253,6 +253,17 @@
         }
         .btn-instrucciones:hover { background: #0779c8; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(9,132,227,0.35); }
         .btn-instrucciones svg { width: 16px; height: 16px; }
+        .btn-instrucciones.secundario {
+            background: #fff; color: var(--azul); border: 1px solid var(--azul);
+            box-shadow: none;
+        }
+        .btn-instrucciones.secundario:hover { background: #f0f7ff; box-shadow: 0 4px 14px rgba(9,132,227,0.15); }
+
+        .acciones-header {
+            display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+            margin: 4px 0 28px;
+        }
+        .acciones-header .btn-instrucciones { margin: 0; }
 
         /* ===== Modal de instrucciones ===== */
         .modal-overlay {
@@ -341,13 +352,22 @@
         <img src="imagenes/banner_04.png" alt="Banderas del Mundo — Ludolab">
     </header>
 
-    <button id="btnInstrucciones" class="btn-instrucciones" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H2z"/>
-            <path d="M22 4h-7a3 3 0 0 0-3 3v14a2 2 0 0 1 2-2h8z"/>
-        </svg>
-        Cómo se juega
-    </button>
+    <div class="acciones-header">
+        <button id="btnInstrucciones" class="btn-instrucciones" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H2z"/>
+                <path d="M22 4h-7a3 3 0 0 0-3 3v14a2 2 0 0 1 2-2h8z"/>
+            </svg>
+            Cómo se juega
+        </button>
+        <a href="cartas.html" class="btn-instrucciones secundario" id="lnkCartas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="7" height="16" rx="1.5"/>
+                <rect x="14" y="4" width="7" height="16" rx="1.5"/>
+            </svg>
+            Ver todas las cartas
+        </a>
+    </div>
 
     <div class="caja-busqueda">
         <input type="text" id="entradaBusqueda" placeholder="Buscar por país o ID (ej: AM-05)">
@@ -581,6 +601,8 @@
         const galeria = document.getElementById('galeria');
         const btnReset = document.getElementById('btnReiniciar');
         const btnInstrucciones = document.getElementById('btnInstrucciones');
+        const lnkCartas = document.getElementById('lnkCartas');
+        const acciones = document.querySelector('.acciones-header');
         const modal = document.getElementById('modalInstrucciones');
 
         // --- Galería de miniaturas agrupadas por continente + ordenadas por ID numérico
@@ -651,7 +673,7 @@
         function ocultarTodo() {
             cajaBusqueda.style.display = 'none';
             galeria.style.display = 'none';
-            btnInstrucciones.style.display = 'none';
+            acciones.style.display = 'none';
             vistaCarta.style.display = 'none';
             perfil.style.display = 'none';
         }
@@ -663,8 +685,10 @@
             resBox.style.display = 'none';
             cajaBusqueda.style.display = 'block';
             galeria.style.display = 'block';
-            btnInstrucciones.style.display = 'inline-flex';
+            acciones.style.display = 'flex';
             paisActual = null;
+            // limpia query string si venimos del catálogo de cartas
+            if (location.search) history.replaceState(null, '', location.pathname);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => input.focus(), 150);
         }
@@ -732,6 +756,14 @@
             window.close();
             setTimeout(volverAlBuscador, 100);
         };
+
+        // --- Deep-link: si la URL trae ?id=XX-NNXX, abrir directo al detalle del país
+        (function abrirDesdeURL() {
+            const idParam = new URLSearchParams(location.search).get('id');
+            if (!idParam) return;
+            const p = dbPaises.find(x => x.id === idParam);
+            if (p) mostrarDetalle(p);
+        })();
     </script>
 </body>
 </html>

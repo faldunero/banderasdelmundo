@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de cartas — Banderas del Mundo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --texto: #1e272e; --gris: #718093; --azul: #0984e3;
+            --borde: #f1f2f6;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--texto); margin: 0; padding: 0 20px 40px; background: #fff; }
+
+        /* Banner: igual que en index */
+        .hero { width: 100vw; margin-left: calc(-50vw + 50%); display: flex; justify-content: center; background: #fff; }
+        .hero img { display: block; width: 100%; max-width: 480px; height: auto; }
+        @media (max-width: 520px) { .hero img { max-width: 70%; } }
+
+        .contenedor { max-width: 1200px; margin: 0 auto; }
+
+        /* Cabecera de la página */
+        .cabecera-pag { text-align: center; margin: 10px 0 6px; }
+        .cabecera-pag h1 { font-size: 32px; margin: 0 0 6px; letter-spacing: -0.5px; }
+        .cabecera-pag .sub {
+            display: block; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--gris);
+        }
+
+        /* Barra de navegación (arriba y abajo del contenido) */
+        .nav-acciones {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            margin: 26px auto;
+        }
+        .btn-nav {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 12px 22px;
+            border-radius: 14px;
+            border: 1px solid var(--borde);
+            background: #fff;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--texto);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .btn-nav:hover { background: #f9fafb; transform: translateY(-1px); }
+        .btn-nav.primario {
+            background: var(--azul); border-color: var(--azul); color: #fff;
+            box-shadow: 0 6px 16px rgba(9,132,227,0.25);
+        }
+        .btn-nav.primario:hover { background: #0779c8; border-color: #0779c8; box-shadow: 0 8px 20px rgba(9,132,227,0.35); }
+
+        /* Títulos de sección */
+        h2 {
+            font-size: 15px; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--texto);
+            border-bottom: 1px solid var(--borde);
+            padding-bottom: 10px;
+            margin: 40px 0 20px;
+        }
+        h2 small { color: var(--gris); font-weight: 600; letter-spacing: 1px; }
+
+        /* Grid de cartas */
+        .grid-cartas {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 22px;
+        }
+        .carta-item {
+            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            transition: transform 0.2s ease;
+        }
+        .carta-item.estatica { cursor: default; }
+        .carta-item:not(.estatica):hover { transform: translateY(-4px); }
+        .carta-item img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            transition: box-shadow 0.2s ease;
+        }
+        .carta-item:not(.estatica):hover img {
+            box-shadow: 0 16px 34px rgba(0,0,0,0.18);
+        }
+        .carta-item .etiqueta {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+        }
+        .carta-item .id-carta { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: var(--texto); }
+        .carta-item .nombre-pais { font-size: 12px; color: var(--gris); font-weight: 500; text-align: center; }
+
+        @media (max-width: 520px) {
+            .grid-cartas { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px; }
+            .cabecera-pag h1 { font-size: 24px; }
+        }
+
+        /* Footer global */
+        .creditos {
+            width: 100%;
+            text-align: center;
+            padding: 36px 0 28px;
+            margin-top: 50px;
+            border-top: 1px solid var(--borde);
+        }
+        .creditos a { display: inline-block; opacity: 0.9; transition: opacity 0.2s ease, transform 0.2s ease; }
+        .creditos a:hover { opacity: 1; transform: translateY(-1px); }
+        .creditos img { height: 42px; width: auto; display: block; }
+        .creditos .tagline {
+            display: block; margin-top: 12px;
+            font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--gris);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <img src="imagenes/banner_04.png" alt="Banderas del Mundo — Ludolab">
+    </header>
+
+    <div class="contenedor">
+        <div class="cabecera-pag">
+            <h1>Catálogo de cartas</h1>
+            <span class="sub">42 países · 3 cartas de truco</span>
+        </div>
+
+        <div class="nav-acciones">
+            <a href="index.html" class="btn-nav primario">← Volver al buscador</a>
+            <button class="btn-nav" id="btnCerrarTop" type="button">Cerrar</button>
+        </div>
+
+        <h2>América <small>(16)</small></h2>
+        <div class="grid-cartas" id="grid-AM"></div>
+
+        <h2>Europa <small>(12)</small></h2>
+        <div class="grid-cartas" id="grid-EU"></div>
+
+        <h2>Asia <small>(8)</small></h2>
+        <div class="grid-cartas" id="grid-AS"></div>
+
+        <h2>África <small>(6)</small></h2>
+        <div class="grid-cartas" id="grid-AF"></div>
+
+        <h2>Cartas de truco <small>(3 diseños)</small></h2>
+        <div class="grid-cartas" id="grid-ES"></div>
+
+        <div class="nav-acciones">
+            <a href="index.html" class="btn-nav primario">← Volver al buscador</a>
+            <button class="btn-nav" id="btnCerrarBottom" type="button">Cerrar</button>
+        </div>
+    </div>
+
+    <footer class="creditos">
+        <a href="https://ludolab.cl" target="_blank" rel="noopener" title="ludolab.cl">
+            <img src="imagenes/logotipo.png" alt="ludolab.cl — Juega, Aprende, Explora">
+        </a>
+        <span class="tagline">© Ludolab · Juega · Aprende · Explora</span>
+    </footer>
+
+    <script>
+        // Catálogo compacto (coincide con dbPaises en index.html)
+        const paises = [
+            ["AM-01","AM-01AR","Argentina"],["AM-02","AM-02BO","Bolivia"],["AM-03","AM-03BR","Brasil"],
+            ["AM-04","AM-04CA","Canadá"],["AM-05","AM-05CL","Chile"],["AM-06","AM-06CO","Colombia"],
+            ["AM-07","AM-07CR","Costa Rica"],["AM-08","AM-08CU","Cuba"],["AM-09","AM-09EC","Ecuador"],
+            ["AM-10","AM-10US","EE. UU."],["AM-11","AM-11GT","Guatemala"],["AM-12","AM-12MX","México"],
+            ["AM-13","AM-13PA","Panamá"],["AM-14","AM-14PE","Perú"],["AM-15","AM-15PY","Paraguay"],
+            ["AM-16","AM-16UY","Uruguay"],
+            ["EU-01","EU-01DE","Alemania"],["EU-02","EU-02ES","España"],["EU-03","EU-03FR","Francia"],
+            ["EU-04","EU-04IT","Italia"],["EU-05","EU-05GR","Grecia"],["EU-06","EU-06PT","Portugal"],
+            ["EU-07","EU-07GB","Reino Unido"],["EU-08","EU-08NL","Países Bajos"],["EU-09","EU-09CH","Suiza"],
+            ["EU-10","EU-10SE","Suecia"],["EU-11","EU-11NO","Noruega"],["EU-12","EU-12PL","Polonia"],
+            ["AS-01","AS-01CN","China"],["AS-02","AS-02JP","Japón"],["AS-03","AS-03IN","India"],
+            ["AS-04","AS-04KR","Corea del Sur"],["AS-05","AS-05TR","Turquía"],["AS-06","AS-06TH","Tailandia"],
+            ["AS-07","AS-07IL","Israel"],["AS-08","AS-08VN","Vietnam"],
+            ["AF-01","AF-01EG","Egipto"],["AF-02","AF-02ZA","Sudáfrica"],["AF-03","AF-03MA","Marruecos"],
+            ["AF-04","AF-04NG","Nigeria"],["AF-05","AF-05KE","Kenia"],["AF-06","AF-06SN","Senegal"]
+        ];
+
+        const especiales = [
+            ["ES-01","ES-01_robo_turno.png","Robo de turno"],
+            ["ES-02","ES-02_pierde_turno.png","Pierde turno"],
+            ["ES-03","ES-03_descarta_carta.png","Descarta carta"]
+        ];
+
+        paises.forEach(([idCorto, idCompleto, nombre]) => {
+            const prefijo = idCorto.split("-")[0];
+            const grid = document.getElementById('grid-' + prefijo);
+            const div = document.createElement('div');
+            div.className = 'carta-item';
+            div.title = `Ver detalle de ${nombre}`;
+            div.innerHTML = `
+                <img src="cartas_png/${idCorto}.png" alt="Carta ${idCorto} — ${nombre}" loading="lazy">
+                <div class="etiqueta">
+                    <span class="id-carta">${idCorto}</span>
+                    <span class="nombre-pais">${nombre}</span>
+                </div>
+            `;
+            div.onclick = () => { location.href = 'index.html?id=' + encodeURIComponent(idCompleto); };
+            grid.appendChild(div);
+        });
+
+        especiales.forEach(([id, archivo, nombre]) => {
+            const grid = document.getElementById('grid-ES');
+            const div = document.createElement('div');
+            div.className = 'carta-item estatica';
+            div.innerHTML = `
+                <img src="cartas_especiales_png/${archivo}" alt="Carta especial ${nombre}" loading="lazy">
+                <div class="etiqueta">
+                    <span class="id-carta">${id}</span>
+                    <span class="nombre-pais">${nombre}</span>
+                </div>
+            `;
+            grid.appendChild(div);
+        });
+
+        // Cerrar: intenta cerrar la pestaña; si no se puede, vuelve al index
+        function cerrar() {
+            window.close();
+            setTimeout(() => { location.href = 'index.html'; }, 120);
+        }
+        document.getElementById('btnCerrarTop').onclick = cerrar;
+        document.getElementById('btnCerrarBottom').onclick = cerrar;
+    </script>
+</body>
+</html>
