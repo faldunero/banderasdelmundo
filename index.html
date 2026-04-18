@@ -81,6 +81,17 @@
         .caja-img + .caja-img { border-left: 1px solid var(--borde); }
         .caja-img img { height: 70px; width: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1)); object-fit: contain; }
         .pie-img { display: block; font-size: 9px; font-weight: 800; color: var(--gris); text-transform: uppercase; margin-top: 12px; letter-spacing: 1.2px; }
+        /* Clickeable: bandera y escudo abren modal con significado */
+        .caja-img.clickable { cursor: pointer; border-radius: 12px; transition: background 0.2s ease, transform 0.2s ease; position: relative; }
+        .caja-img.clickable:hover { background: #f9fafb; transform: translateY(-2px); }
+        .caja-img.clickable::after {
+            content: "ⓘ";
+            position: absolute; top: 6px; right: 8px;
+            font-size: 13px; color: var(--azul); opacity: 0.55;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .caja-img.clickable:hover::after { opacity: 1; transform: scale(1.1); }
+        .caja-img.clickable .pie-img { color: var(--azul); }
 
         /* Contenido Ficha */
         #perfil { width: 100%; max-width: 450px; display: none; position: relative; }
@@ -430,6 +441,40 @@
             display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
         }
         .acciones-jugar .btn-instrucciones { margin: 0; }
+
+        /* ===== Modal de significado (bandera / escudo) ===== */
+        .modal-caja-simbolo {
+            max-width: 460px;
+            text-align: center;
+            padding: 34px 30px 28px;
+        }
+        .modal-caja-simbolo .etiqueta-simbolo {
+            display: inline-block;
+            font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--azul); background: #f0f7ff;
+            padding: 5px 12px; border-radius: 999px; margin-bottom: 10px;
+        }
+        .modal-caja-simbolo h1 { font-size: 22px; margin: 0 0 2px; }
+        .modal-caja-simbolo .subtitulo { margin-bottom: 18px; font-size: 10px; }
+        .modal-simbolo-img {
+            display: flex; justify-content: center; align-items: center;
+            padding: 16px 0 10px;
+        }
+        .modal-simbolo-img img {
+            max-width: 170px; max-height: 120px; width: auto; height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+            border-radius: 6px;
+        }
+        .modal-simbolo-texto {
+            font-size: 14px; line-height: 1.65; color: #4b5563;
+            margin: 10px auto 6px; max-width: 380px; text-align: left;
+        }
+        @media (max-width: 520px) {
+            .modal-caja-simbolo { padding: 28px 20px 22px; max-width: 320px; }
+            .modal-caja-simbolo h1 { font-size: 19px; }
+            .modal-simbolo-img img { max-width: 140px; max-height: 100px; }
+            .modal-simbolo-texto { font-size: 13px; }
+        }
     </style>
 </head>
 <body>
@@ -507,11 +552,11 @@
         </div>
 
         <div class="contenedor-simbolos">
-            <div class="caja-img">
+            <div class="caja-img clickable" id="cajaBandera" title="Ver significado de la bandera">
                 <img id="imgBandera" src="">
                 <span class="pie-img">Bandera</span>
             </div>
-            <div class="caja-img">
+            <div class="caja-img clickable" id="cajaEscudo" title="Ver significado del escudo">
                 <img id="imgEscudo" src="">
                 <span class="pie-img">Escudo</span>
             </div>
@@ -570,6 +615,20 @@
                     Ver detalle
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal: Significado de bandera / escudo -->
+    <div class="modal-overlay" id="modalSimbolo" role="dialog" aria-modal="true" aria-labelledby="tituloSimbolo">
+        <div class="modal-caja modal-caja-simbolo">
+            <button class="btn-cerrar-modal" id="btnCerrarSimbolo" title="Cerrar" aria-label="Cerrar">✕</button>
+            <span class="etiqueta-simbolo" id="etiquetaSimbolo">Bandera</span>
+            <h1 id="tituloSimbolo">—</h1>
+            <span class="subtitulo" id="subtituloSimbolo">Significado y simbología</span>
+            <div class="modal-simbolo-img">
+                <img id="imgSimbolo" src="" alt="">
+            </div>
+            <p class="modal-simbolo-texto" id="textoSimbolo"></p>
         </div>
     </div>
 
@@ -674,6 +733,7 @@
         </span>
     </footer>
 
+    <script src="significados.js"></script>
     <script>
         const dbPaises = [
             { id: "AM-01AR", nombre: "Argentina", cap: "Buenos Aires", cont: "América", ind: "9 de julio", pob: "46.0M", muj: 51.2, hom: 48.8, col: "Celeste, Blanco", iso: "ar", lat: -34.6037, lon: -58.3816, res: "Argentina es el país hispanohablante más extenso del mundo. Alberga las Cataratas del Iguazú y la Patagonia con sus glaciares. Es mundialmente famosa por el tango, el fútbol y la carne asada." },
@@ -918,6 +978,42 @@
         document.getElementById('btnOtraCarta').onclick = sacarCartaAlAzar;
         document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
         modalJugar.addEventListener('click', (e) => { if (e.target === modalJugar) cerrarModalJugar(); });
+
+        // ============== Modal significado bandera / escudo ==============
+        const modalSimbolo = document.getElementById('modalSimbolo');
+        function abrirSimbolo(tipo) {
+            if (!paisActual) return;
+            const datos = (typeof SIGNIFICADOS !== 'undefined') ? SIGNIFICADOS[paisActual.id] : null;
+            const texto = datos && datos[tipo]
+                ? datos[tipo]
+                : 'Aún no hay un significado registrado para este símbolo.';
+            document.getElementById('etiquetaSimbolo').innerText = tipo === 'bandera' ? 'Bandera' : 'Escudo';
+            document.getElementById('tituloSimbolo').innerText = paisActual.nombre;
+            document.getElementById('subtituloSimbolo').innerText =
+                tipo === 'bandera' ? 'Significado de la bandera' : 'Significado del escudo';
+            const img = document.getElementById('imgSimbolo');
+            if (tipo === 'bandera') {
+                img.src = `https://flagcdn.com/${paisActual.iso}.svg`;
+                img.alt = `Bandera de ${paisActual.nombre}`;
+            } else {
+                img.src = `https://mainfacts.com/media/images/coats_of_arms/${paisActual.iso}.png`;
+                img.alt = `Escudo de ${paisActual.nombre}`;
+            }
+            document.getElementById('textoSimbolo').innerText = texto;
+            modalSimbolo.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+        }
+        function cerrarSimbolo() {
+            modalSimbolo.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('cajaBandera').onclick = () => abrirSimbolo('bandera');
+        document.getElementById('cajaEscudo').onclick  = () => abrirSimbolo('escudo');
+        document.getElementById('btnCerrarSimbolo').onclick = cerrarSimbolo;
+        modalSimbolo.addEventListener('click', (e) => { if (e.target === modalSimbolo) cerrarSimbolo(); });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalSimbolo.classList.contains('visible')) cerrarSimbolo();
+        });
 
         function mostrarCarta(p) {
             paisActual = p;
