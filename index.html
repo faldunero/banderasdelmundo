@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ludolab - Explorador de Países</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --texto: #1e272e; --gris: #718093; --azul: #0984e3;
+            --borde: #f1f2f6; --rosa: #fd79a8; --celeste: #74b9ff;
+        }
+        body { font-family: 'Inter', sans-serif; color: var(--texto); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; background: #fff; }
+        
+        /* Buscador */
+        .caja-busqueda { width: 100%; max-width: 450px; position: relative; margin: 20px 0 40px; }
+        #entradaBusqueda { width: 100%; padding: 18px 50px 18px 18px; border-radius: 15px; border: 2px solid var(--borde); font-size: 16px; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
+        #entradaBusqueda:focus { border-color: var(--azul); }
+        #btnReiniciar { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--borde); color: var(--gris); font-size: 16px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.2s; }
+        #btnReiniciar:hover { background: #e5e7eb; color: var(--texto); }
+        #btnReiniciar.visible { display: flex; }
+        #resultados { position: absolute; width: 100%; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; margin-top: 5px; }
+        .item { padding: 15px; cursor: pointer; border-bottom: 1px solid var(--borde); transition: background 0.15s; }
+        .item:hover { background: #f9fafb; }
+        .item:last-child { border-bottom: none; }
+
+        /* Barra cambiar país (dentro del perfil) */
+        .barra-cambio { display: flex; align-items: center; gap: 10px; background: #f9fafb; border: 1px solid var(--borde); border-radius: 14px; padding: 10px 14px; margin-bottom: 25px; position: relative; }
+        .barra-cambio svg { flex-shrink: 0; color: var(--gris); }
+        #entradaCambio { flex: 1; border: none; background: transparent; font-family: inherit; font-size: 14px; color: var(--texto); outline: none; padding: 6px 0; }
+        #entradaCambio::placeholder { color: var(--gris); }
+        #resultadosCambio { position: absolute; top: calc(100% + 5px); left: 0; width: 100%; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 250px; overflow-y: auto; display: none; }
+
+        /* Símbolos laterales */
+        .contenedor-simbolos { display: flex; justify-content: center; align-items: stretch; gap: 0; margin-bottom: 25px; }
+        .caja-img { text-align: center; flex: 1; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .caja-img + .caja-img { border-left: 1px solid var(--borde); }
+        .caja-img img { height: 70px; width: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1)); object-fit: contain; }
+        .pie-img { display: block; font-size: 9px; font-weight: 800; color: var(--gris); text-transform: uppercase; margin-top: 12px; letter-spacing: 1.2px; }
+
+        /* Contenido Ficha */
+        #perfil { width: 100%; max-width: 450px; display: none; position: relative; }
+        /* Cabecera del detalle: país + continente */
+        .cabecera-pais { text-align: center; margin: 10px 0 25px; padding-top: 10px; }
+        .cabecera-pais h1 { font-size: 36px; margin: 0 0 6px; color: var(--texto); letter-spacing: -0.5px; }
+        .cabecera-pais .etiqueta-cont { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gris); }
+        .marco-mapa { width: 100%; height: 240px; border-radius: 24px; overflow: hidden; border: 1px solid var(--borde); margin: 25px 0; position: relative; }
+        /* iframe OSM ampliado con margen negativo para ocultar "Ver mapa" y atribución interna */
+        iframe {
+            position: absolute;
+            top: -22px;
+            left: 0;
+            width: 100%;
+            height: calc(100% + 40px);
+            border: none;
+        }
+        .marco-mapa::after { content: ""; position: absolute; inset: 0; background: transparent; cursor: default; }
+        
+        .resumen { background: #fcfcfc; padding: 25px; border-radius: 20px; border: 1px solid var(--borde); margin-bottom: 20px; }
+        .resumen h2 { font-size: 14px; text-transform: uppercase; color: var(--azul); margin-top: 0; }
+        .resumen p { font-size: 15px; line-height: 1.8; color: #4b5563; text-align: justify; }
+
+        .barra-poblacion { height: 8px; display: flex; background: #eee; border-radius: 10px; overflow: hidden; margin: 10px 0 40px; }
+        .cuadricula { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; border-top: 1px solid var(--borde); padding-top: 30px; }
+        .dato-item { background: #fcfcfc; border: 1px solid var(--borde); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+        .etiqueta { display: block; font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--gris); letter-spacing: 1.2px; }
+        .valor { display: block; font-size: 16px; font-weight: 600; color: var(--texto); line-height: 1.3; }
+        
+        footer { margin-top: 60px; text-align: center; border-top: 1px solid var(--borde); padding: 30px 0; font-size: 10px; color: #d1d8e0; }
+        footer a { color: var(--azul); text-decoration: none; font-weight: 700; letter-spacing: 0.5px; }
+        footer a:hover { text-decoration: underline; }
+
+        /* ===== Vista de carta intermedia ===== */
+        #vista-carta { width: 100%; max-width: 450px; display: none; text-align: center; }
+        .carta-interactiva {
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: 18px;
+            filter: drop-shadow(0 20px 35px rgba(0,0,0,0.18));
+        }
+        .carta-interactiva:hover { transform: translateY(-4px) scale(1.01); }
+        .carta-interactiva img { width: 280px; max-width: 80vw; height: auto; display: block; border-radius: 18px; }
+        .pista-click { margin-top: 24px; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--gris); text-transform: uppercase; }
+        .pista-click::after { content: " ▾"; color: var(--azul); }
+
+        /* ===== Botón cerrar (X) superior derecho ===== */
+        .btn-cerrar {
+            position: absolute;
+            top: 0; right: 0;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--borde);
+            color: var(--texto);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-cerrar:hover { background: #e5e7eb; }
+
+        /* ===== Acciones de navegación al pie del detalle ===== */
+        .acciones-nav {
+            display: flex; gap: 12px; margin: 30px 0 10px;
+        }
+        .acciones-nav button {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid var(--borde);
+            background: white;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--texto);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .acciones-nav button.primario {
+            background: var(--azul);
+            border-color: var(--azul);
+            color: white;
+        }
+        .acciones-nav button.primario:hover { background: #0779c8; border-color: #0779c8; }
+        .acciones-nav button:hover { background: #f9fafb; }
+    </style>
+</head>
+<body>
+
+    <div class="caja-busqueda">
+        <input type="text" id="entradaBusqueda" placeholder="Buscar país o ID...">
+        <button id="btnReiniciar" type="button" title="Reiniciar búsqueda" aria-label="Reiniciar búsqueda">✕</button>
+        <div id="resultados"></div>
+    </div>
+
+    <!-- VISTA INTERMEDIA: carta del país -->
+    <div id="vista-carta">
+        <div class="carta-interactiva" id="btnVerDetalle" title="Ver detalle del país">
+            <img id="imgCarta" src="" alt="">
+        </div>
+        <div class="pista-click">Toca la carta para ver el detalle</div>
+    </div>
+
+    <!-- DETALLE DEL PAÍS -->
+    <div id="perfil">
+        <button class="btn-cerrar" id="btnCerrarDetalle" title="Cerrar">✕</button>
+
+        <div class="cabecera-pais">
+            <h1 id="txtNombre"></h1>
+            <span class="etiqueta-cont" id="txtContinente"></span>
+        </div>
+
+        <div class="contenedor-simbolos">
+            <div class="caja-img">
+                <img id="imgBandera" src="">
+                <span class="pie-img">Bandera</span>
+            </div>
+            <div class="caja-img">
+                <img id="imgEscudo" src="">
+                <span class="pie-img">Escudo</span>
+            </div>
+        </div>
+
+        <div class="marco-mapa">
+            <iframe id="mapa" src=""></iframe>
+        </div>
+
+        <div class="resumen">
+            <h2>Resumen del País</h2>
+            <p id="txtResumen"></p>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800; color:var(--gris)">
+            <span id="txtMujeres"></span>
+            <span id="txtHombres"></span>
+        </div>
+        <div class="barra-poblacion">
+            <div id="barraMujer" style="background:var(--rosa);"></div>
+            <div id="barraHombre" style="background:var(--celeste);"></div>
+        </div>
+
+        <div class="cuadricula">
+            <div class="dato-item"><span class="etiqueta">Capital</span><span class="valor" id="txtCapital"></span></div>
+            <div class="dato-item"><span class="etiqueta">Población</span><span class="valor" id="txtPob"></span></div>
+            <div class="dato-item"><span class="etiqueta">Independencia</span><span class="valor" id="txtIndep"></span></div>
+            <div class="dato-item"><span class="etiqueta">Colores</span><span class="valor" id="txtColores"></span></div>
+        </div>
+
+        <div class="acciones-nav">
+            <button id="btnNuevaBusqueda" class="primario">Nueva búsqueda</button>
+            <button id="btnCerrar">Cerrar</button>
+        </div>
+
+        <footer>
+            <a href="https://ludolab.cl" target="_blank" rel="noopener">LUDOLAB.CL</a> | <span id="txtID"></span>
+            <div style="margin-top:10px; font-size:9px; color:#d1d8e0;">
+                Mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:inherit;">OpenStreetMap</a> contributors
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const dbPaises = [
+            { id: "AM-01AR", nombre: "Argentina", cap: "Buenos Aires", cont: "América", ind: "9 de julio", pob: "46.0M", muj: 51.2, hom: 48.8, col: "Celeste, Blanco", iso: "ar", lat: -34.6037, lon: -58.3816, res: "Argentina es el país hispanohablante más extenso del mundo. Alberga las Cataratas del Iguazú y la Patagonia con sus glaciares. Es mundialmente famosa por el tango, el fútbol y la carne asada." },
+            { id: "AM-02BO", nombre: "Bolivia", cap: "Sucre", cont: "América", ind: "6 de agosto", pob: "12.2M", muj: 49.6, hom: 50.4, col: "Rojo, Amarillo, Verde", iso: "bo", lat: -19.0196, lon: -65.2619, res: "Bolivia es un país sin salida al mar con dos capitales: Sucre (constitucional) y La Paz (sede de gobierno). Allí está el Salar de Uyuni, el desierto de sal más grande del mundo, y el lago Titicaca." },
+            { id: "AM-03BR", nombre: "Brasil", cap: "Brasilia", cont: "América", ind: "7 de septiembre", pob: "215.3M", muj: 51.1, hom: 48.9, col: "Verde, Amarillo, Azul", iso: "br", lat: -15.7801, lon: -47.9292, res: "Brasil es el país más grande de Sudamérica y el único de habla portuguesa en el continente. Contiene gran parte de la selva amazónica y es famoso por el carnaval de Río y el fútbol." },
+            { id: "AM-04CA", nombre: "Canadá", cap: "Ottawa", cont: "América", ind: "1 de julio", pob: "38.9M", muj: 50.4, hom: 49.6, col: "Rojo, Blanco", iso: "ca", lat: 45.4215, lon: -75.6972, res: "Canadá es el segundo país más extenso del mundo. Es bilingüe (inglés y francés), hogar de las cataratas del Niágara y de inmensos bosques boreales donde habitan alces y osos." },
+            { id: "AM-05CL", nombre: "Chile", cap: "Santiago", cont: "América", ind: "18 de septiembre", pob: "19.6M", muj: 50.7, hom: 49.3, col: "Rojo, Blanco, Azul", iso: "cl", lat: -33.4489, lon: -70.6693, res: "Chile es una nación larga y angosta en el extremo sudoeste de América del Sur, flanqueada por los Andes y el Pacífico. Alberga el desierto de Atacama, el más árido del mundo, y glaciares en el extremo sur." },
+            { id: "AM-06CO", nombre: "Colombia", cap: "Bogotá", cont: "América", ind: "20 de julio", pob: "51.8M", muj: 51.2, hom: 48.8, col: "Amarillo, Azul, Rojo", iso: "co", lat: 4.7110, lon: -74.0721, res: "Colombia es el único país sudamericano con costas en el Atlántico y el Pacífico. Es el mayor productor mundial de esmeraldas y famoso por su café, la salsa y la cumbia." },
+            { id: "AM-07CR", nombre: "Costa Rica", cap: "San José", cont: "América", ind: "15 de septiembre", pob: "5.1M", muj: 49.6, hom: 50.4, col: "Azul, Blanco, Rojo", iso: "cr", lat: 9.9281, lon: -84.0907, res: "Costa Rica abolió su ejército en 1948 y es líder mundial en conservación ambiental. Alberga el 6% de la biodiversidad del planeta en menos del 0,03% de su superficie." },
+            { id: "AM-08CU", nombre: "Cuba", cap: "La Habana", cont: "América", ind: "20 de mayo", pob: "11.0M", muj: 50.3, hom: 49.7, col: "Azul, Blanco, Rojo", iso: "cu", lat: 23.1136, lon: -82.3666, res: "Cuba es la isla más grande del Caribe, famosa por sus autos clásicos, su música (son, salsa, rumba) y La Habana Vieja, declarada Patrimonio de la Humanidad por la UNESCO." },
+            { id: "AM-09EC", nombre: "Ecuador", cap: "Quito", cont: "América", ind: "10 de agosto", pob: "18.0M", muj: 50.5, hom: 49.5, col: "Amarillo, Azul, Rojo", iso: "ec", lat: -0.1807, lon: -78.4678, res: "Ecuador toma su nombre de la línea ecuatorial que lo atraviesa. Incluye las Islas Galápagos, donde Darwin desarrolló su teoría de la evolución, y es el mayor exportador de bananos del mundo." },
+            { id: "AM-10US", nombre: "EE. UU.", cap: "Washington D.C.", cont: "América", ind: "4 de julio", pob: "333.2M", muj: 50.5, hom: 49.5, col: "Azul, Blanco, Rojo", iso: "us", lat: 38.9072, lon: -77.0369, res: "Estados Unidos es la tercera nación más poblada del mundo. Está formado por 50 estados y es cuna de Hollywood, Silicon Valley y la NBA, con paisajes como el Gran Cañón y Yellowstone." },
+            { id: "AM-11GT", nombre: "Guatemala", cap: "C. de Guatemala", cont: "América", ind: "15 de septiembre", pob: "17.6M", muj: 50.8, hom: 49.2, col: "Celeste, Blanco", iso: "gt", lat: 14.6349, lon: -90.5069, res: "Guatemala es la cuna de la civilización maya, con ruinas como Tikal escondidas en la selva. Es también conocida por sus volcanes activos, textiles coloridos y su café de altura." },
+            { id: "AM-12MX", nombre: "México", cap: "C. de México", cont: "América", ind: "16 de septiembre", pob: "127.5M", muj: 51.2, hom: 48.8, col: "Verde, Blanco, Rojo", iso: "mx", lat: 19.4326, lon: -99.1332, res: "México es la nación hispanohablante más poblada del mundo. Cuna de las culturas azteca y maya, es famoso por sus tacos, el Día de Muertos, los mariachis y ruinas como Chichén Itzá." },
+            { id: "AM-13PA", nombre: "Panamá", cap: "C. de Panamá", cont: "América", ind: "28 de noviembre", pob: "4.4M", muj: 50.1, hom: 49.9, col: "Azul, Rojo, Blanco", iso: "pa", lat: 8.9824, lon: -79.5199, res: "Panamá conecta América del Norte y del Sur, y alberga el famoso Canal de Panamá que une los océanos Atlántico y Pacífico. Usa el dólar estadounidense como moneda de uso común." },
+            { id: "AM-14PE", nombre: "Perú", cap: "Lima", cont: "América", ind: "28 de julio", pob: "34.0M", muj: 50.4, hom: 49.6, col: "Rojo, Blanco", iso: "pe", lat: -12.0464, lon: -77.0428, res: "Perú fue el centro del Imperio Inca. Alberga Machu Picchu, una de las maravillas del mundo, y es reconocido por su gastronomía considerada de las mejores del planeta." },
+            { id: "AM-15PY", nombre: "Paraguay", cap: "Asunción", cont: "América", ind: "14 de mayo", pob: "6.7M", muj: 49.6, hom: 50.4, col: "Rojo, Blanco, Azul", iso: "py", lat: -25.2637, lon: -57.5759, res: "Paraguay es un país sin salida al mar con dos idiomas oficiales: el español y el guaraní. Es famoso por la represa de Itaipú, una de las mayores centrales hidroeléctricas del mundo." },
+            { id: "AM-16UY", nombre: "Uruguay", cap: "Montevideo", cont: "América", ind: "25 de agosto", pob: "3.4M", muj: 51.7, hom: 48.3, col: "Azul, Blanco, Amarillo", iso: "uy", lat: -34.9011, lon: -56.1645, res: "Uruguay es uno de los países más pequeños de Sudamérica, pero pionero en derechos sociales y educación pública. Es la tierra del mate, el tango y el candombe." },
+            { id: "EU-01DE", nombre: "Alemania", cap: "Berlín", cont: "Europa", ind: "3 de octubre", pob: "83.2M", muj: 50.6, hom: 49.4, col: "Negro, Rojo, Amarillo", iso: "de", lat: 52.5200, lon: 13.4050, res: "Alemania es la mayor economía de Europa. Famosa por su puntualidad, sus castillos, su Oktoberfest en Múnich y por ser cuna de compositores como Bach y Beethoven." },
+            { id: "EU-02ES", nombre: "España", cap: "Madrid", cont: "Europa", ind: "12 de octubre", pob: "47.5M", muj: 51.0, hom: 49.0, col: "Rojo, Amarillo", iso: "es", lat: 40.4168, lon: -3.7038, res: "España es cuna de la lengua española, hablada por más de 500 millones de personas. Famosa por el flamenco, la paella, la Alhambra y las obras de Gaudí en Barcelona." },
+            { id: "EU-03FR", nombre: "Francia", cap: "París", cont: "Europa", ind: "14 de julio", pob: "67.8M", muj: 51.6, hom: 48.4, col: "Azul, Blanco, Rojo", iso: "fr", lat: 48.8566, lon: 2.3522, res: "Francia es el país más visitado del mundo. Hogar de la Torre Eiffel, el museo del Louvre y la cocina considerada Patrimonio de la Humanidad por la UNESCO." },
+            { id: "EU-04IT", nombre: "Italia", cap: "Roma", cont: "Europa", ind: "2 de junio", pob: "58.9M", muj: 51.3, hom: 48.7, col: "Verde, Blanco, Rojo", iso: "it", lat: 41.9028, lon: 12.4964, res: "Italia tiene forma de bota y alberga más sitios Patrimonio de la Humanidad que cualquier otro país. Cuna del Imperio Romano, del Renacimiento, de la pizza y de la pasta." },
+            { id: "EU-05GR", nombre: "Grecia", cap: "Atenas", cont: "Europa", ind: "25 de marzo", pob: "10.4M", muj: 51.1, hom: 48.9, col: "Azul, Blanco", iso: "gr", lat: 37.9838, lon: 23.7275, res: "Grecia es considerada la cuna de la civilización occidental, de la democracia y de los Juegos Olímpicos. Tiene más de 6.000 islas y ruinas antiguas como el Partenón." },
+            { id: "EU-06PT", nombre: "Portugal", cap: "Lisboa", cont: "Europa", ind: "10 de junio", pob: "10.3M", muj: 52.7, hom: 47.3, col: "Verde, Rojo", iso: "pt", lat: 38.7223, lon: -9.1393, res: "Portugal fue una gran potencia marítima durante la era de los descubrimientos. Es el mayor productor mundial de corcho y famoso por el fado, los azulejos y el vino de Oporto." },
+            { id: "EU-07GB", nombre: "Reino Unido", cap: "Londres", cont: "Europa", ind: "15 de junio", pob: "67.3M", muj: 50.6, hom: 49.4, col: "Azul, Blanco, Rojo", iso: "gb", lat: 51.5074, lon: -0.1278, res: "El Reino Unido está formado por Inglaterra, Escocia, Gales e Irlanda del Norte. Es cuna de la Revolución Industrial, de los Beatles, del fútbol moderno y de la monarquía parlamentaria." },
+            { id: "EU-08NL", nombre: "Países Bajos", cap: "Ámsterdam", cont: "Europa", ind: "26 de julio", pob: "17.7M", muj: 50.3, hom: 49.7, col: "Rojo, Blanco, Azul", iso: "nl", lat: 52.3676, lon: 4.9041, res: "Los Países Bajos tienen gran parte de su territorio bajo el nivel del mar, protegido por diques. Famosos por los tulipanes, los molinos, las bicicletas y los canales de Ámsterdam." },
+            { id: "EU-09CH", nombre: "Suiza", cap: "Berna", cont: "Europa", ind: "1 de agosto", pob: "8.7M", muj: 50.4, hom: 49.6, col: "Rojo, Blanco", iso: "ch", lat: 46.9480, lon: 7.4474, res: "Suiza es conocida por su neutralidad, sus Alpes, sus relojes de precisión, su chocolate y su queso. Tiene cuatro idiomas oficiales: alemán, francés, italiano y romanche." },
+            { id: "EU-10SE", nombre: "Suecia", cap: "Estocolmo", cont: "Europa", ind: "6 de junio", pob: "10.5M", muj: 49.9, hom: 50.1, col: "Azul, Amarillo", iso: "se", lat: 59.3293, lon: 18.0686, res: "Suecia es la tierra de los vikingos, de IKEA y del premio Nobel. Un país nórdico famoso por sus auroras boreales, sus bosques y su diseño minimalista." },
+            { id: "EU-11NO", nombre: "Noruega", cap: "Oslo", cont: "Europa", ind: "17 de mayo", pob: "5.4M", muj: 49.5, hom: 50.5, col: "Rojo, Blanco, Azul", iso: "no", lat: 59.9139, lon: 10.7522, res: "Noruega es célebre por sus fiordos, las auroras boreales y el Sol de Medianoche en verano. Es uno de los países con mayor calidad de vida del mundo." },
+            { id: "EU-12PL", nombre: "Polonia", cap: "Varsovia", cont: "Europa", ind: "11 de noviembre", pob: "37.8M", muj: 51.7, hom: 48.3, col: "Blanco, Rojo", iso: "pl", lat: 52.2297, lon: 21.0122, res: "Polonia es cuna de figuras como Copérnico, Chopin y Marie Curie. Tiene una rica historia medieval, castillos impresionantes y el bosque de Białowieża, hogar de los bisontes europeos." },
+            { id: "AS-01CN", nombre: "China", cap: "Pekín", cont: "Asia", ind: "1 de octubre", pob: "1.4B", muj: 48.8, hom: 51.2, col: "Rojo, Amarillo", iso: "cn", lat: 39.9042, lon: 116.4074, res: "China es el país más poblado de Asia y la segunda economía del mundo. Cuna de invenciones como el papel, la pólvora y la brújula, alberga la Gran Muralla, visible desde el espacio." },
+            { id: "AS-02JP", nombre: "Japón", cap: "Tokio", cont: "Asia", ind: "11 de febrero", pob: "125.1M", muj: 51.4, hom: 48.6, col: "Blanco, Rojo", iso: "jp", lat: 35.6762, lon: 139.6503, res: "Japón es un archipiélago con más de 6.800 islas. Combina tradición (templos, samuráis, sumo) con alta tecnología (robots, anime). Famoso por el sushi y los cerezos en flor." },
+            { id: "AS-03IN", nombre: "India", cap: "Nueva Delhi", cont: "Asia", ind: "15 de agosto", pob: "1.4B", muj: 48.4, hom: 51.6, col: "Naranja, Blanco, Verde", iso: "in", lat: 28.6139, lon: 77.2090, res: "India es el país más poblado del mundo. Cuna del yoga, del ajedrez y del número cero, alberga el Taj Mahal y más de 20 idiomas oficiales." },
+            { id: "AS-04KR", nombre: "Corea del Sur", cap: "Seúl", cont: "Asia", ind: "15 de agosto", pob: "51.7M", muj: 50.1, hom: 49.9, col: "Blanco, Rojo, Azul", iso: "kr", lat: 37.5665, lon: 126.9780, res: "Corea del Sur es una potencia tecnológica, cuna de Samsung y del K-pop. Famosa por su gastronomía picante (kimchi) y su cultura pop que conquistó al mundo (la ola Hallyu)." },
+            { id: "AS-05TR", nombre: "Turquía", cap: "Ankara", cont: "Asia", ind: "29 de octubre", pob: "85.3M", muj: 50.7, hom: 49.3, col: "Rojo, Blanco", iso: "tr", lat: 39.9334, lon: 32.8597, res: "Turquía une Europa y Asia. Su ciudad Estambul está en dos continentes. Fue corazón de los imperios Bizantino y Otomano, y es famosa por sus bazares, baños turcos y el globo aerostático en Capadocia." },
+            { id: "AS-06TH", nombre: "Tailandia", cap: "Bangkok", cont: "Asia", ind: "5 de diciembre", pob: "71.6M", muj: 51.3, hom: 48.7, col: "Rojo, Blanco, Azul", iso: "th", lat: 13.7563, lon: 100.5018, res: "Tailandia es el único país del sudeste asiático que nunca fue colonizado por europeos. Famosa por sus templos dorados, sus playas paradisíacas y su cocina picante." },
+            { id: "AS-07IL", nombre: "Israel", cap: "Jerusalén", cont: "Asia", ind: "14 de mayo", pob: "9.5M", muj: 50.4, hom: 49.6, col: "Azul, Blanco", iso: "il", lat: 31.7683, lon: 35.2137, res: "Israel es un país joven (1948) con una historia milenaria. Jerusalén es ciudad sagrada para tres religiones: judaísmo, cristianismo e islam." },
+            { id: "AS-08VN", nombre: "Vietnam", cap: "Hanói", cont: "Asia", ind: "2 de septiembre", pob: "98.2M", muj: 50.6, hom: 49.4, col: "Rojo, Amarillo", iso: "vn", lat: 21.0285, lon: 105.8542, res: "Vietnam tiene forma de S a lo largo del sudeste asiático. Famoso por la Bahía de Ha Long, sus arrozales en terrazas y su gastronomía ligera (pho, banh mi)." },
+            { id: "AF-01EG", nombre: "Egipto", cap: "El Cairo", cont: "África", ind: "28 de febrero", pob: "110.0M", muj: 49.4, hom: 50.6, col: "Rojo, Blanco, Negro", iso: "eg", lat: 30.0444, lon: 31.2357, res: "Egipto alberga las famosas pirámides de Guiza y la Esfinge, únicas maravillas del mundo antiguo que aún existen. El río Nilo, el más largo del mundo, lo atraviesa." },
+            { id: "AF-02ZA", nombre: "Sudáfrica", cap: "Pretoria", cont: "África", ind: "31 de mayo", pob: "60.6M", muj: 50.7, hom: 49.3, col: "Verde, Negro, Rojo, Azul", iso: "za", lat: -25.7479, lon: 28.2293, res: "Sudáfrica tiene 11 idiomas oficiales y tres capitales. Famosa por los safaris, la Montaña de la Mesa en Ciudad del Cabo y por figuras como Nelson Mandela." },
+            { id: "AF-03MA", nombre: "Marruecos", cap: "Rabat", cont: "África", ind: "18 de noviembre", pob: "37.5M", muj: 50.4, hom: 49.6, col: "Rojo, Verde", iso: "ma", lat: 34.0209, lon: -6.8417, res: "Marruecos está separado de Europa por apenas 14 km en el Estrecho de Gibraltar. Es famoso por sus zocos coloridos, el desierto del Sahara y ciudades como Marrakech y Fez." },
+            { id: "AF-04NG", nombre: "Nigeria", cap: "Abuja", cont: "África", ind: "1 de octubre", pob: "218.5M", muj: 49.3, hom: 50.7, col: "Verde, Blanco", iso: "ng", lat: 9.0765, lon: 7.3986, res: "Nigeria es el país más poblado de África. Es la mayor economía del continente, el principal exportador de petróleo africano y cuna de Nollywood, la industria cinematográfica." },
+            { id: "AF-05KE", nombre: "Kenia", cap: "Nairobi", cont: "África", ind: "12 de diciembre", pob: "54.0M", muj: 50.3, hom: 49.7, col: "Negro, Rojo, Verde", iso: "ke", lat: -1.2921, lon: 36.8219, res: "Kenia es cuna del ser humano, con fósiles de millones de años. Famosa por sus safaris en el Masái Mara y por ser potencia mundial en atletismo de fondo." },
+            { id: "AF-06SN", nombre: "Senegal", cap: "Dakar", cont: "África", ind: "4 de abril", pob: "17.3M", muj: 50.1, hom: 49.9, col: "Verde, Amarillo, Rojo", iso: "sn", lat: 14.7167, lon: -17.4677, res: "Senegal es conocido como la puerta de entrada a África Occidental. Famoso por su música (mbalax), por su hospitalidad llamada teranga y por la Isla de Gorée, símbolo de memoria histórica." }
+        ];
+
+        const input = document.getElementById('entradaBusqueda');
+        const resBox = document.getElementById('resultados');
+        const perfil = document.getElementById('perfil');
+        const vistaCarta = document.getElementById('vista-carta');
+        const cajaBusqueda = document.querySelector('.caja-busqueda');
+        const btnReset = document.getElementById('btnReiniciar');
+
+        let paisActual = null;
+
+        function renderMatches(val, contenedor, onSelect) {
+            contenedor.innerHTML = '';
+            if (val.length < 2) { contenedor.style.display = 'none'; return; }
+            const matches = dbPaises.filter(p => p.nombre.toLowerCase().includes(val) || p.id.toLowerCase().includes(val));
+            if (matches.length > 0) {
+                contenedor.style.display = 'block';
+                matches.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.innerHTML = `<strong>${p.id}</strong> — ${p.nombre}`;
+                    div.onclick = () => mostrarCarta(p);
+                    contenedor.appendChild(div);
+                });
+            } else {
+                contenedor.style.display = 'none';
+            }
+        }
+
+        input.oninput = () => {
+            btnReset.classList.toggle('visible', input.value.length > 0);
+            renderMatches(input.value.toLowerCase(), resBox, mostrarCarta);
+        };
+
+        btnReset.onclick = () => volverAlBuscador();
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.caja-busqueda')) resBox.style.display = 'none';
+        });
+
+        // --- Vistas -----------------------------------------------------
+        function ocultarTodo() {
+            cajaBusqueda.style.display = 'none';
+            vistaCarta.style.display = 'none';
+            perfil.style.display = 'none';
+        }
+
+        function volverAlBuscador() {
+            ocultarTodo();
+            input.value = '';
+            btnReset.classList.remove('visible');
+            resBox.style.display = 'none';
+            cajaBusqueda.style.display = 'block';
+            paisActual = null;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => input.focus(), 150);
+        }
+
+        function mostrarCarta(p) {
+            paisActual = p;
+            ocultarTodo();
+            // Extrae "AM-01" desde "AM-01AR"
+            const idCarta = p.id.substring(0, 5);
+            document.getElementById('imgCarta').src = `cartas_png/${idCarta}.png`;
+            document.getElementById('imgCarta').alt = `Carta ${idCarta} — ${p.nombre}`;
+            vistaCarta.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function mostrarDetalle(p) {
+            paisActual = p;
+            ocultarTodo();
+            perfil.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            document.getElementById('imgBandera').src = `https://flagcdn.com/${p.iso}.svg`;
+            document.getElementById('imgEscudo').src = `https://mainfacts.com/media/images/coats_of_arms/${p.iso}.png`;
+            document.getElementById('txtNombre').innerText = p.nombre;
+            document.getElementById('txtContinente').innerText = `Continente · ${p.cont}`;
+            // Mapa con OpenStreetMap (bbox alrededor de la capital)
+            const dLat = 0.12, dLon = 0.18;
+            const bbox = `${p.lon - dLon},${p.lat - dLat},${p.lon + dLon},${p.lat + dLat}`;
+            document.getElementById('mapa').src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${p.lat},${p.lon}`;
+            document.getElementById('txtResumen').innerText = p.res;
+            document.getElementById('txtMujeres').innerText = `♀ MUJERES ${p.muj}%`;
+            document.getElementById('txtHombres').innerText = `HOMBRES ${p.hom}% ♂`;
+            document.getElementById('barraMujer').style.width = p.muj + '%';
+            document.getElementById('barraHombre').style.width = p.hom + '%';
+            document.getElementById('txtCapital').innerText = p.cap;
+            document.getElementById('txtPob').innerText = p.pob;
+            document.getElementById('txtIndep').innerText = p.ind;
+            document.getElementById('txtColores').innerText = p.col;
+            document.getElementById('txtID').innerText = `FICHA ${p.id}`;
+        }
+
+        // --- Listeners --------------------------------------------------
+        document.getElementById('btnVerDetalle').onclick = () => {
+            if (paisActual) mostrarDetalle(paisActual);
+        };
+        document.getElementById('btnCerrarDetalle').onclick = () => volverAlBuscador();
+        document.getElementById('btnNuevaBusqueda').onclick = () => volverAlBuscador();
+        document.getElementById('btnCerrar').onclick = () => {
+            // Intenta cerrar la ventana; si no se puede (abrió por URL directa), vuelve al buscador.
+            window.close();
+            setTimeout(volverAlBuscador, 100);
+        };
+    </script>
+</body>
+</html>

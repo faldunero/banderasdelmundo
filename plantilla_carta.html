@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Carta {{ID}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* ===== CARTA TAMAÑO PÓKER (63×88mm) ===== */
+        .carta {
+            width: 252px;
+            height: 352px;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(9,132,227,0.10), transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(253,121,168,0.10), transparent 55%),
+                linear-gradient(145deg, #fdfbf6 0%, #f3f1ea 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 14px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        /* Marco interior decorativo */
+        .carta::before {
+            content: "";
+            position: absolute;
+            inset: 6px;
+            border-radius: 11px;
+            border: 1px solid rgba(30,39,46,0.08);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .carta > * { position: relative; z-index: 1; }
+
+        /* Título del juego */
+        .titulo {
+            text-align: center;
+            padding: 4px 0 10px;
+            border-bottom: 1px solid rgba(30,39,46,0.08);
+            margin-bottom: 6px;
+        }
+        .titulo .eyebrow {
+            display: block;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #c4cbd5;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .titulo .nombre-juego {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #1e272e;
+            text-transform: uppercase;
+        }
+        .titulo .nombre-juego .acento {
+            color: #0984e3;
+        }
+
+        /* Zona flexible que centra la bandera */
+        .zona-bandera {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 0;
+        }
+        /* Marco de la bandera: respeta proporción 3:2 */
+        .marco-bandera {
+            width: 100%;
+            aspect-ratio: 3 / 2;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08),
+                        0 4px 14px rgba(0,0,0,0.1);
+        }
+        .marco-bandera svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .marco-bandera::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(130deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 50%);
+            pointer-events: none;
+        }
+
+        /* Pie: marca centrada */
+        .pie {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 14px 4px 2px;
+            margin-top: 12px;
+            border-top: 1px solid rgba(30,39,46,0.08);
+        }
+        .marca {
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            color: #8a93a0;
+        }
+    </style>
+</head>
+<body>
+    <div class="carta">
+        <div class="titulo">
+            <span class="eyebrow">Juego de cartas</span>
+            <span class="nombre-juego">Banderas <span class="acento">del Mundo</span></span>
+        </div>
+        <div class="zona-bandera">
+            <div class="marco-bandera">
+                {{BANDERA_SVG}}
+            </div>
+        </div>
+        <div class="pie">
+            <span class="marca">LUDOLAB.CL</span>
+        </div>
+    </div>
+</body>
+</html>

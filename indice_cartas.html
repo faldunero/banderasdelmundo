@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Índice de cartas — Banderas del Mundo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+    body { font-family: 'Space Grotesk', sans-serif; background: #eef1f6; margin: 0; padding: 40px 20px; }
+    h1 { text-align: center; color: #1e272e; font-size: 28px; margin: 0 0 8px; letter-spacing: -0.5px; }
+    h1 span { color: #0984e3; }
+    p.sub { text-align: center; color: #8a93a0; font-weight: 500; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 40px; }
+    h2 { color: #1e272e; font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; border-bottom: 1px solid #d7dbe2; padding-bottom: 8px; margin: 40px auto 20px; max-width: 1200px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .carta-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .carta-item img { width: 100%; max-width: 220px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); display: block; }
+    .carta-item .id { font-weight: 800; color: #1e272e; font-size: 13px; letter-spacing: 1.2px; }
+    .carta-item .nombre { color: #8a93a0; font-size: 11px; font-weight: 500; }
+</style>
+</head>
+<body>
+    <h1>Banderas <span>del Mundo</span></h1>
+    <p class="sub">Índice · 42 cartas · Ludolab</p>
+
+    <h2>América (16)</h2>
+    <div class="grid" id="g-AM"></div>
+
+    <h2>Europa (12)</h2>
+    <div class="grid" id="g-EU"></div>
+
+    <h2>Asia (8)</h2>
+    <div class="grid" id="g-AS"></div>
+
+    <h2>África (6)</h2>
+    <div class="grid" id="g-AF"></div>
+
+<script>
+const cartas = [
+    ["AM-01","Argentina"],["AM-02","Bolivia"],["AM-03","Brasil"],["AM-04","Canadá"],
+    ["AM-05","Chile"],["AM-06","Colombia"],["AM-07","Costa Rica"],["AM-08","Cuba"],
+    ["AM-09","Ecuador"],["AM-10","EE. UU."],["AM-11","Guatemala"],["AM-12","México"],
+    ["AM-13","Panamá"],["AM-14","Perú"],["AM-15","Paraguay"],["AM-16","Uruguay"],
+    ["EU-01","Alemania"],["EU-02","España"],["EU-03","Francia"],["EU-04","Italia"],
+    ["EU-05","Grecia"],["EU-06","Portugal"],["EU-07","Reino Unido"],["EU-08","Países Bajos"],
+    ["EU-09","Suiza"],["EU-10","Suecia"],["EU-11","Noruega"],["EU-12","Polonia"],
+    ["AS-01","China"],["AS-02","Japón"],["AS-03","India"],["AS-04","Corea del Sur"],
+    ["AS-05","Turquía"],["AS-06","Tailandia"],["AS-07","Israel"],["AS-08","Vietnam"],
+    ["AF-01","Egipto"],["AF-02","Sudáfrica"],["AF-03","Marruecos"],["AF-04","Nigeria"],
+    ["AF-05","Kenia"],["AF-06","Senegal"]
+];
+cartas.forEach(([id, nombre]) => {
+    const cont = document.getElementById("g-" + id.split("-")[0]);
+    const div = document.createElement("div");
+    div.className = "carta-item";
+    div.innerHTML = `
+        <img src="cartas_png/${id}.png" alt="${nombre}">
+        <span class="id">${id}</span>
+        <span class="nombre">${nombre}</span>
+    `;
+    cont.appendChild(div);
+});
+</script>
+</body>
+</html>
