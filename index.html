@@ -587,21 +587,83 @@
         .resultado-ronda .puntos-ronda { color: var(--azul); font-size: 20px; font-weight: 800; display: block; margin-bottom: 2px; }
         .puntaje-barra {
             display: flex; justify-content: space-between; align-items: center;
-            margin: 4px 0 10px; padding: 8px 14px;
-            background: #fcfcfc; border: 1px solid var(--borde);
+            gap: 10px;
+            margin: 4px 0 14px; padding: 10px 16px;
+            background: linear-gradient(135deg, #fff8dc 0%, #ffe8a3 100%);
+            border: 2px solid #f0c44c;
             border-radius: 999px;
             font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
-            text-transform: uppercase; color: var(--gris);
+            text-transform: uppercase; color: #8a6d1a;
+            box-shadow: 0 4px 12px rgba(240, 196, 76, 0.25);
         }
-        .puntaje-barra .total { color: var(--azul); font-size: 16px; letter-spacing: 0.5px; }
+        .puntaje-barra .etiqueta { display: inline-flex; align-items: center; gap: 6px; }
+        .puntaje-barra .etiqueta svg { width: 16px; height: 16px; color: #d4a017; }
+        .puntaje-barra .total {
+            color: #1e4a8f; font-size: 22px; letter-spacing: 0; font-weight: 900;
+            background: #fff; padding: 2px 12px; border-radius: 999px;
+            box-shadow: inset 0 0 0 2px #ffd966;
+            min-width: 34px; text-align: center;
+            margin: 0 auto 0 4px;
+        }
         .puntaje-barra button {
-            background: transparent; border: none; color: var(--gris);
-            font-family: inherit; font-size: 10px; font-weight: 700;
+            background: rgba(255,255,255,0.6); border: 1px solid #e0b84c; color: #8a6d1a;
+            font-family: inherit; font-size: 9.5px; font-weight: 800;
             letter-spacing: 1px; text-transform: uppercase;
-            cursor: pointer; padding: 2px 6px; border-radius: 6px;
+            cursor: pointer; padding: 4px 9px; border-radius: 999px;
             transition: background 0.15s, color 0.15s;
         }
-        .puntaje-barra button:hover { background: #f1f2f6; color: var(--texto); }
+        .puntaje-barra button:hover { background: #fff; color: #5a4510; }
+
+        /* Puntaje destacado en la página principal */
+        .puntaje-principal {
+            display: inline-flex; align-items: center; gap: 12px;
+            padding: 10px 18px 10px 14px;
+            background: linear-gradient(135deg, #fff8dc 0%, #ffe8a3 100%);
+            border: 2px solid #f0c44c;
+            border-radius: 999px;
+            box-shadow: 0 6px 18px rgba(240, 196, 76, 0.3);
+            margin-bottom: 10px;
+        }
+        .puntaje-principal .icono {
+            width: 34px; height: 34px;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: #fff; border-radius: 50%;
+            box-shadow: inset 0 0 0 2px #ffd966;
+            color: #d4a017;
+        }
+        .puntaje-principal .icono svg { width: 20px; height: 20px; }
+        .puntaje-principal .texto {
+            display: flex; flex-direction: column; line-height: 1.1;
+        }
+        .puntaje-principal .etiqueta {
+            font-size: 10px; font-weight: 800; letter-spacing: 1.8px;
+            text-transform: uppercase; color: #8a6d1a;
+        }
+        .puntaje-principal .valor {
+            font-size: 26px; font-weight: 900; color: #1e4a8f;
+            font-variant-numeric: tabular-nums;
+        }
+        .puntaje-principal .btn-reset-principal {
+            background: rgba(255,255,255,0.7); border: 1px solid #e0b84c; color: #8a6d1a;
+            font-family: inherit; font-size: 9.5px; font-weight: 800;
+            letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; padding: 5px 10px; border-radius: 999px;
+            transition: background 0.15s, color 0.15s;
+            margin-left: 4px;
+        }
+        .puntaje-principal .btn-reset-principal:hover { background: #fff; color: #5a4510; }
+        .puntaje-principal .valor.palpita { animation: palpitaPuntaje 0.55s ease-out; }
+        @keyframes palpitaPuntaje {
+            0%   { transform: scale(1);   color: #1e4a8f; }
+            35%  { transform: scale(1.28); color: #d4a017; }
+            100% { transform: scale(1);   color: #1e4a8f; }
+        }
+        @media (max-width: 520px) {
+            .puntaje-principal { padding: 8px 14px 8px 10px; gap: 10px; }
+            .puntaje-principal .icono { width: 30px; height: 30px; }
+            .puntaje-principal .valor { font-size: 22px; }
+            .puntaje-principal .etiqueta { font-size: 9px; letter-spacing: 1.4px; }
+        }
         @media (max-width: 520px) {
             .bandera-adivina { width: 130px; }
             .quiz-campo input { font-size: 13px; padding: 9px 32px 9px 10px; }
@@ -674,6 +736,18 @@
 
     <!-- Botón "A jugar" (bajo el buscador) -->
     <div class="caja-jugar">
+        <div class="puntaje-principal" id="puntajePrincipal">
+            <span class="icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l2.39 5.32L20 8.27l-4.06 3.94L17.18 18 12 15.27 6.82 18l1.24-5.79L4 8.27l5.61-.95L12 2z"/>
+                </svg>
+            </span>
+            <div class="texto">
+                <span class="etiqueta">Puntaje total</span>
+                <span class="valor" id="puntajePrincipalValor">0</span>
+            </div>
+            <button type="button" class="btn-reset-principal" id="btnReiniciarPuntajePrincipal" title="Reiniciar puntaje">Reiniciar</button>
+        </div>
         <button id="btnJugar" class="btn-jugar-grande" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="3.5"/>
@@ -777,7 +851,12 @@
             <button class="btn-cerrar-modal" id="btnCerrarJugar" title="Cerrar" aria-label="Cerrar">✕</button>
 
             <div class="puntaje-barra" id="puntajeBarra">
-                <span>Puntaje total</span>
+                <span class="etiqueta">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2l2.39 5.32L20 8.27l-4.06 3.94L17.18 18 12 15.27 6.82 18l1.24-5.79L4 8.27l5.61-.95L12 2z"/>
+                    </svg>
+                    Puntaje total
+                </span>
                 <span class="total" id="puntajeTotal">0</span>
                 <button type="button" id="btnReiniciarPuntaje" title="Reiniciar puntaje">Reiniciar</button>
             </div>
@@ -1177,14 +1256,34 @@
             try { localStorage.setItem(KEY_PUNTAJE, String(v)); } catch (e) {}
         }
         function actualizarPuntajeUI() {
-            document.getElementById('puntajeTotal').innerText = leerPuntaje();
+            const p = leerPuntaje();
+            const elModal = document.getElementById('puntajeTotal');
+            const elPrincipal = document.getElementById('puntajePrincipalValor');
+            if (elModal) elModal.innerText = p;
+            if (elPrincipal) {
+                elPrincipal.innerText = p;
+                // pequeña animación cuando cambia
+                elPrincipal.classList.remove('palpita');
+                void elPrincipal.offsetWidth;
+                elPrincipal.classList.add('palpita');
+            }
         }
         actualizarPuntajeUI();
 
-        document.getElementById('btnReiniciarPuntaje').onclick = () => {
+        function reiniciarPuntaje() {
+            if (!confirm('¿Reiniciar el puntaje a 0?')) return;
             guardarPuntaje(0);
             actualizarPuntajeUI();
-        };
+        }
+        const btnResetModal = document.getElementById('btnReiniciarPuntaje');
+        const btnResetPrincipal = document.getElementById('btnReiniciarPuntajePrincipal');
+        if (btnResetModal) btnResetModal.onclick = reiniciarPuntaje;
+        if (btnResetPrincipal) btnResetPrincipal.onclick = reiniciarPuntaje;
+
+        // Sincroniza si otra pestaña cambia el puntaje
+        window.addEventListener('storage', (e) => {
+            if (e.key === KEY_PUNTAJE) actualizarPuntajeUI();
+        });
 
         function resetQuizUI() {
             ['campoPais', 'campoCap', 'campoCont'].forEach(id => {
