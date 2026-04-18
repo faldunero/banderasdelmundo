@@ -349,7 +349,7 @@
     </button>
 
     <div class="caja-busqueda">
-        <input type="text" id="entradaBusqueda" placeholder="Buscar país o ID...">
+        <input type="text" id="entradaBusqueda" placeholder="Buscar por país o ID (ej: AM-05)">
         <button id="btnReiniciar" type="button" title="Reiniciar búsqueda" aria-label="Reiniciar búsqueda">✕</button>
         <div id="resultados"></div>
     </div>
@@ -423,13 +423,6 @@
             <button id="btnNuevaBusqueda" class="primario">Nueva búsqueda</button>
             <button id="btnCerrar">Cerrar</button>
         </div>
-
-        <footer>
-            <a href="https://ludolab.cl" target="_blank" rel="noopener">LUDOLAB.CL</a> | <span id="txtID"></span>
-            <div style="margin-top:10px; font-size:9px; color:#d1d8e0;">
-                Mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:inherit;">OpenStreetMap</a> contributors
-            </div>
-        </footer>
     </div>
 
     <!-- Modal: Instrucciones del juego -->
@@ -528,6 +521,9 @@
             <img src="imagenes/logotipo.png" alt="ludolab.cl — Juega, Aprende, Explora">
         </a>
         <span class="tagline">© Ludolab · Juega · Aprende · Explora</span>
+        <span class="tagline" style="margin-top:6px; font-size:9px; letter-spacing:1px; color:#d1d8e0;">
+            Mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:inherit;">OpenStreetMap</a> contributors
+        </span>
     </footer>
 
     <script>
@@ -722,7 +718,6 @@
             document.getElementById('txtPob').innerText = p.pob;
             document.getElementById('txtIndep').innerText = p.ind;
             document.getElementById('txtColores').innerText = p.col;
-            document.getElementById('txtID').innerText = `FICHA ${p.id}`;
         }
 
         // --- Listeners --------------------------------------------------
