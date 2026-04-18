@@ -588,13 +588,13 @@
         .puntaje-barra {
             display: flex; justify-content: space-between; align-items: center;
             gap: 10px;
-            margin: 4px 0 14px; padding: 10px 16px;
-            background: linear-gradient(135deg, #fff8dc 0%, #ffe8a3 100%);
-            border: 2px solid #f0c44c;
+            margin: 28px 44px 14px 0; padding: 8px 12px 8px 14px;
+            background: linear-gradient(135deg, #fff1b8 0%, #ffd966 100%);
+            border: 2px solid #e0b84c;
             border-radius: 999px;
-            font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
-            text-transform: uppercase; color: #8a6d1a;
-            box-shadow: 0 4px 12px rgba(240, 196, 76, 0.25);
+            font-size: 10.5px; font-weight: 800; letter-spacing: 1.1px;
+            text-transform: uppercase; color: #7a5f10;
+            box-shadow: 0 4px 12px rgba(240, 196, 76, 0.3);
         }
         .puntaje-barra .etiqueta { display: inline-flex; align-items: center; gap: 6px; }
         .puntaje-barra .etiqueta svg { width: 16px; height: 16px; color: #d4a017; }
@@ -772,6 +772,8 @@
         <div class="grid-miniaturas" id="gal-AS"></div>
         <h2>África</h2>
         <div class="grid-miniaturas" id="gal-AF"></div>
+        <h2>Oceanía</h2>
+        <div class="grid-miniaturas" id="gal-OC"></div>
     </div>
 
     <!-- VISTA INTERMEDIA: carta del país -->
@@ -957,7 +959,7 @@
 
             <h2>Componentes</h2>
             <ul>
-                <li>72 cartas de países (con la bandera visible al reverso).</li>
+                <li>46 cartas de países de los 5 continentes: América, Europa, Asia, África y Oceanía.</li>
                 <li>8 cartas especiales.</li>
                 <li>1 pozo común (espacio para cartas descartadas).</li>
                 <li>Código QR en cada carta (contenido educativo opcional).</li>
@@ -1088,7 +1090,11 @@
             { id: "AF-03MA", nombre: "Marruecos", cap: "Rabat", cont: "África", ind: "18 de noviembre", pob: "37.5M", muj: 50.4, hom: 49.6, col: "Rojo, Verde", iso: "ma", lat: 34.0209, lon: -6.8417, res: "Marruecos está separado de Europa por apenas 14 km en el Estrecho de Gibraltar. Es famoso por sus zocos coloridos, el desierto del Sahara y ciudades como Marrakech y Fez." },
             { id: "AF-04NG", nombre: "Nigeria", cap: "Abuja", cont: "África", ind: "1 de octubre", pob: "218.5M", muj: 49.3, hom: 50.7, col: "Verde, Blanco", iso: "ng", lat: 9.0765, lon: 7.3986, res: "Nigeria es el país más poblado de África. Es la mayor economía del continente, el principal exportador de petróleo africano y cuna de Nollywood, la industria cinematográfica." },
             { id: "AF-05KE", nombre: "Kenia", cap: "Nairobi", cont: "África", ind: "12 de diciembre", pob: "54.0M", muj: 50.3, hom: 49.7, col: "Negro, Rojo, Verde", iso: "ke", lat: -1.2921, lon: 36.8219, res: "Kenia es cuna del ser humano, con fósiles de millones de años. Famosa por sus safaris en el Masái Mara y por ser potencia mundial en atletismo de fondo." },
-            { id: "AF-06SN", nombre: "Senegal", cap: "Dakar", cont: "África", ind: "4 de abril", pob: "17.3M", muj: 50.1, hom: 49.9, col: "Verde, Amarillo, Rojo", iso: "sn", lat: 14.7167, lon: -17.4677, res: "Senegal es conocido como la puerta de entrada a África Occidental. Famoso por su música (mbalax), por su hospitalidad llamada teranga y por la Isla de Gorée, símbolo de memoria histórica." }
+            { id: "AF-06SN", nombre: "Senegal", cap: "Dakar", cont: "África", ind: "4 de abril", pob: "17.3M", muj: 50.1, hom: 49.9, col: "Verde, Amarillo, Rojo", iso: "sn", lat: 14.7167, lon: -17.4677, res: "Senegal es conocido como la puerta de entrada a África Occidental. Famoso por su música (mbalax), por su hospitalidad llamada teranga y por la Isla de Gorée, símbolo de memoria histórica." },
+            { id: "OC-01AU", nombre: "Australia", cap: "Canberra", cont: "Oceanía", ind: "1 de enero", pob: "26.5M", muj: 50.7, hom: 49.3, col: "Azul, Rojo, Blanco", iso: "au", lat: -35.2809, lon: 149.1300, res: "Australia es el único país que ocupa un continente entero. Famosa por la Gran Barrera de Coral, los canguros, los koalas y la Ópera de Sídney. Su fauna única evolucionó en aislamiento durante millones de años." },
+            { id: "OC-02NZ", nombre: "Nueva Zelanda", cap: "Wellington", cont: "Oceanía", ind: "6 de febrero", pob: "5.2M", muj: 50.6, hom: 49.4, col: "Azul, Rojo, Blanco", iso: "nz", lat: -41.2865, lon: 174.7762, res: "Nueva Zelanda está formada por dos islas principales, Norte y Sur, y fue el último país grande poblado por humanos. Hogar del pueblo maorí, de paisajes de 'El Señor de los Anillos' y del kiwi, un ave nocturna que no vuela." },
+            { id: "OC-03PG", nombre: "Papúa Nueva Guinea", cap: "Port Moresby", cont: "Oceanía", ind: "16 de septiembre", pob: "10.1M", muj: 49.0, hom: 51.0, col: "Rojo, Negro, Amarillo, Blanco", iso: "pg", lat: -9.4438, lon: 147.1803, res: "Papúa Nueva Guinea comparte la isla de Nueva Guinea con Indonesia. Tiene mayor diversidad lingüística del mundo: se hablan más de 800 idiomas. Gran parte del territorio está cubierto por selva tropical." },
+            { id: "OC-04FJ", nombre: "Fiji", cap: "Suva", cont: "Oceanía", ind: "10 de octubre", pob: "0.9M", muj: 49.4, hom: 50.6, col: "Celeste, Azul, Rojo, Blanco, Amarillo", iso: "fj", lat: -18.1416, lon: 178.4419, res: "Fiji es un archipiélago de más de 330 islas en el Pacífico Sur, de las cuales solo un tercio están habitadas. Famoso por sus playas de arena blanca, arrecifes de coral y su cultura mixta melanesia, india y polinesia." }
         ];
 
         const input = document.getElementById('entradaBusqueda');
@@ -1119,7 +1125,7 @@
 
         // --- Galería de miniaturas agrupadas por continente + ordenadas por ID numérico
         (function construirGaleria() {
-            const grupos = { AM: [], EU: [], AS: [], AF: [] };
+            const grupos = { AM: [], EU: [], AS: [], AF: [], OC: [] };
             dbPaises.forEach(p => {
                 const prefijo = p.id.substring(0, 2);
                 if (grupos[prefijo]) grupos[prefijo].push(p);

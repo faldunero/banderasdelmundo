@@ -1,4 +1,3 @@
-// Generado desde BD_banderas.xlsx — clima por país
 const CLIMA = {
   "AM-01AR": {
     "tipo": "Variado",
@@ -167,5 +166,21 @@ const CLIMA = {
   "AF-06SN": {
     "tipo": "Tropical seco",
     "desc": "Sabana con estación seca larga y estación lluviosa corta entre junio y octubre."
+  },
+  "OC-01AU": {
+    "tipo": "Variado",
+    "desc": "Desértico en el interior ('outback'), tropical en el norte y templado suave en las costas del sur y sureste."
+  },
+  "OC-02NZ": {
+    "tipo": "Oceánico templado",
+    "desc": "Suave y lluvioso todo el año; veranos frescos e inviernos nevados en los Alpes del Sur."
+  },
+  "OC-03PG": {
+    "tipo": "Tropical lluvioso",
+    "desc": "Cálido y muy húmedo todo el año, con monzones; más fresco en las montañas del interior."
+  },
+  "OC-04FJ": {
+    "tipo": "Tropical oceánico",
+    "desc": "Cálido y húmedo todo el año, con lluvias abundantes y ciclones tropicales entre noviembre y abril."
   }
 };

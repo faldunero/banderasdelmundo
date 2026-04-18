@@ -179,6 +179,24 @@ SIGNIFICADOS = {
         "bandera": "Los colores panafricanos: verde (esperanza y religión), amarillo (riqueza y progreso) y rojo (la sangre de los mártires). La estrella verde representa la unidad africana.",
         "escudo": "Un león dorado (fuerza y dinastías africanas) y un baobab (el árbol sagrado). La estrella verde aparece arriba. Lema: 'Un peuple, un but, une foi' ('Un pueblo, una meta, una fe')."
     },
+
+    # ================== OCEANÍA ==================
+    "OC-01AU": {
+        "bandera": "Azul, con la Union Jack británica en la esquina, recordando su historia colonial. La estrella grande de 7 puntas representa los 6 estados y los territorios. A la derecha, la constelación de la Cruz del Sur, visible desde el hemisferio sur.",
+        "escudo": "Un canguro y un emú (animales que casi no pueden caminar hacia atrás, símbolo de progreso) sostienen un escudo con los símbolos de los 6 estados, sobre una rama de acacia dorada, flor nacional."
+    },
+    "OC-02NZ": {
+        "bandera": "Azul, con la Union Jack británica en la esquina. Las 4 estrellas rojas con borde blanco representan la Cruz del Sur, constelación visible en el cielo del hemisferio sur.",
+        "escudo": "Una mujer europea con la bandera y un jefe maorí con un bastón tradicional sostienen un escudo con 4 estrellas, un barco, una oveja, trigo, martillos y la Corona, símbolos de la historia y economía del país."
+    },
+    "OC-03PG": {
+        "bandera": "Dividida en diagonal. La mitad roja con un Ave del Paraíso dorada, símbolo nacional famoso por sus plumas. La mitad negra con 5 estrellas blancas que forman la Cruz del Sur.",
+        "escudo": "Un Ave del Paraíso sobre una lanza tradicional y un tambor kundu, representando la cultura, las costumbres ancestrales y la fauna única del país."
+    },
+    "OC-04FJ": {
+        "bandera": "Celeste como el océano Pacífico, con la Union Jack británica recordando el pasado colonial. A la derecha, una parte del escudo nacional con una paloma de la paz, caña de azúcar, coco y bananas.",
+        "escudo": "Una cruz roja con un león dorado arriba sosteniendo un coco, y cuatro secciones con caña de azúcar, un coco, una paloma de la paz y un racimo de bananas: productos y símbolos fundamentales de la isla."
+    },
 }
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-// Generado desde BD_banderas.xlsx — países limítrofes
 const FRONTERAS = {
   "AM-01AR": [
     "Bolivia",
@@ -254,5 +253,11 @@ const FRONTERAS = {
     "Guinea-Bisáu",
     "Malí",
     "Mauritania"
-  ]
+  ],
+  "OC-01AU": [],
+  "OC-02NZ": [],
+  "OC-03PG": [
+    "Indonesia"
+  ],
+  "OC-04FJ": []
 };

@@ -1,5 +1,3 @@
-// Generado desde BD_banderas.xlsx — principales materias primas de exportación
-// No editar a mano. Usa generar_materias.py
 const MATERIAS_EXPORT = {
   "AM-01AR": [
     "Soja",
@@ -252,5 +250,35 @@ const MATERIAS_EXPORT = {
     "fosfatos",
     "pescado",
     "maní"
+  ],
+  "OC-01AU": [
+    "Hierro",
+    "carbón",
+    "oro",
+    "gas natural",
+    "trigo",
+    "lana"
+  ],
+  "OC-02NZ": [
+    "Leche en polvo",
+    "mantequilla",
+    "carne de cordero",
+    "kiwi",
+    "vino"
+  ],
+  "OC-03PG": [
+    "Oro",
+    "cobre",
+    "gas natural",
+    "petróleo",
+    "café",
+    "aceite de palma"
+  ],
+  "OC-04FJ": [
+    "Caña de azúcar",
+    "agua embotellada",
+    "pescado",
+    "coco",
+    "oro"
   ]
 };

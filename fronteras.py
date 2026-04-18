@@ -50,9 +50,15 @@ FRONTERAS = {
     "AF-04NG": ["Benín", "Camerún", "Chad", "Níger"],
     "AF-05KE": ["Etiopía", "Somalia", "Sudán del Sur", "Tanzania", "Uganda"],
     "AF-06SN": ["Gambia", "Guinea", "Guinea-Bisáu", "Malí", "Mauritania"],
+
+    # ================== OCEANÍA ==================
+    "OC-01AU": [],  # isla continente
+    "OC-02NZ": [],  # archipiélago
+    "OC-03PG": ["Indonesia"],
+    "OC-04FJ": [],  # archipiélago
 }
 
 if __name__ == "__main__":
-    assert len(FRONTERAS) == 42
+    assert len(FRONTERAS) == 46
     sin_fronteras = [k for k, v in FRONTERAS.items() if not v]
     print(f"✓ {len(FRONTERAS)} países. Sin fronteras terrestres: {sin_fronteras}")

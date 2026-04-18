@@ -50,8 +50,14 @@ MATERIAS = {
     "AF-04NG": "Petróleo, gas natural, cacao, sésamo",
     "AF-05KE": "Té, café, flores cortadas, horticultura",
     "AF-06SN": "Oro, fosfatos, pescado, maní",
+
+    # ================== OCEANÍA ==================
+    "OC-01AU": "Hierro, carbón, oro, gas natural, trigo, lana",
+    "OC-02NZ": "Leche en polvo, mantequilla, carne de cordero, kiwi, vino",
+    "OC-03PG": "Oro, cobre, gas natural, petróleo, café, aceite de palma",
+    "OC-04FJ": "Caña de azúcar, agua embotellada, pescado, coco, oro",
 }
 
 if __name__ == "__main__":
-    assert len(MATERIAS) == 42
+    assert len(MATERIAS) == 46
     print(f"✓ {len(MATERIAS)} países con materias primas")

@@ -54,8 +54,14 @@ CLIMA = {
     "AF-04NG": {"tipo": "Tropical", "desc": "Ecuatorial húmedo en el sur y sabana más seca en el norte del país."},
     "AF-05KE": {"tipo": "Tropical", "desc": "Cálido todo el año; seco en el norte y más húmedo en las tierras altas centrales."},
     "AF-06SN": {"tipo": "Tropical seco", "desc": "Sabana con estación seca larga y estación lluviosa corta entre junio y octubre."},
+
+    # ================== OCEANÍA ==================
+    "OC-01AU": {"tipo": "Variado", "desc": "Desértico en el interior ('outback'), tropical en el norte y templado suave en las costas del sur y sureste."},
+    "OC-02NZ": {"tipo": "Oceánico templado", "desc": "Suave y lluvioso todo el año; veranos frescos e inviernos nevados en los Alpes del Sur."},
+    "OC-03PG": {"tipo": "Tropical lluvioso", "desc": "Cálido y muy húmedo todo el año, con monzones; más fresco en las montañas del interior."},
+    "OC-04FJ": {"tipo": "Tropical oceánico", "desc": "Cálido y húmedo todo el año, con lluvias abundantes y ciclones tropicales entre noviembre y abril."},
 }
 
 if __name__ == "__main__":
-    assert len(CLIMA) == 42
+    assert len(CLIMA) == 46
     print(f"✓ {len(CLIMA)} países con clima")
