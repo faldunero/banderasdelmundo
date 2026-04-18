@@ -507,6 +507,107 @@
         }
         .acciones-jugar .btn-instrucciones { margin: 0; }
 
+        /* ===== Quiz de 3 preguntas en 'A jugar' ===== */
+        .bandera-adivina {
+            width: 160px; max-width: 55vw;
+            height: auto;
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+            background: #fff;
+            animation: cartaIn 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.25);
+        }
+        .quiz { margin: 12px 0 14px; text-align: left; }
+        .quiz-intro {
+            font-size: 11px; font-weight: 800; letter-spacing: 1.6px;
+            text-transform: uppercase; color: var(--gris);
+            text-align: center; margin: 2px 0 10px;
+        }
+        .quiz-campo {
+            display: flex; flex-direction: column; gap: 4px;
+            margin-bottom: 10px;
+        }
+        .quiz-campo label {
+            font-size: 11px; font-weight: 800; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--texto);
+        }
+        .quiz-campo .input-wrap { position: relative; display: flex; }
+        .quiz-campo input {
+            flex: 1;
+            padding: 10px 36px 10px 12px;
+            border-radius: 10px;
+            border: 1.5px solid var(--borde);
+            font-family: inherit; font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .quiz-campo input:focus { border-color: var(--azul); }
+        .quiz-campo input:disabled { background: #fafbfc; color: var(--texto); }
+        .quiz-campo.correcto input { border-color: #27ae60; background: #f1fbf5; }
+        .quiz-campo.incorrecto input { border-color: #e74c3c; background: #fdf3f2; }
+        .quiz-campo .marca {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            font-weight: 800; font-size: 14px;
+            display: none;
+        }
+        .quiz-campo.correcto .marca { display: block; color: #27ae60; }
+        .quiz-campo.incorrecto .marca { display: block; color: #e74c3c; }
+        .quiz-campo .respuesta-correcta {
+            display: none;
+            font-size: 12px; color: var(--gris); margin-top: 4px;
+        }
+        .quiz-campo.incorrecto .respuesta-correcta { display: block; }
+        .quiz-campo .respuesta-correcta strong { color: #27ae60; }
+        .btn-comprobar {
+            width: 100%;
+            padding: 12px;
+            margin-top: 4px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #27ae60 0%, #1e8e4e 100%);
+            color: #fff;
+            font-family: inherit; font-weight: 800; font-size: 13px;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(39,174,96,0.28);
+            transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+        .btn-comprobar:hover { transform: translateY(-1px); filter: brightness(1.05); }
+        .btn-comprobar:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+        .resultado-ronda {
+            margin: 10px 0 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px; font-weight: 700; color: var(--texto);
+            background: #f9fafb; border: 1px solid var(--borde);
+            display: none;
+        }
+        .resultado-ronda.visible { display: block; }
+        .resultado-ronda .puntos-ronda { color: var(--azul); font-size: 20px; font-weight: 800; display: block; margin-bottom: 2px; }
+        .puntaje-barra {
+            display: flex; justify-content: space-between; align-items: center;
+            margin: 4px 0 10px; padding: 8px 14px;
+            background: #fcfcfc; border: 1px solid var(--borde);
+            border-radius: 999px;
+            font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
+            text-transform: uppercase; color: var(--gris);
+        }
+        .puntaje-barra .total { color: var(--azul); font-size: 16px; letter-spacing: 0.5px; }
+        .puntaje-barra button {
+            background: transparent; border: none; color: var(--gris);
+            font-family: inherit; font-size: 10px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; padding: 2px 6px; border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .puntaje-barra button:hover { background: #f1f2f6; color: var(--texto); }
+        @media (max-width: 520px) {
+            .bandera-adivina { width: 130px; }
+            .quiz-campo input { font-size: 13px; padding: 9px 32px 9px 10px; }
+            .quiz-campo label { font-size: 10.5px; }
+        }
+
         /* ===== Modal de significado (bandera / escudo) ===== */
         .modal-caja-simbolo {
             max-width: 460px;
@@ -674,12 +775,63 @@
     <div class="modal-overlay" id="modalJugar" role="dialog" aria-modal="true" aria-labelledby="tituloJugar">
         <div class="modal-caja modal-caja-jugar">
             <button class="btn-cerrar-modal" id="btnCerrarJugar" title="Cerrar" aria-label="Cerrar">✕</button>
+
+            <div class="puntaje-barra" id="puntajeBarra">
+                <span>Puntaje total</span>
+                <span class="total" id="puntajeTotal">0</span>
+                <button type="button" id="btnReiniciarPuntaje" title="Reiniciar puntaje">Reiniciar</button>
+            </div>
+
             <span class="etiqueta-tipo" id="tipoCartaRobada">Carta de país</span>
             <h1 id="tituloJugar">Te tocó…</h1>
-            <div class="carta-robada-wrap">
+
+            <!-- Vista 'adivina': solo bandera -->
+            <div class="carta-robada-wrap" id="zonaBandera" style="display:none;">
+                <img id="banderaAdivina" class="bandera-adivina" src="" alt="">
+            </div>
+
+            <!-- Vista carta completa -->
+            <div class="carta-robada-wrap" id="zonaCarta">
                 <img id="cartaRobada" class="carta-robada" src="" alt="">
             </div>
+
+            <!-- Quiz (solo cartas de país) -->
+            <form class="quiz" id="quizPais" style="display:none;" autocomplete="off">
+                <p class="quiz-intro">Mira la bandera y adivina:</p>
+                <div class="quiz-campo" id="campoPais">
+                    <label for="respPais">1. ¿De qué país es?</label>
+                    <div class="input-wrap">
+                        <input type="text" id="respPais" name="respPais" placeholder="Nombre del país">
+                        <span class="marca" id="marcaPais"></span>
+                    </div>
+                    <span class="respuesta-correcta">Respuesta: <strong id="correctoPais"></strong></span>
+                </div>
+                <div class="quiz-campo" id="campoCap">
+                    <label for="respCap">2. ¿Qué capital tiene?</label>
+                    <div class="input-wrap">
+                        <input type="text" id="respCap" name="respCap" placeholder="Nombre de la capital">
+                        <span class="marca" id="marcaCap"></span>
+                    </div>
+                    <span class="respuesta-correcta">Respuesta: <strong id="correctoCap"></strong></span>
+                </div>
+                <div class="quiz-campo" id="campoCont">
+                    <label for="respCont">3. ¿Qué continente es?</label>
+                    <div class="input-wrap">
+                        <input type="text" id="respCont" name="respCont" placeholder="América, Europa, Asia o África">
+                        <span class="marca" id="marcaCont"></span>
+                    </div>
+                    <span class="respuesta-correcta">Respuesta: <strong id="correctoCont"></strong></span>
+                </div>
+                <button type="submit" class="btn-comprobar" id="btnComprobar">Comprobar</button>
+            </form>
+
+            <div class="resultado-ronda" id="resultadoRonda">
+                <span class="puntos-ronda" id="puntosRonda">0 / 3</span>
+                <span id="textoRonda">Respuestas correctas</span>
+            </div>
+
             <p class="descripcion-carta" id="descCartaRobada"></p>
+
             <div class="acciones-jugar">
                 <button id="btnOtraCarta" class="btn-instrucciones jugar" type="button">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -995,13 +1147,73 @@
 
         // --- Simulación de juego: "A jugar" -----------------------------
         // Mazo real: 72 cartas de país + 8 cartas especiales (Pierde 3, Descarta 3, Robo 2)
+
+        // Normaliza texto: minúsculas, sin tildes, sin puntuación repetida, trim
+        function normalizar(s) {
+            return (s || '').toString().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/\./g, '').replace(/\s+/g, ' ').trim();
+        }
+        // Alias para nombres con múltiples variantes aceptables
+        const ALIAS_PAIS = {
+            "AM-10US": ["estados unidos", "ee uu", "eeuu", "usa", "estados unidos de america"],
+            "EU-07GB": ["reino unido", "uk", "gran bretana", "inglaterra"],
+            "EU-08NL": ["paises bajos", "holanda", "netherlands"],
+            "AS-04KR": ["corea del sur", "corea", "sur corea"],
+        };
+        function respuestasValidas(p) {
+            const base = [normalizar(p.nombre)];
+            const extra = (ALIAS_PAIS[p.id] || []).map(normalizar);
+            return [...new Set([...base, ...extra])];
+        }
+
+        // Puntaje acumulado (localStorage)
+        const KEY_PUNTAJE = 'banderas_puntaje_total';
+        function leerPuntaje() {
+            try { return parseInt(localStorage.getItem(KEY_PUNTAJE) || '0', 10) || 0; }
+            catch (e) { return 0; }
+        }
+        function guardarPuntaje(v) {
+            try { localStorage.setItem(KEY_PUNTAJE, String(v)); } catch (e) {}
+        }
+        function actualizarPuntajeUI() {
+            document.getElementById('puntajeTotal').innerText = leerPuntaje();
+        }
+        actualizarPuntajeUI();
+
+        document.getElementById('btnReiniciarPuntaje').onclick = () => {
+            guardarPuntaje(0);
+            actualizarPuntajeUI();
+        };
+
+        function resetQuizUI() {
+            ['campoPais', 'campoCap', 'campoCont'].forEach(id => {
+                const c = document.getElementById(id);
+                c.classList.remove('correcto', 'incorrecto');
+                const input = c.querySelector('input');
+                input.disabled = false;
+                input.value = '';
+            });
+            const btn = document.getElementById('btnComprobar');
+            btn.disabled = false;
+            btn.innerText = 'Comprobar';
+            document.getElementById('resultadoRonda').classList.remove('visible');
+        }
+
         function sacarCartaAlAzar() {
             const esEspecial = Math.random() < (8 / 80);
-            const img = document.getElementById('cartaRobada');
-            // reinicia la animación en cada tirada
-            img.style.animation = 'none';
-            void img.offsetWidth;
-            img.style.animation = '';
+            const imgCarta = document.getElementById('cartaRobada');
+            const imgBan = document.getElementById('banderaAdivina');
+            const zonaCarta = document.getElementById('zonaCarta');
+            const zonaBan = document.getElementById('zonaBandera');
+            const quiz = document.getElementById('quizPais');
+            const desc = document.getElementById('descCartaRobada');
+
+            // reinicia animación
+            imgCarta.style.animation = 'none'; void imgCarta.offsetWidth; imgCarta.style.animation = '';
+            imgBan.style.animation = 'none'; void imgBan.offsetWidth; imgBan.style.animation = '';
+
+            resetQuizUI();
 
             if (esEspecial) {
                 const totalPeso = cartasEspeciales.reduce((s, c) => s + c.peso, 0);
@@ -1015,28 +1227,95 @@
                 document.getElementById('tipoCartaRobada').innerText = 'Carta de truco';
                 document.getElementById('tipoCartaRobada').classList.add('truco');
                 document.getElementById('tituloJugar').innerText = '¡Carta especial!';
-                img.src = `cartas_especiales_png/${carta.archivo}`;
-                img.alt = carta.nombre;
-                img.classList.remove('clickable');
-                img.onclick = null;
-                document.getElementById('descCartaRobada').innerHTML = carta.desc;
+                imgCarta.src = `cartas_especiales_png/${carta.archivo}`;
+                imgCarta.alt = carta.nombre;
+                imgCarta.classList.remove('clickable');
+                imgCarta.onclick = null;
+                desc.innerHTML = carta.desc;
+                desc.style.display = '';
+                zonaBan.style.display = 'none';
+                zonaCarta.style.display = '';
+                quiz.style.display = 'none';
                 document.getElementById('btnVerDetalleRobada').style.display = 'none';
             } else {
                 const p = dbPaises[Math.floor(Math.random() * dbPaises.length)];
                 paisSacado = p;
                 document.getElementById('tipoCartaRobada').innerText = 'Carta de país';
                 document.getElementById('tipoCartaRobada').classList.remove('truco');
-                document.getElementById('tituloJugar').innerText = '¡Te tocó!';
+                document.getElementById('tituloJugar').innerText = 'Adivina';
+
+                // En modo adivina: solo bandera visible, carta oculta
+                imgBan.src = `banderas_svg/${p.iso}.svg`;
+                imgBan.alt = 'Bandera a adivinar';
+                zonaBan.style.display = 'flex';
+                zonaCarta.style.display = 'none';
+                desc.style.display = 'none';
+                quiz.style.display = 'block';
+                document.getElementById('btnVerDetalleRobada').style.display = 'none';
+
+                // Preparar la carta completa por si luego se revela
                 const idCarta = p.id.substring(0, 5);
-                img.src = `cartas_png/${idCarta}.png`;
-                img.alt = `Carta ${idCarta} — ${p.nombre}`;
-                img.classList.add('clickable');
-                img.onclick = () => verDetalleRobada();
-                document.getElementById('descCartaRobada').innerHTML =
-                    'Di en voz alta <strong>país</strong>, <strong>capital</strong> y <strong>continente</strong>. Pincha la carta o "Ver detalle" para verificar.';
-                document.getElementById('btnVerDetalleRobada').style.display = 'inline-flex';
+                imgCarta.src = `cartas_png/${idCarta}.png`;
+                imgCarta.alt = `Carta ${idCarta} — ${p.nombre}`;
+                imgCarta.classList.add('clickable');
+                imgCarta.onclick = () => verDetalleRobada();
+
+                setTimeout(() => document.getElementById('respPais').focus(), 50);
             }
         }
+
+        function comprobarQuiz(ev) {
+            ev.preventDefault();
+            if (!paisSacado) return;
+            const p = paisSacado;
+            const resp = {
+                pais:  normalizar(document.getElementById('respPais').value),
+                cap:   normalizar(document.getElementById('respCap').value),
+                cont:  normalizar(document.getElementById('respCont').value),
+            };
+            const ok = {
+                pais:  respuestasValidas(p).includes(resp.pais) && resp.pais.length > 0,
+                cap:   resp.cap.length > 0 && resp.cap === normalizar(p.cap),
+                cont:  resp.cont.length > 0 && resp.cont === normalizar(p.cont),
+            };
+
+            // Marcas y feedback por campo
+            const campos = [
+                { id: 'campoPais', ok: ok.pais, correcta: p.nombre, marca: 'marcaPais', target: 'correctoPais' },
+                { id: 'campoCap',  ok: ok.cap,  correcta: p.cap,    marca: 'marcaCap',  target: 'correctoCap'  },
+                { id: 'campoCont', ok: ok.cont, correcta: p.cont,   marca: 'marcaCont', target: 'correctoCont' },
+            ];
+            campos.forEach(c => {
+                const div = document.getElementById(c.id);
+                div.classList.add(c.ok ? 'correcto' : 'incorrecto');
+                div.querySelector('input').disabled = true;
+                document.getElementById(c.marca).innerText = c.ok ? '✓' : '✕';
+                document.getElementById(c.target).innerText = c.correcta;
+            });
+
+            const puntos = (ok.pais ? 1 : 0) + (ok.cap ? 1 : 0) + (ok.cont ? 1 : 0);
+            const nuevoTotal = leerPuntaje() + puntos;
+            guardarPuntaje(nuevoTotal);
+            actualizarPuntajeUI();
+
+            document.getElementById('puntosRonda').innerText = `${puntos} / 3`;
+            const msg = puntos === 3 ? '¡Todas correctas! +3 puntos'
+                      : puntos === 2 ? 'Muy bien, +2 puntos'
+                      : puntos === 1 ? 'Te llevas +1 punto'
+                      : 'Sigue intentando, 0 puntos esta ronda';
+            document.getElementById('textoRonda').innerText = msg;
+            document.getElementById('resultadoRonda').classList.add('visible');
+
+            // Revelar carta completa
+            document.getElementById('zonaBandera').style.display = 'none';
+            document.getElementById('zonaCarta').style.display = 'flex';
+            document.getElementById('btnVerDetalleRobada').style.display = 'inline-flex';
+
+            const btn = document.getElementById('btnComprobar');
+            btn.disabled = true;
+            btn.innerText = 'Comprobado';
+        }
+        document.getElementById('quizPais').addEventListener('submit', comprobarQuiz);
 
         function abrirModalJugar() {
             sacarCartaAlAzar();
