@@ -771,6 +771,59 @@
             text-align: center; min-height: 16px;
         }
 
+        /* Opciones tras 1/3 aciertos + Riesgo */
+        .opciones-ronda {
+            margin-top: 10px; padding: 12px; border-radius: 12px;
+            background: #fffbf0; border: 1.5px solid #fde4b8;
+        }
+        .opciones-ronda .quiz-intro { margin: 0 0 8px; font-size: 12px; font-weight: 700; color: var(--gris); text-align: center; }
+        .opciones-botones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .btn-opcion-segura, .btn-opcion-riesgo {
+            flex: 1 1 140px; padding: 10px 12px; border-radius: 10px;
+            font-family: inherit; font-weight: 800; font-size: 11px;
+            letter-spacing: 0.6px; text-transform: uppercase; cursor: pointer;
+            transition: all 0.15s; border: 2px solid transparent;
+        }
+        .btn-opcion-segura { background: #e8f4fd; color: #1f5bbf; border-color: #b6dcfa; }
+        .btn-opcion-segura:hover { background: #d4e9fb; }
+        .btn-opcion-riesgo { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: #fff; }
+        .btn-opcion-riesgo:hover { filter: brightness(1.08); }
+        .btn-opcion-segura small, .btn-opcion-riesgo small {
+            display: block; font-weight: 600; font-size: 9px; letter-spacing: 0.4px;
+            text-transform: none; margin-top: 3px; opacity: 0.85;
+        }
+        .riesgo-box {
+            margin-top: 10px; padding: 12px; border-radius: 12px;
+            background: #fff4e6; border: 1.5px solid #f7c97a;
+        }
+        .riesgo-box .quiz-intro { margin: 0 0 8px; font-size: 12px; font-weight: 700; color: #b7791f; text-align: center; }
+        .riesgo-campos { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+        .btn-riesgo-campo {
+            padding: 7px 12px; border-radius: 999px; border: 1.5px solid #f7c97a;
+            background: #fff; color: #b7791f;
+            font-family: inherit; font-weight: 700; font-size: 11px;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .btn-riesgo-campo:hover { background: #fff8ec; }
+        .btn-riesgo-campo.activo {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #fff; border-color: transparent;
+        }
+        .riesgo-reintento { display: none; }
+        .riesgo-reintento.visible { display: block; }
+        .riesgo-reintento input {
+            width: 100%; padding: 10px 12px; border: 2px solid #f7c97a; border-radius: 8px;
+            font-size: 13px; font-family: inherit;
+        }
+        .riesgo-reintento input:focus { border-color: #e67e22; outline: none; }
+        .riesgo-reintento button {
+            width: 100%; margin-top: 8px; padding: 10px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%); color: #fff;
+            font-family: inherit; font-weight: 800; font-size: 12px; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer; transition: all 0.15s;
+        }
+        .riesgo-reintento button:hover { filter: brightness(1.08); }
+
         /* Fase Final - Podio */
         .podio-titulo {
             text-align: center; font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
@@ -1154,6 +1207,29 @@
                         <span id="textoRonda">Respuestas correctas</span>
                     </div>
 
+                    <!-- Opciones cuando el jugador acertó solo 1 de 3 -->
+                    <div class="opciones-ronda" id="opcionesRonda" style="display:none;">
+                        <p class="quiz-intro">Acertaste 1 de 3. Elige una opción:</p>
+                        <div class="opciones-botones">
+                            <button type="button" class="btn-opcion-segura" id="btnOpcionSegura">
+                                Segura<small>La carta va al pozo</small>
+                            </button>
+                            <button type="button" class="btn-opcion-riesgo" id="btnOpcionRiesgo">
+                                Riesgo<small>Reintenta 1 de las 2 fallidas</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bloque de re-intento tras elegir "Riesgo" -->
+                    <div class="riesgo-box" id="riesgoBox" style="display:none;">
+                        <p class="quiz-intro">Elige qué respuesta reintentar:</p>
+                        <div class="riesgo-campos" id="riesgoCampos"></div>
+                        <div class="riesgo-reintento" id="riesgoReintento">
+                            <input type="text" id="respRiesgo" placeholder="Tu respuesta" autocomplete="off">
+                            <button type="button" id="btnComprobarRiesgo">Comprobar</button>
+                        </div>
+                    </div>
+
                     <p class="descripcion-carta" id="descCartaRobada"></p>
 
                     <div class="acciones-turno" id="accionesTurno" style="display:none;">
@@ -1531,8 +1607,9 @@
                 if (!raw) return null;
                 const g = JSON.parse(raw);
                 if (!g.jugadores || !Array.isArray(g.jugadores)) return null;
-                // Migración: si el juego viejo no tiene baraja (formato pre-cartas-especiales), descartamos
-                if (!g.baraja || !Array.isArray(g.baraja)) return null;
+                // Formato vigente: mazo (array) + pozo (array) + jugadores con cartas[]
+                if (!Array.isArray(g.mazo) || !Array.isArray(g.pozo)) return null;
+                if (!g.jugadores.every(j => Array.isArray(j.cartas))) return null;
                 return g;
             } catch (e) { return null; }
         }
@@ -1550,14 +1627,15 @@
             const valor = document.getElementById('puntajePrincipalValor');
             if (!JUEGO) { banner.style.display = 'none'; return; }
             banner.style.display = 'inline-flex';
+            const contar = j => (j.cartas ? j.cartas.length : 0);
             if (JUEGO.estado === 'jugando') {
-                const lider = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje)[0];
+                const lider = [...JUEGO.jugadores].sort((a,b) => contar(b) - contar(a))[0];
                 etiqueta.innerText = 'Partida en curso';
-                valor.innerText = `${lider.nombre}: ${lider.puntaje} pts`;
+                valor.innerText = `${lider.nombre}: ${contar(lider)} cartas`;
             } else if (JUEGO.estado === 'finalizado') {
-                const lider = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje)[0];
+                const lider = [...JUEGO.jugadores].sort((a,b) => contar(b) - contar(a))[0];
                 etiqueta.innerText = 'Última partida';
-                valor.innerText = `Ganó ${lider.nombre} · ${lider.puntaje} pts`;
+                valor.innerText = `Ganó ${lider.nombre} · ${contar(lider)} cartas`;
             }
             valor.classList.remove('palpita');
             void valor.offsetWidth;
@@ -1610,13 +1688,17 @@
             const nombres = inputs.map((inp, i) => (inp.value.trim() || `Jugador ${i+1}`));
             JUEGO = {
                 estado: 'jugando',
-                jugadores: nombres.map(n => ({ nombre: n, puntaje: 0 })),
+                jugadores: nombres.map(n => ({
+                    nombre: n,
+                    cartas: [],        // IDs de cartas de país ganadas
+                    saltar: false,     // pierde su próximo turno
+                })),
                 turno: 0,
-                baraja: generarBaraja(),   // mazo pre-mezclado (paises + cartas especiales)
-                posicion: 0,               // índice de próxima carta a robar
-                cartaActual: null,         // { tipo: 'pais'|'especial', id }
+                mazo: generarBaraja(),  // pila boca abajo (paises + especiales)
+                pozo: [],               // cartas no ganadas (solo IDs de país)
+                cartaActual: null,      // { tipo: 'pais'|'especial', id }
                 rondaComprobada: false,
-                skipProximo: false,        // si true, el siguiente jugador pierde su turno
+                rondaDecidida: true,    // false cuando queda pendiente segura/riesgo
             };
             guardarJuego();
             actualizarBannerPrincipal();
@@ -1627,7 +1709,7 @@
         // `paisSacado` se declara antes (línea ~1352) como variable compartida del script.
 
         function cartasEnMazo() {
-            return JUEGO ? (JUEGO.baraja.length - JUEGO.posicion) : 0;
+            return JUEGO ? JUEGO.mazo.length : 0;
         }
 
         function renderFaseJuego() {
@@ -1665,7 +1747,9 @@
             JUEGO.jugadores.forEach((j, i) => {
                 const f = document.createElement('div');
                 f.className = 'jugador-fila' + (i === JUEGO.turno ? ' activo' : '');
-                f.innerHTML = `<span class="nombre">${escapeHtml(j.nombre)}</span><span class="puntos">${j.puntaje}</span>`;
+                const n = (j.cartas ? j.cartas.length : 0);
+                const marca = j.saltar ? ' · salta' : '';
+                f.innerHTML = `<span class="nombre">${escapeHtml(j.nombre)}${marca}</span><span class="puntos">${n} cartas</span>`;
                 cont.appendChild(f);
             });
         }
@@ -1691,6 +1775,8 @@
             document.getElementById('quizPais').style.display = 'block';
             document.getElementById('accionesTurno').style.display = 'none';
             document.getElementById('accionesTruco').style.display = 'none';
+            document.getElementById('opcionesRonda').style.display = 'none';
+            document.getElementById('riesgoBox').style.display = 'none';
 
             const idCarta = p.id.substring(0, 5);
             imgCarta.src = `cartas_png/${idCarta}.png`;
@@ -1712,15 +1798,20 @@
             btn.innerText = 'Comprobar';
             document.getElementById('resultadoRonda').classList.remove('visible');
             document.getElementById('accionesTurno').style.display = 'none';
+            document.getElementById('opcionesRonda').style.display = 'none';
+            document.getElementById('riesgoBox').style.display = 'none';
+            document.getElementById('riesgoReintento').classList.remove('visible');
             setTimeout(() => { const r = document.getElementById('respPais'); if (r) r.focus(); }, 50);
         }
 
         function robarCarta() {
             if (!JUEGO) return;
-            if (cartasEnMazo() <= 0) { finalizarJuego('mazo'); return; }
-            const entry = JUEGO.baraja[JUEGO.posicion++];
+            if (JUEGO.mazo.length === 0) { finalizarJuego('mazo'); return; }
+            // Saca la carta de arriba (boca abajo)
+            const entry = JUEGO.mazo.shift();
             JUEGO.cartaActual = entry;
             JUEGO.rondaComprobada = false;
+            JUEGO.rondaDecidida = true;
             guardarJuego();
 
             document.getElementById('accionRobar').style.display = 'none';
@@ -1829,31 +1920,37 @@
                 JUEGO.rondaComprobada = false;
                 guardarJuego();
                 acciones.style.display = 'none';
-                // Intentar robar otra carta para el mismo jugador
-                if (cartasEnMazo() <= 0) { finalizarJuego('mazo'); return; }
+                if (JUEGO.mazo.length === 0) { finalizarJuego('mazo'); return; }
                 robarCarta();
                 return;
             }
 
             if (idEsp === 'ES-02') {
-                // El siguiente jugador pierde su turno
-                JUEGO.skipProximo = true;
+                // El siguiente jugador pierde su turno (saltar=true en el que venga)
+                const next = (JUEGO.turno + 1) % JUEGO.jugadores.length;
+                JUEGO.jugadores[next].saltar = true;
                 JUEGO.cartaActual = null;
                 JUEGO.rondaComprobada = false;
                 guardarJuego();
                 acciones.style.display = 'none';
+                // Avanzar normal: siguienteTurno consumirá el saltar y avanzará de nuevo
+                // Forzamos accion "avanzar" para el contador
+                document.getElementById('btnSiguienteTurno').dataset.accion = 'avanzar';
                 siguienteTurno();
                 return;
             }
 
             if (idEsp === 'ES-03') {
-                const otros = JUEGO.jugadores.filter((_, i) => i !== JUEGO.turno);
-                if (otros.length === 0) {
-                    // descarta sin efecto
+                const otrosIdx = JUEGO.jugadores
+                    .map((j, i) => i).filter(i => i !== JUEGO.turno);
+                const conCartas = otrosIdx.filter(i => JUEGO.jugadores[i].cartas.length > 0);
+                if (conCartas.length === 0) {
                     JUEGO.cartaActual = null;
                     JUEGO.rondaComprobada = false;
                     guardarJuego();
                     acciones.style.display = 'none';
+                    alert('Ningún otro jugador tiene cartas para descartar. La carta se descarta sin efecto.');
+                    document.getElementById('btnSiguienteTurno').dataset.accion = 'avanzar';
                     siguienteTurno();
                     return;
                 }
@@ -1861,24 +1958,31 @@
                     resultado.innerText = 'Elige al jugador afectado antes de aplicar.';
                     return;
                 }
-                // Descarta carta: el afectado pierde 3 puntos (equivalente a una carta completa).
-                // No bajamos bajo cero.
-                const antes = JUEGO.jugadores[victimaSeleccionada].puntaje;
-                const penal = Math.min(3, antes);
-                JUEGO.jugadores[victimaSeleccionada].puntaje = antes - penal;
+                if (JUEGO.jugadores[victimaSeleccionada].cartas.length === 0) {
+                    resultado.innerText = 'Ese jugador no tiene cartas. Elige a otro.';
+                    return;
+                }
+                // Descarta: saca la última carta ganada y la envía al pozo
+                const cartaPerdida = JUEGO.jugadores[victimaSeleccionada].cartas.pop();
+                JUEGO.pozo.push(cartaPerdida);
                 const nombreVic = JUEGO.jugadores[victimaSeleccionada].nombre;
+                const paisP = dbPaises.find(x => x.id === cartaPerdida);
                 renderTablaJugadores();
                 actualizarBannerPrincipal();
                 JUEGO.cartaActual = null;
                 JUEGO.rondaComprobada = false;
                 guardarJuego();
                 acciones.style.display = 'none';
-                // Feedback rápido y paso de turno
-                alert(`${nombreVic} pierde ${penal} punto${penal === 1 ? '' : 's'}.`);
+                alert(`${nombreVic} pierde su carta de ${paisP ? paisP.nombre : cartaPerdida} (va al pozo).`);
+                document.getElementById('btnSiguienteTurno').dataset.accion = 'avanzar';
                 siguienteTurno();
                 return;
             }
         }
+
+        // Estado de riesgo (si el jugador eligió re-intentar)
+        let riesgoCamposFallidos = [];  // lista de { key:'pais'|'cap'|'cont', label, correctas: [normalizadas] }
+        let riesgoElegido = null;       // el objeto elegido a reintentar
 
         function comprobarQuiz(ev) {
             ev.preventDefault();
@@ -1896,9 +2000,9 @@
             };
 
             const campos = [
-                { id: 'campoPais', ok: ok.pais, correcta: p.nombre, marca: 'marcaPais', target: 'correctoPais' },
-                { id: 'campoCap',  ok: ok.cap,  correcta: p.cap,    marca: 'marcaCap',  target: 'correctoCap'  },
-                { id: 'campoCont', ok: ok.cont, correcta: p.cont,   marca: 'marcaCont', target: 'correctoCont' },
+                { key: 'pais', label: '¿Qué país?',     id: 'campoPais', ok: ok.pais, correcta: p.nombre, marca: 'marcaPais', target: 'correctoPais', correctas: respuestasValidas(p) },
+                { key: 'cap',  label: '¿Qué capital?',  id: 'campoCap',  ok: ok.cap,  correcta: p.cap,    marca: 'marcaCap',  target: 'correctoCap',  correctas: [normalizar(p.cap)] },
+                { key: 'cont', label: '¿Qué continente?', id: 'campoCont', ok: ok.cont, correcta: p.cont,   marca: 'marcaCont', target: 'correctoCont', correctas: [normalizar(p.cont)] },
             ];
             campos.forEach(c => {
                 const div = document.getElementById(c.id);
@@ -1909,39 +2013,146 @@
             });
 
             const puntos = (ok.pais ? 1 : 0) + (ok.cap ? 1 : 0) + (ok.cont ? 1 : 0);
-            JUEGO.jugadores[JUEGO.turno].puntaje += puntos;
             JUEGO.rondaComprobada = true;
-            guardarJuego();
-            renderTablaJugadores();
-            actualizarBannerPrincipal();
+            JUEGO.rondaDecidida = (puntos !== 1); // si es 1, queda pendiente decisión segura/riesgo
 
             document.getElementById('puntosRonda').innerText = `${puntos} / 3`;
             const nombre = JUEGO.jugadores[JUEGO.turno].nombre;
-            const msg = puntos === 3 ? `¡${nombre} acertó todas! +3 puntos`
-                      : puntos === 2 ? `Muy bien ${nombre}, +2 puntos`
-                      : puntos === 1 ? `${nombre} se lleva +1 punto`
-                      : `${nombre} no sumó esta ronda`;
-            document.getElementById('textoRonda').innerText = msg;
             document.getElementById('resultadoRonda').classList.add('visible');
-
             document.getElementById('zonaBandera').style.display = 'none';
             document.getElementById('zonaCarta').style.display = 'flex';
-            document.getElementById('accionesTurno').style.display = 'flex';
 
             const btn = document.getElementById('btnComprobar');
             btn.disabled = true;
             btn.innerText = 'Comprobado';
 
-            // Si ya no quedan cartas en el mazo, avisa que el "Siguiente" cierra el juego
-            if (cartasEnMazo() <= 0) {
-                document.getElementById('btnSiguienteTurno').innerText = 'Ver resultado final';
+            const siguienteBtn = document.getElementById('btnSiguienteTurno');
+            const accionesTurno = document.getElementById('accionesTurno');
+            const opcionesRonda = document.getElementById('opcionesRonda');
+
+            if (puntos === 3) {
+                // Se queda con la carta y juega otro turno
+                JUEGO.jugadores[JUEGO.turno].cartas.push(p.id);
+                document.getElementById('textoRonda').innerText = `¡${nombre} acertó todas! Se queda con la carta y juega otro turno.`;
+                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Jugar otro turno' : 'Ver resultado final';
+                siguienteBtn.dataset.accion = 'otroTurno';
+                opcionesRonda.style.display = 'none';
+                accionesTurno.style.display = 'flex';
+            } else if (puntos === 2) {
+                JUEGO.jugadores[JUEGO.turno].cartas.push(p.id);
+                document.getElementById('textoRonda').innerText = `Muy bien ${nombre}, acertaste 2 de 3. Te quedas con la carta.`;
+                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+                siguienteBtn.dataset.accion = 'avanzar';
+                opcionesRonda.style.display = 'none';
+                accionesTurno.style.display = 'flex';
+            } else if (puntos === 1) {
+                document.getElementById('textoRonda').innerText = `${nombre} acertó 1 de 3.`;
+                riesgoCamposFallidos = campos.filter(c => !c.ok);
+                riesgoElegido = null;
+                opcionesRonda.style.display = 'block';
+                accionesTurno.style.display = 'none';
+            } else {
+                // 0/3 → al pozo
+                JUEGO.pozo.push(p.id);
+                document.getElementById('textoRonda').innerText = `${nombre} no acertó ninguna. La carta va al pozo.`;
+                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+                siguienteBtn.dataset.accion = 'avanzar';
+                opcionesRonda.style.display = 'none';
+                accionesTurno.style.display = 'flex';
             }
+
+            guardarJuego();
+            renderTablaJugadores();
+            actualizarBannerPrincipal();
+        }
+
+        // --- Opción segura: carta al pozo, termina turno
+        function elegirOpcionSegura() {
+            if (!JUEGO || !paisSacado) return;
+            JUEGO.pozo.push(paisSacado.id);
+            JUEGO.rondaDecidida = true;
+            guardarJuego();
+            document.getElementById('opcionesRonda').style.display = 'none';
+            document.getElementById('riesgoBox').style.display = 'none';
+            const nombre = JUEGO.jugadores[JUEGO.turno].nombre;
+            document.getElementById('textoRonda').innerText = `${nombre} eligió segura. La carta va al pozo.`;
+            const siguienteBtn = document.getElementById('btnSiguienteTurno');
+            siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+            siguienteBtn.dataset.accion = 'avanzar';
+            document.getElementById('accionesTurno').style.display = 'flex';
+        }
+
+        // --- Opción riesgo: mostrar bloque de reintento
+        function elegirOpcionRiesgo() {
+            if (!JUEGO || !paisSacado) return;
+            document.getElementById('opcionesRonda').style.display = 'none';
+            const riesgoBox = document.getElementById('riesgoBox');
+            const campos = document.getElementById('riesgoCampos');
+            campos.innerHTML = '';
+            riesgoElegido = null;
+            riesgoCamposFallidos.forEach(c => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'btn-riesgo-campo';
+                b.innerText = c.label;
+                b.onclick = () => {
+                    riesgoElegido = c;
+                    [...campos.children].forEach(ch => ch.classList.remove('activo'));
+                    b.classList.add('activo');
+                    const reintento = document.getElementById('riesgoReintento');
+                    reintento.classList.add('visible');
+                    const inp = document.getElementById('respRiesgo');
+                    inp.value = '';
+                    inp.placeholder = c.label;
+                    setTimeout(() => inp.focus(), 50);
+                };
+                campos.appendChild(b);
+            });
+            document.getElementById('riesgoReintento').classList.remove('visible');
+            riesgoBox.style.display = 'block';
+        }
+
+        // --- Comprobar intento de riesgo
+        function comprobarRiesgo() {
+            if (!JUEGO || !paisSacado || !riesgoElegido) return;
+            const resp = normalizar(document.getElementById('respRiesgo').value);
+            const acierta = riesgoElegido.correctas.includes(resp) && resp.length > 0;
+            const nombre = JUEGO.jugadores[JUEGO.turno].nombre;
+            if (acierta) {
+                JUEGO.jugadores[JUEGO.turno].cartas.push(paisSacado.id);
+                document.getElementById('textoRonda').innerText = `¡${nombre} acertó el riesgo! Se queda con la carta.`;
+            } else {
+                JUEGO.pozo.push(paisSacado.id);
+                JUEGO.jugadores[JUEGO.turno].saltar = true;
+                document.getElementById('textoRonda').innerText = `Fallaste el riesgo. La carta va al pozo y ${nombre} pierde su próximo turno.`;
+            }
+            JUEGO.rondaDecidida = true;
+            guardarJuego();
+            document.getElementById('riesgoBox').style.display = 'none';
+            document.getElementById('opcionesRonda').style.display = 'none';
+            const siguienteBtn = document.getElementById('btnSiguienteTurno');
+            siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+            siguienteBtn.dataset.accion = 'avanzar';
+            document.getElementById('accionesTurno').style.display = 'flex';
+            renderTablaJugadores();
+            actualizarBannerPrincipal();
         }
 
         function restaurarRondaComprobada(p) {
-            // Cuando el usuario reabre la modal tras comprobar, restauramos visualmente
-            // (no se re-puntúa). Caso bordes: para simplicidad, limpiamos a estado quiz y listo.
+            // Al reabrir la modal con la ronda ya comprobada, mostramos la carta y el botón de continuar.
+            // (El efecto en puntaje/cartas ya fue aplicado al comprobar la primera vez.)
             resetQuizUI();
+            document.getElementById('quizPais').style.display = 'none';
+            document.getElementById('zonaBandera').style.display = 'none';
+            document.getElementById('zonaCarta').style.display = 'flex';
+            document.getElementById('resultadoRonda').classList.remove('visible');
+            document.getElementById('opcionesRonda').style.display = 'none';
+            document.getElementById('riesgoBox').style.display = 'none';
+            const siguienteBtn = document.getElementById('btnSiguienteTurno');
+            siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+            siguienteBtn.dataset.accion = 'avanzar';
+            document.getElementById('accionesTurno').style.display = 'flex';
+            document.getElementById('textoRonda').innerText = 'Ronda comprobada. Pulsa para continuar.';
         }
 
         function siguienteTurno() {
@@ -1951,20 +2162,36 @@
                 finalizarJuego('mazo');
                 return;
             }
-            // Avanza al siguiente jugador; si hay skip pendiente, salta uno más
-            JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
-            if (JUEGO.skipProximo) {
-                // Mostrar breve aviso del jugador saltado
-                const saltado = JUEGO.jugadores[JUEGO.turno].nombre;
-                JUEGO.skipProximo = false;
-                JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
-                guardarJuego();
-                setTimeout(() => alert(`${saltado} pierde el turno por la carta especial.`), 50);
-            }
+
+            const accion = document.getElementById('btnSiguienteTurno').dataset.accion || 'avanzar';
             JUEGO.cartaActual = null;
             JUEGO.rondaComprobada = false;
-            guardarJuego();
+            JUEGO.rondaDecidida = true;
             paisSacado = null;
+
+            if (accion === 'otroTurno') {
+                // Mismo jugador vuelve a sacar una carta
+                guardarJuego();
+                renderFaseJuego();
+                return;
+            }
+
+            // Avanza al próximo jugador. Saltamos a todos los que tengan saltar=true
+            let n = JUEGO.jugadores.length;
+            let saltados = [];
+            for (let i = 0; i < n; i++) {
+                JUEGO.turno = (JUEGO.turno + 1) % n;
+                if (JUEGO.jugadores[JUEGO.turno].saltar) {
+                    saltados.push(JUEGO.jugadores[JUEGO.turno].nombre);
+                    JUEGO.jugadores[JUEGO.turno].saltar = false;
+                    continue;
+                }
+                break;
+            }
+            guardarJuego();
+            if (saltados.length > 0) {
+                setTimeout(() => alert(`${saltados.join(' y ')} pierde${saltados.length>1?'n':''} el turno.`), 50);
+            }
             renderFaseJuego();
         }
 
@@ -1977,27 +2204,28 @@
         }
         function renderFinal(motivo) {
             mostrarFase('faseFinal');
-            const ordenados = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje);
+            const contar = j => (j.cartas ? j.cartas.length : 0);
+            const ordenados = [...JUEGO.jugadores].sort((a,b) => contar(b) - contar(a));
             const ganador = ordenados[0];
-            const empate = ordenados.length > 1 && ordenados[1].puntaje === ganador.puntaje;
+            const empate = ordenados.length > 1 && contar(ordenados[1]) === contar(ganador);
 
             document.getElementById('podioMotivo').innerText =
                 motivo === 'mazo' ? 'Se acabaron las cartas del mazo' : 'Juego finalizado por los jugadores';
 
             if (empate) {
-                const empatados = ordenados.filter(j => j.puntaje === ganador.puntaje).map(j => j.nombre).join(' · ');
+                const empatados = ordenados.filter(j => contar(j) === contar(ganador)).map(j => j.nombre).join(' · ');
                 document.getElementById('ganadorNombre').innerText = `Empate: ${empatados}`;
             } else {
                 document.getElementById('ganadorNombre').innerText = ganador.nombre;
             }
-            document.getElementById('ganadorPuntaje').innerText = ganador.puntaje;
+            document.getElementById('ganadorPuntaje').innerText = contar(ganador) + ' cartas';
 
             const rk = document.getElementById('rankingFinal');
             rk.innerHTML = '';
             ordenados.forEach((j, i) => {
                 const f = document.createElement('div');
                 f.className = 'ranking-fila';
-                f.innerHTML = `<span><span class="pos">${i+1}</span><span class="nombre">${escapeHtml(j.nombre)}</span></span><span class="puntos">${j.puntaje} pts</span>`;
+                f.innerHTML = `<span><span class="pos">${i+1}</span><span class="nombre">${escapeHtml(j.nombre)}</span></span><span class="puntos">${contar(j)} cartas</span>`;
                 rk.appendChild(f);
             });
             actualizarBannerPrincipal();
@@ -2050,6 +2278,12 @@
         document.getElementById('btnSiguienteTurno').onclick = siguienteTurno;
         document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
         document.getElementById('btnAplicarTruco').onclick = aplicarTruco;
+        document.getElementById('btnOpcionSegura').onclick = elegirOpcionSegura;
+        document.getElementById('btnOpcionRiesgo').onclick = elegirOpcionRiesgo;
+        document.getElementById('btnComprobarRiesgo').onclick = comprobarRiesgo;
+        document.getElementById('respRiesgo').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); comprobarRiesgo(); }
+        });
         document.getElementById('btnFinalizarJuego').onclick = () => {
             if (confirm('¿Finalizar la partida ahora y ver el resultado?')) finalizarJuego('manual');
         };
