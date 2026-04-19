@@ -742,6 +742,35 @@
         }
         .btn-finalizar:hover { border-color: #e74c3c; color: #e74c3c; }
 
+        /* Acciones de cartas especiales (truco) */
+        .acciones-truco {
+            margin-top: 14px;
+            padding: 14px 12px 12px;
+            border-radius: 12px;
+            background: #fff8ec;
+            border: 1.5px solid #fde4b8;
+        }
+        .acciones-truco .quiz-intro { margin: 0 0 8px; font-size: 12px; color: var(--gris); font-weight: 700; }
+        .lista-victimas {
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+            margin-bottom: 10px;
+        }
+        .btn-victima {
+            padding: 7px 12px; border-radius: 999px; border: 1.5px solid #e5e7eb;
+            background: #fff; color: var(--texto);
+            font-family: inherit; font-weight: 700; font-size: 11px;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .btn-victima:hover { border-color: var(--azul); color: var(--azul); }
+        .btn-victima.seleccionada {
+            background: linear-gradient(135deg, #2874f0 0%, #1f5bbf 100%);
+            color: #fff; border-color: transparent;
+        }
+        .resultado-truco {
+            margin-top: 8px; font-size: 12px; color: #b7791f; font-weight: 700;
+            text-align: center; min-height: 16px;
+        }
+
         /* Fase Final - Podio */
         .podio-titulo {
             text-align: center; font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
@@ -1131,6 +1160,16 @@
                         <button type="button" class="btn-siguiente" id="btnSiguienteTurno">Siguiente jugador</button>
                         <button type="button" id="btnVerDetalleRobada" class="btn-instrucciones secundario">Ver detalle</button>
                     </div>
+
+                    <!-- Acciones para cartas especiales / truco -->
+                    <div class="acciones-truco" id="accionesTruco" style="display:none;">
+                        <div id="selectorVictima" style="display:none;">
+                            <p class="quiz-intro">Elige al jugador afectado:</p>
+                            <div class="lista-victimas" id="listaVictimas"></div>
+                        </div>
+                        <div class="resultado-truco" id="resultadoTruco"></div>
+                        <button type="button" class="btn-siguiente" id="btnAplicarTruco">Aplicar y seguir</button>
+                    </div>
                 </div>
 
                 <div style="text-align:center; margin-top:16px;">
@@ -1492,6 +1531,8 @@
                 if (!raw) return null;
                 const g = JSON.parse(raw);
                 if (!g.jugadores || !Array.isArray(g.jugadores)) return null;
+                // Migración: si el juego viejo no tiene baraja (formato pre-cartas-especiales), descartamos
+                if (!g.baraja || !Array.isArray(g.baraja)) return null;
                 return g;
             } catch (e) { return null; }
         }
@@ -1551,6 +1592,19 @@
                 cont.appendChild(input);
             }
         }
+        function generarBaraja() {
+            const deck = dbPaises.map(p => ({ tipo: 'pais', id: p.id }));
+            cartasEspeciales.forEach(c => {
+                for (let i = 0; i < c.peso; i++) deck.push({ tipo: 'especial', id: c.id });
+            });
+            // Fisher-Yates
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+
         function comenzarJuego() {
             const inputs = [...document.querySelectorAll('#setupNombres input')];
             const nombres = inputs.map((inp, i) => (inp.value.trim() || `Jugador ${i+1}`));
@@ -1558,9 +1612,11 @@
                 estado: 'jugando',
                 jugadores: nombres.map(n => ({ nombre: n, puntaje: 0 })),
                 turno: 0,
-                cartasUsadas: [],
-                cartaActualId: null,
+                baraja: generarBaraja(),   // mazo pre-mezclado (paises + cartas especiales)
+                posicion: 0,               // índice de próxima carta a robar
+                cartaActual: null,         // { tipo: 'pais'|'especial', id }
                 rondaComprobada: false,
+                skipProximo: false,        // si true, el siguiente jugador pierde su turno
             };
             guardarJuego();
             actualizarBannerPrincipal();
@@ -1570,30 +1626,33 @@
         // ========== FASE JUEGO ==========
         // `paisSacado` se declara antes (línea ~1352) como variable compartida del script.
 
+        function cartasEnMazo() {
+            return JUEGO ? (JUEGO.baraja.length - JUEGO.posicion) : 0;
+        }
+
         function renderFaseJuego() {
             mostrarFase('faseJuego');
             renderTablaJugadores();
             document.getElementById('turnoNombre').innerText = JUEGO.jugadores[JUEGO.turno].nombre;
-            document.getElementById('cartasRestantes').innerText = dbPaises.length - JUEGO.cartasUsadas.length;
+            document.getElementById('cartasRestantes').innerText = cartasEnMazo();
 
             const zonaRonda = document.getElementById('zonaRonda');
             const accionRobar = document.getElementById('accionRobar');
 
-            if (JUEGO.cartaActualId) {
-                // Ya hay carta sacada: restaurar vista del quiz
-                const p = dbPaises.find(x => x.id === JUEGO.cartaActualId);
-                paisSacado = p;
+            if (JUEGO.cartaActual) {
                 accionRobar.style.display = 'none';
                 zonaRonda.style.display = '';
-                mostrarCartaEnRonda(p);
-                if (JUEGO.rondaComprobada) {
-                    // mostrar resultados ya comprobados (sin re-puntuar)
-                    restaurarRondaComprobada(p);
+                if (JUEGO.cartaActual.tipo === 'pais') {
+                    const p = dbPaises.find(x => x.id === JUEGO.cartaActual.id);
+                    paisSacado = p;
+                    mostrarCartaEnRonda(p);
+                    if (JUEGO.rondaComprobada) restaurarRondaComprobada(p);
+                    else resetQuizUI();
                 } else {
-                    resetQuizUI();
+                    paisSacado = null;
+                    mostrarCartaEspecial(JUEGO.cartaActual.id);
                 }
             } else {
-                // Sin carta: mostrar botón robar
                 accionRobar.style.display = 'flex';
                 zonaRonda.style.display = 'none';
                 paisSacado = null;
@@ -1631,6 +1690,7 @@
             document.getElementById('descCartaRobada').style.display = 'none';
             document.getElementById('quizPais').style.display = 'block';
             document.getElementById('accionesTurno').style.display = 'none';
+            document.getElementById('accionesTruco').style.display = 'none';
 
             const idCarta = p.id.substring(0, 5);
             imgCarta.src = `cartas_png/${idCarta}.png`;
@@ -1656,20 +1716,168 @@
         }
 
         function robarCarta() {
-            const disponibles = dbPaises.filter(p => !JUEGO.cartasUsadas.includes(p.id));
-            if (disponibles.length === 0) { finalizarJuego('mazo'); return; }
-            const p = disponibles[Math.floor(Math.random() * disponibles.length)];
-            JUEGO.cartaActualId = p.id;
-            JUEGO.cartasUsadas.push(p.id);
+            if (!JUEGO) return;
+            if (cartasEnMazo() <= 0) { finalizarJuego('mazo'); return; }
+            const entry = JUEGO.baraja[JUEGO.posicion++];
+            JUEGO.cartaActual = entry;
             JUEGO.rondaComprobada = false;
             guardarJuego();
-            paisSacado = p;
 
             document.getElementById('accionRobar').style.display = 'none';
             document.getElementById('zonaRonda').style.display = '';
-            document.getElementById('cartasRestantes').innerText = dbPaises.length - JUEGO.cartasUsadas.length;
-            mostrarCartaEnRonda(p);
-            resetQuizUI();
+            document.getElementById('cartasRestantes').innerText = cartasEnMazo();
+
+            if (entry.tipo === 'pais') {
+                const p = dbPaises.find(x => x.id === entry.id);
+                paisSacado = p;
+                mostrarCartaEnRonda(p);
+                resetQuizUI();
+            } else {
+                paisSacado = null;
+                mostrarCartaEspecial(entry.id);
+            }
+        }
+
+        // ========== CARTAS ESPECIALES (TRUCO) ==========
+        let victimaSeleccionada = null;
+
+        function mostrarCartaEspecial(idEsp) {
+            const meta = cartasEspeciales.find(c => c.id === idEsp);
+            if (!meta) return;
+
+            // Label y título
+            const etiqueta = document.getElementById('tipoCartaRobada');
+            etiqueta.innerText = 'Carta especial';
+            etiqueta.classList.add('truco');
+            document.getElementById('tituloJugar').innerText = meta.nombre;
+
+            // Ocultar bandera + quiz, mostrar la imagen de la carta especial
+            document.getElementById('zonaBandera').style.display = 'none';
+            document.getElementById('zonaCarta').style.display = 'flex';
+            document.getElementById('quizPais').style.display = 'none';
+            document.getElementById('resultadoRonda').classList.remove('visible');
+            document.getElementById('accionesTurno').style.display = 'none';
+
+            const imgCarta = document.getElementById('cartaRobada');
+            imgCarta.src = `cartas_especiales_png/${meta.archivo}`;
+            imgCarta.alt = `Carta especial — ${meta.nombre}`;
+            imgCarta.classList.remove('clickable');
+            imgCarta.onclick = null;
+            imgCarta.style.animation = 'none'; void imgCarta.offsetWidth; imgCarta.style.animation = '';
+
+            // Descripción
+            const desc = document.getElementById('descCartaRobada');
+            desc.innerHTML = meta.desc;
+            desc.style.display = 'block';
+
+            // Preparar acciones truco
+            const acciones = document.getElementById('accionesTruco');
+            const selector = document.getElementById('selectorVictima');
+            const lista = document.getElementById('listaVictimas');
+            const resultado = document.getElementById('resultadoTruco');
+            const btnAplicar = document.getElementById('btnAplicarTruco');
+
+            acciones.style.display = 'block';
+            resultado.innerText = '';
+            victimaSeleccionada = null;
+            lista.innerHTML = '';
+
+            if (idEsp === 'ES-03') {
+                // Necesita elegir víctima
+                selector.style.display = 'block';
+                const otros = JUEGO.jugadores
+                    .map((j, i) => ({ j, i }))
+                    .filter(o => o.i !== JUEGO.turno);
+                if (otros.length === 0) {
+                    // Solo 1 jugador → no hay a quién afectar, se salta
+                    selector.style.display = 'none';
+                    resultado.innerText = 'No hay otros jugadores a quien afectar — la carta se descarta.';
+                    btnAplicar.innerText = 'Continuar';
+                } else {
+                    otros.forEach(({ j, i }) => {
+                        const b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'btn-victima';
+                        b.innerText = `${j.nombre} (${j.puntaje})`;
+                        b.onclick = () => {
+                            victimaSeleccionada = i;
+                            [...lista.children].forEach(c => c.classList.remove('seleccionada'));
+                            b.classList.add('seleccionada');
+                        };
+                        lista.appendChild(b);
+                    });
+                    btnAplicar.innerText = 'Aplicar descarte';
+                }
+            } else if (idEsp === 'ES-01') {
+                selector.style.display = 'none';
+                btnAplicar.innerText = 'Robar otra carta';
+            } else if (idEsp === 'ES-02') {
+                selector.style.display = 'none';
+                btnAplicar.innerText = 'Siguiente jugador pierde turno';
+            }
+        }
+
+        function aplicarTruco() {
+            if (!JUEGO || !JUEGO.cartaActual || JUEGO.cartaActual.tipo !== 'especial') return;
+            const idEsp = JUEGO.cartaActual.id;
+            const resultado = document.getElementById('resultadoTruco');
+            const acciones = document.getElementById('accionesTruco');
+
+            if (idEsp === 'ES-01') {
+                // Robo de turno: mismo jugador saca otra carta
+                JUEGO.cartaActual = null;
+                JUEGO.rondaComprobada = false;
+                guardarJuego();
+                acciones.style.display = 'none';
+                // Intentar robar otra carta para el mismo jugador
+                if (cartasEnMazo() <= 0) { finalizarJuego('mazo'); return; }
+                robarCarta();
+                return;
+            }
+
+            if (idEsp === 'ES-02') {
+                // El siguiente jugador pierde su turno
+                JUEGO.skipProximo = true;
+                JUEGO.cartaActual = null;
+                JUEGO.rondaComprobada = false;
+                guardarJuego();
+                acciones.style.display = 'none';
+                siguienteTurno();
+                return;
+            }
+
+            if (idEsp === 'ES-03') {
+                const otros = JUEGO.jugadores.filter((_, i) => i !== JUEGO.turno);
+                if (otros.length === 0) {
+                    // descarta sin efecto
+                    JUEGO.cartaActual = null;
+                    JUEGO.rondaComprobada = false;
+                    guardarJuego();
+                    acciones.style.display = 'none';
+                    siguienteTurno();
+                    return;
+                }
+                if (victimaSeleccionada === null) {
+                    resultado.innerText = 'Elige al jugador afectado antes de aplicar.';
+                    return;
+                }
+                // Descarta carta: el afectado pierde 3 puntos (equivalente a una carta completa).
+                // No bajamos bajo cero.
+                const antes = JUEGO.jugadores[victimaSeleccionada].puntaje;
+                const penal = Math.min(3, antes);
+                JUEGO.jugadores[victimaSeleccionada].puntaje = antes - penal;
+                const nombreVic = JUEGO.jugadores[victimaSeleccionada].nombre;
+                renderTablaJugadores();
+                actualizarBannerPrincipal();
+                JUEGO.cartaActual = null;
+                JUEGO.rondaComprobada = false;
+                guardarJuego();
+                acciones.style.display = 'none';
+                // Feedback rápido y paso de turno
+                alert(`${nombreVic} pierde ${penal} punto${penal === 1 ? '' : 's'}.`);
+                siguienteTurno();
+                return;
+            }
         }
 
         function comprobarQuiz(ev) {
@@ -1724,8 +1932,8 @@
             btn.disabled = true;
             btn.innerText = 'Comprobado';
 
-            // Si fue la última carta, avisa para cerrar al presionar "Siguiente"
-            if (JUEGO.cartasUsadas.length >= dbPaises.length) {
+            // Si ya no quedan cartas en el mazo, avisa que el "Siguiente" cierra el juego
+            if (cartasEnMazo() <= 0) {
                 document.getElementById('btnSiguienteTurno').innerText = 'Ver resultado final';
             }
         }
@@ -1739,12 +1947,21 @@
         function siguienteTurno() {
             if (!JUEGO) return;
             // ¿terminó el mazo?
-            if (JUEGO.cartasUsadas.length >= dbPaises.length) {
+            if (cartasEnMazo() <= 0) {
                 finalizarJuego('mazo');
                 return;
             }
+            // Avanza al siguiente jugador; si hay skip pendiente, salta uno más
             JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
-            JUEGO.cartaActualId = null;
+            if (JUEGO.skipProximo) {
+                // Mostrar breve aviso del jugador saltado
+                const saltado = JUEGO.jugadores[JUEGO.turno].nombre;
+                JUEGO.skipProximo = false;
+                JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
+                guardarJuego();
+                setTimeout(() => alert(`${saltado} pierde el turno por la carta especial.`), 50);
+            }
+            JUEGO.cartaActual = null;
             JUEGO.rondaComprobada = false;
             guardarJuego();
             paisSacado = null;
@@ -1832,6 +2049,7 @@
         document.getElementById('quizPais').addEventListener('submit', comprobarQuiz);
         document.getElementById('btnSiguienteTurno').onclick = siguienteTurno;
         document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
+        document.getElementById('btnAplicarTruco').onclick = aplicarTruco;
         document.getElementById('btnFinalizarJuego').onclick = () => {
             if (confirm('¿Finalizar la partida ahora y ver el resultado?')) finalizarJuego('manual');
         };
