@@ -1147,7 +1147,7 @@
                 <div class="encabezado-turno">Turno de <strong id="turnoNombre">—</strong></div>
                 <div class="cartas-restantes">Cartas restantes: <strong id="cartasRestantes">46</strong></div>
 
-                <!-- Antes de robar -->
+                <!-- Antes de sacar -->
                 <div class="accion-robar" id="accionRobar">
                     <span class="etiqueta-tipo">Es tu turno</span>
                     <button type="button" class="btn-robar-carta" id="btnRobarCarta">
@@ -1157,7 +1157,7 @@
                             <circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/>
                             <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
                         </svg>
-                        Robar carta
+                        Sacar carta
                     </button>
                 </div>
 
@@ -1317,7 +1317,7 @@
             </ol>
 
             <h2>Cómo se juega</h2>
-            <p>En cada turno, el jugador roba 1 carta y la da vuelta. Debe decir en voz alta:</p>
+            <p>En cada turno, el jugador saca 1 carta y la da vuelta. Debe decir en voz alta:</p>
             <ul>
                 <li>País</li>
                 <li>Capital</li>
@@ -1365,7 +1365,7 @@
             <p>Todas las cartas no ganadas van al pozo.</p>
 
             <h2>Regla especial opcional</h2>
-            <p>Cuando un jugador roba una carta especial, puede intentar:</p>
+            <p>Cuando un jugador saca una carta especial, puede intentar:</p>
             <ul>
                 <li>Decir correctamente el país de una carta del pozo.</li>
                 <li>Si acierta, la recupera y se la queda.</li>
@@ -1408,6 +1408,9 @@
             { id: "AM-14PE", nombre: "Perú", cap: "Lima", cont: "América", ind: "28 de julio", pob: "34.0M", muj: 50.4, hom: 49.6, col: "Rojo, Blanco", iso: "pe", lat: -12.0464, lon: -77.0428, res: "Perú fue el centro del Imperio Inca. Alberga Machu Picchu, una de las maravillas del mundo, y es reconocido por su gastronomía considerada de las mejores del planeta." },
             { id: "AM-15PY", nombre: "Paraguay", cap: "Asunción", cont: "América", ind: "14 de mayo", pob: "6.7M", muj: 49.6, hom: 50.4, col: "Rojo, Blanco, Azul", iso: "py", lat: -25.2637, lon: -57.5759, res: "Paraguay es un país sin salida al mar con dos idiomas oficiales: el español y el guaraní. Es famoso por la represa de Itaipú, una de las mayores centrales hidroeléctricas del mundo." },
             { id: "AM-16UY", nombre: "Uruguay", cap: "Montevideo", cont: "América", ind: "25 de agosto", pob: "3.4M", muj: 51.7, hom: 48.3, col: "Azul, Blanco, Amarillo", iso: "uy", lat: -34.9011, lon: -56.1645, res: "Uruguay es uno de los países más pequeños de Sudamérica, pero pionero en derechos sociales y educación pública. Es la tierra del mate, el tango y el candombe." },
+            { id: "AM-17VE", nombre: "Venezuela", cap: "Caracas", cont: "América", ind: "5 de julio", pob: "28.3M", muj: 50.8, hom: 49.2, col: "Amarillo, Azul, Rojo", iso: "ve", lat: 10.4806, lon: -66.9036, res: "Venezuela alberga el Salto Ángel, la cascada más alta del mundo, y posee las mayores reservas de petróleo del planeta. Es cuna del libertador Simón Bolívar y del joropo, su música nacional." },
+            { id: "AM-18DO", nombre: "Rep. Dominicana", cap: "Santo Domingo", cont: "América", ind: "27 de febrero", pob: "11.2M", muj: 50.2, hom: 49.8, col: "Azul, Rojo, Blanco", iso: "do", lat: 18.4861, lon: -69.9312, res: "República Dominicana comparte la isla de La Española con Haití. Santo Domingo fue la primera ciudad europea de América. Es la cuna del merengue y la bachata, y un destino turístico famoso del Caribe." },
+            { id: "AM-19HN", nombre: "Honduras", cap: "Tegucigalpa", cont: "América", ind: "15 de septiembre", pob: "10.3M", muj: 50.8, hom: 49.2, col: "Azul, Blanco", iso: "hn", lat: 14.0723, lon: -87.1921, res: "Honduras alberga las ruinas mayas de Copán, reconocidas como Patrimonio de la Humanidad. Tiene costas en el Caribe y el Pacífico, y sus Islas de la Bahía son famosas por el buceo en arrecifes." },
             { id: "EU-01DE", nombre: "Alemania", cap: "Berlín", cont: "Europa", ind: "3 de octubre", pob: "83.2M", muj: 50.6, hom: 49.4, col: "Negro, Rojo, Amarillo", iso: "de", lat: 52.5200, lon: 13.4050, res: "Alemania es la mayor economía de Europa. Famosa por su puntualidad, sus castillos, su Oktoberfest en Múnich y por ser cuna de compositores como Bach y Beethoven." },
             { id: "EU-02ES", nombre: "España", cap: "Madrid", cont: "Europa", ind: "12 de octubre", pob: "47.5M", muj: 51.0, hom: 49.0, col: "Rojo, Amarillo", iso: "es", lat: 40.4168, lon: -3.7038, res: "España es cuna de la lengua española, hablada por más de 500 millones de personas. Famosa por el flamenco, la paella, la Alhambra y las obras de Gaudí en Barcelona." },
             { id: "EU-03FR", nombre: "Francia", cap: "París", cont: "Europa", ind: "14 de julio", pob: "67.8M", muj: 51.6, hom: 48.4, col: "Azul, Blanco, Rojo", iso: "fr", lat: 48.8566, lon: 2.3522, res: "Francia es el país más visitado del mundo. Hogar de la Torre Eiffel, el museo del Louvre y la cocina considerada Patrimonio de la Humanidad por la UNESCO." },
@@ -1420,6 +1423,9 @@
             { id: "EU-10SE", nombre: "Suecia", cap: "Estocolmo", cont: "Europa", ind: "6 de junio", pob: "10.5M", muj: 49.9, hom: 50.1, col: "Azul, Amarillo", iso: "se", lat: 59.3293, lon: 18.0686, res: "Suecia es la tierra de los vikingos, de IKEA y del premio Nobel. Un país nórdico famoso por sus auroras boreales, sus bosques y su diseño minimalista." },
             { id: "EU-11NO", nombre: "Noruega", cap: "Oslo", cont: "Europa", ind: "17 de mayo", pob: "5.4M", muj: 49.5, hom: 50.5, col: "Rojo, Blanco, Azul", iso: "no", lat: 59.9139, lon: 10.7522, res: "Noruega es célebre por sus fiordos, las auroras boreales y el Sol de Medianoche en verano. Es uno de los países con mayor calidad de vida del mundo." },
             { id: "EU-12PL", nombre: "Polonia", cap: "Varsovia", cont: "Europa", ind: "11 de noviembre", pob: "37.8M", muj: 51.7, hom: 48.3, col: "Blanco, Rojo", iso: "pl", lat: 52.2297, lon: 21.0122, res: "Polonia es cuna de figuras como Copérnico, Chopin y Marie Curie. Tiene una rica historia medieval, castillos impresionantes y el bosque de Białowieża, hogar de los bisontes europeos." },
+            { id: "EU-13BE", nombre: "Bélgica", cap: "Bruselas", cont: "Europa", ind: "21 de julio", pob: "11.7M", muj: 50.8, hom: 49.2, col: "Negro, Amarillo, Rojo", iso: "be", lat: 50.8503, lon: 4.3517, res: "Bélgica alberga la sede de la Unión Europea y la OTAN en Bruselas. Es famosa por sus chocolates, cervezas artesanales, waffles, papas fritas y por haber creado personajes como Tintín y los Pitufos." },
+            { id: "EU-14AT", nombre: "Austria", cap: "Viena", cont: "Europa", ind: "26 de octubre", pob: "9.1M", muj: 51.1, hom: 48.9, col: "Rojo, Blanco", iso: "at", lat: 48.2082, lon: 16.3738, res: "Austria es la cuna de Mozart, Haydn y Strauss. Viena, su capital, fue durante siglos el centro cultural de Europa. Los Alpes austriacos son famosos por el esquí y el paisaje de 'La novicia rebelde'." },
+            { id: "EU-15IE", nombre: "Irlanda", cap: "Dublín", cont: "Europa", ind: "17 de marzo", pob: "5.3M", muj: 50.3, hom: 49.7, col: "Verde, Blanco, Naranja", iso: "ie", lat: 53.3498, lon: -6.2603, res: "Irlanda es la 'Isla Esmeralda' por sus verdes praderas. Tiene dos idiomas oficiales (irlandés e inglés) y es famosa por San Patricio, la cerveza Guinness, la música celta y los Acantilados de Moher." },
             { id: "AS-01CN", nombre: "China", cap: "Pekín", cont: "Asia", ind: "1 de octubre", pob: "1.4B", muj: 48.8, hom: 51.2, col: "Rojo, Amarillo", iso: "cn", lat: 39.9042, lon: 116.4074, res: "China es el país más poblado de Asia y la segunda economía del mundo. Cuna de invenciones como el papel, la pólvora y la brújula, alberga la Gran Muralla, visible desde el espacio." },
             { id: "AS-02JP", nombre: "Japón", cap: "Tokio", cont: "Asia", ind: "11 de febrero", pob: "125.1M", muj: 51.4, hom: 48.6, col: "Blanco, Rojo", iso: "jp", lat: 35.6762, lon: 139.6503, res: "Japón es un archipiélago con más de 6.800 islas. Combina tradición (templos, samuráis, sumo) con alta tecnología (robots, anime). Famoso por el sushi y los cerezos en flor." },
             { id: "AS-03IN", nombre: "India", cap: "Nueva Delhi", cont: "Asia", ind: "15 de agosto", pob: "1.4B", muj: 48.4, hom: 51.6, col: "Naranja, Blanco, Verde", iso: "in", lat: 28.6139, lon: 77.2090, res: "India es el país más poblado del mundo. Cuna del yoga, del ajedrez y del número cero, alberga el Taj Mahal y más de 20 idiomas oficiales." },
@@ -1458,7 +1464,7 @@
         // Cartas especiales del mazo (con sus frecuencias reales)
         const cartasEspeciales = [
             { id: "ES-01", peso: 2, nombre: "Robo de turno",  archivo: "ES-01_robo_turno.png",
-              desc: "Juegas <strong>otro turno</strong> inmediatamente. ¡Roba otra carta!" },
+              desc: "Juegas <strong>otro turno</strong> inmediatamente. ¡Saca otra carta!" },
             { id: "ES-02", peso: 3, nombre: "Pierde turno",   archivo: "ES-02_pierde_turno.png",
               desc: "El <strong>siguiente jugador</strong> pierde su turno." },
             { id: "ES-03", peso: 3, nombre: "Descarta carta", archivo: "ES-03_descarta_carta.png",
@@ -1901,7 +1907,7 @@
                 }
             } else if (idEsp === 'ES-01') {
                 selector.style.display = 'none';
-                btnAplicar.innerText = 'Robar otra carta';
+                btnAplicar.innerText = 'Sacar otra carta';
             } else if (idEsp === 'ES-02') {
                 selector.style.display = 'none';
                 btnAplicar.innerText = 'Siguiente jugador pierde turno';

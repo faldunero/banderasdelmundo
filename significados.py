@@ -69,6 +69,18 @@ SIGNIFICADOS = {
         "bandera": "Las nueve franjas representan los nueve departamentos originales. El Sol de Mayo en el cantón blanco simboliza el nacimiento de la nación, igual que en Argentina.",
         "escudo": "Dividido en cuatro cuarteles: una balanza (igualdad y justicia), el Cerro de Montevideo (fuerza), un caballo suelto (libertad) y un buey (abundancia)."
     },
+    "AM-17VE": {
+        "bandera": "Amarillo (riquezas naturales), azul (mar Caribe que separa a Venezuela de España) y rojo (sangre de los héroes). Las ocho estrellas representan las provincias que firmaron la independencia.",
+        "escudo": "Dividido en tres campos: espigas de trigo (unión), armas y banderas (victoria) y un caballo blanco en libertad. Dos cornucopias y una rama de olivo y otra de laurel lo rodean."
+    },
+    "AM-18DO": {
+        "bandera": "Una cruz blanca central simboliza la fe cristiana. Los cuarteles azules representan la libertad y los rojos, la sangre derramada por la patria. En el centro luce el escudo con una Biblia abierta.",
+        "escudo": "Muestra una Biblia abierta, una cruz, banderas y lanzas, rodeado por laurel y palma. La cinta superior dice 'Dios, Patria, Libertad' y la inferior, 'República Dominicana'."
+    },
+    "AM-19HN": {
+        "bandera": "Dos franjas azules representan los océanos Atlántico y Pacífico y la franja blanca, la paz. Las cinco estrellas azules recuerdan las cinco naciones de la antigua Federación Centroamericana.",
+        "escudo": "Un triángulo equilátero (igualdad), dos volcanes con un arco iris sobre el mar, una torre y un bosque de pinos. Representa la unión del pueblo con sus recursos naturales."
+    },
 
     # ================== EUROPA ==================
     "EU-01DE": {
@@ -118,6 +130,18 @@ SIGNIFICADOS = {
     "EU-12PL": {
         "bandera": "La franja blanca superior simboliza la paz y la pureza; la franja roja inferior, la sangre derramada por la libertad. Los colores vienen del águila blanca sobre fondo rojo.",
         "escudo": "Un águila blanca coronada con el pico y las garras doradas, sobre fondo rojo. Según la leyenda, el fundador Lech vio un águila blanca al elegir dónde establecerse."
+    },
+    "EU-13BE": {
+        "bandera": "Franjas verticales negra, amarilla y roja. El negro simboliza la determinación, el amarillo la generosidad y el rojo la valentía. Inspirada en el escudo del histórico ducado de Brabante.",
+        "escudo": "Un león negro sobre campo dorado (tomado del ducado de Brabante), rodeado por el collar de la Orden de Leopoldo. Lema: 'L'union fait la force' (La unión hace la fuerza)."
+    },
+    "EU-14AT": {
+        "bandera": "Una de las banderas nacionales más antiguas del mundo (1191). Cuenta la leyenda que un duque tiñó su túnica blanca de rojo con sangre tras una batalla, dejando solo una franja blanca bajo el cinturón.",
+        "escudo": "Águila negra con corona mural (símbolo de república), martillo (obreros), hoz (campesinos) y cadenas rotas en sus garras, que representan la liberación al terminar la Segunda Guerra Mundial."
+    },
+    "EU-15IE": {
+        "bandera": "El verde representa a los católicos gaélicos; el naranja, a los protestantes seguidores de Guillermo de Orange; y el blanco del centro, la paz y la unión entre ambas comunidades.",
+        "escudo": "Un arpa dorada sobre campo azul. El arpa celta es el símbolo más antiguo de Irlanda, usado desde la Edad Media, y es el único país del mundo con un instrumento musical como emblema nacional."
     },
 
     # ================== ASIA ==================

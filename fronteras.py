@@ -18,6 +18,9 @@ FRONTERAS = {
     "AM-14PE": ["Bolivia", "Brasil", "Chile", "Colombia", "Ecuador"],
     "AM-15PY": ["Argentina", "Bolivia", "Brasil"],
     "AM-16UY": ["Argentina", "Brasil"],
+    "AM-17VE": ["Brasil", "Colombia", "Guyana"],
+    "AM-18DO": ["Haití"],
+    "AM-19HN": ["El Salvador", "Guatemala", "Nicaragua"],
 
     # ================== EUROPA ==================
     "EU-01DE": ["Austria", "Bélgica", "Chequia", "Dinamarca", "Francia", "Luxemburgo", "Países Bajos", "Polonia", "Suiza"],
@@ -32,6 +35,9 @@ FRONTERAS = {
     "EU-10SE": ["Finlandia", "Noruega"],
     "EU-11NO": ["Finlandia", "Rusia", "Suecia"],
     "EU-12PL": ["Alemania", "Bielorrusia", "Chequia", "Eslovaquia", "Lituania", "Rusia", "Ucrania"],
+    "EU-13BE": ["Alemania", "Francia", "Luxemburgo", "Países Bajos"],
+    "EU-14AT": ["Alemania", "Chequia", "Eslovaquia", "Eslovenia", "Hungría", "Italia", "Liechtenstein", "Suiza"],
+    "EU-15IE": ["Reino Unido"],
 
     # ================== ASIA ==================
     "AS-01CN": ["Afganistán", "Bután", "Corea del Norte", "India", "Kazajistán", "Kirguistán", "Laos", "Mongolia", "Myanmar", "Nepal", "Pakistán", "Rusia", "Tayikistán", "Vietnam"],
@@ -59,6 +65,6 @@ FRONTERAS = {
 }
 
 if __name__ == "__main__":
-    assert len(FRONTERAS) == 46
+    assert len(FRONTERAS) == 52
     sin_fronteras = [k for k, v in FRONTERAS.items() if not v]
     print(f"✓ {len(FRONTERAS)} países. Sin fronteras terrestres: {sin_fronteras}")

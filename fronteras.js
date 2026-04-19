@@ -84,6 +84,19 @@ const FRONTERAS = {
     "Argentina",
     "Brasil"
   ],
+  "AM-17VE": [
+    "Brasil",
+    "Colombia",
+    "Guyana"
+  ],
+  "AM-18DO": [
+    "Haití"
+  ],
+  "AM-19HN": [
+    "El Salvador",
+    "Guatemala",
+    "Nicaragua"
+  ],
   "EU-01DE": [
     "Austria",
     "Bélgica",
@@ -160,6 +173,25 @@ const FRONTERAS = {
     "Lituania",
     "Rusia",
     "Ucrania"
+  ],
+  "EU-13BE": [
+    "Alemania",
+    "Francia",
+    "Luxemburgo",
+    "Países Bajos"
+  ],
+  "EU-14AT": [
+    "Alemania",
+    "Chequia",
+    "Eslovaquia",
+    "Eslovenia",
+    "Hungría",
+    "Italia",
+    "Liechtenstein",
+    "Suiza"
+  ],
+  "EU-15IE": [
+    "Reino Unido"
   ],
   "AS-01CN": [
     "Afganistán",

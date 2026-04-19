@@ -95,6 +95,24 @@ const MATERIAS_EXPORT = {
     "celulosa",
     "lácteos"
   ],
+  "AM-17VE": [
+    "Petróleo",
+    "gas natural",
+    "oro",
+    "mineral de hierro"
+  ],
+  "AM-18DO": [
+    "Oro",
+    "ferroníquel",
+    "tabaco",
+    "cacao"
+  ],
+  "AM-19HN": [
+    "Café",
+    "banano",
+    "camarón",
+    "aceite de palma"
+  ],
   "EU-01DE": [
     "Automóviles",
     "maquinaria",
@@ -166,6 +184,24 @@ const MATERIAS_EXPORT = {
     "maquinaria",
     "muebles",
     "carbón"
+  ],
+  "EU-13BE": [
+    "Productos químicos",
+    "diamantes",
+    "vehículos",
+    "productos farmacéuticos"
+  ],
+  "EU-14AT": [
+    "Maquinaria",
+    "vehículos",
+    "productos farmacéuticos",
+    "papel"
+  ],
+  "EU-15IE": [
+    "Productos farmacéuticos",
+    "química",
+    "maquinaria",
+    "software"
   ],
   "AS-01CN": [
     "Electrónica",

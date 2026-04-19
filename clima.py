@@ -22,6 +22,9 @@ CLIMA = {
     "AM-14PE": {"tipo": "Variado", "desc": "Desértico en la costa, frío de montaña en los Andes y tropical en la selva."},
     "AM-15PY": {"tipo": "Subtropical", "desc": "Cálido y húmedo al este; semiárido y caluroso en el Chaco occidental."},
     "AM-16UY": {"tipo": "Templado", "desc": "Clima templado con cuatro estaciones suaves y humedad del Río de la Plata."},
+    "AM-17VE": {"tipo": "Tropical", "desc": "Cálido y húmedo en las costas y llanos; templado en los Andes y más seco en el Caribe."},
+    "AM-18DO": {"tipo": "Tropical", "desc": "Cálido y húmedo todo el año; estación lluviosa entre mayo y noviembre, con huracanes."},
+    "AM-19HN": {"tipo": "Tropical", "desc": "Cálido y húmedo en las costas; templado de montaña en las tierras altas del interior."},
 
     # ================== EUROPA ==================
     "EU-01DE": {"tipo": "Templado", "desc": "Oceánico suave en el norte y continental con inviernos fríos en el sur y este."},
@@ -36,6 +39,9 @@ CLIMA = {
     "EU-10SE": {"tipo": "Frío continental", "desc": "Inviernos largos y fríos, veranos cortos y suaves; subártico en el norte."},
     "EU-11NO": {"tipo": "Frío oceánico", "desc": "Templado en la costa por la corriente del Golfo; subártico en el interior y norte."},
     "EU-12PL": {"tipo": "Continental templado", "desc": "Inviernos fríos y veranos cálidos, con influencia tanto marítima como continental."},
+    "EU-13BE": {"tipo": "Oceánico", "desc": "Templado y húmedo todo el año; veranos suaves e inviernos frescos con lluvia frecuente."},
+    "EU-14AT": {"tipo": "Alpino", "desc": "Continental templado en el este; frío, nevado y montañoso en los Alpes al oeste."},
+    "EU-15IE": {"tipo": "Oceánico", "desc": "Templado y muy lluvioso todo el año con fuerte influencia marina; veranos suaves e inviernos frescos."},
 
     # ================== ASIA ==================
     "AS-01CN": {"tipo": "Variado", "desc": "Continental seco en el norte y oeste; monzónico subtropical en el sur y este."},
@@ -63,5 +69,5 @@ CLIMA = {
 }
 
 if __name__ == "__main__":
-    assert len(CLIMA) == 46
+    assert len(CLIMA) == 52
     print(f"✓ {len(CLIMA)} países con clima")

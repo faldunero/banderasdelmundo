@@ -18,6 +18,9 @@ MATERIAS = {
     "AM-14PE": "Cobre, oro, zinc, harina de pescado",
     "AM-15PY": "Soja, carne vacuna, maíz, energía eléctrica",
     "AM-16UY": "Carne vacuna, soja, celulosa, lácteos",
+    "AM-17VE": "Petróleo, gas natural, oro, mineral de hierro",
+    "AM-18DO": "Oro, ferroníquel, tabaco, cacao",
+    "AM-19HN": "Café, banano, camarón, aceite de palma",
 
     # ================== EUROPA ==================
     "EU-01DE": "Automóviles, maquinaria, química, productos farmacéuticos",
@@ -32,6 +35,9 @@ MATERIAS = {
     "EU-10SE": "Maquinaria, mineral de hierro, madera, vehículos",
     "EU-11NO": "Petróleo, gas natural, pescado (salmón), aluminio",
     "EU-12PL": "Vehículos, maquinaria, muebles, carbón",
+    "EU-13BE": "Productos químicos, diamantes, vehículos, productos farmacéuticos",
+    "EU-14AT": "Maquinaria, vehículos, productos farmacéuticos, papel",
+    "EU-15IE": "Productos farmacéuticos, química, maquinaria, software",
 
     # ================== ASIA ==================
     "AS-01CN": "Electrónica, maquinaria, textiles, acero",
@@ -59,5 +65,5 @@ MATERIAS = {
 }
 
 if __name__ == "__main__":
-    assert len(MATERIAS) == 46
+    assert len(MATERIAS) == 52
     print(f"✓ {len(MATERIAS)} países con materias primas")

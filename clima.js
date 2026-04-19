@@ -63,6 +63,18 @@ const CLIMA = {
     "tipo": "Templado",
     "desc": "Clima templado con cuatro estaciones suaves y humedad del Río de la Plata."
   },
+  "AM-17VE": {
+    "tipo": "Tropical",
+    "desc": "Cálido y húmedo en las costas y llanos; templado en los Andes y más seco en el Caribe."
+  },
+  "AM-18DO": {
+    "tipo": "Tropical",
+    "desc": "Cálido y húmedo todo el año; estación lluviosa entre mayo y noviembre, con huracanes."
+  },
+  "AM-19HN": {
+    "tipo": "Tropical",
+    "desc": "Cálido y húmedo en las costas; templado de montaña en las tierras altas del interior."
+  },
   "EU-01DE": {
     "tipo": "Templado",
     "desc": "Oceánico suave en el norte y continental con inviernos fríos en el sur y este."
@@ -110,6 +122,18 @@ const CLIMA = {
   "EU-12PL": {
     "tipo": "Continental templado",
     "desc": "Inviernos fríos y veranos cálidos, con influencia tanto marítima como continental."
+  },
+  "EU-13BE": {
+    "tipo": "Oceánico",
+    "desc": "Templado y húmedo todo el año; veranos suaves e inviernos frescos con lluvia frecuente."
+  },
+  "EU-14AT": {
+    "tipo": "Alpino",
+    "desc": "Continental templado en el este; frío, nevado y montañoso en los Alpes al oeste."
+  },
+  "EU-15IE": {
+    "tipo": "Oceánico",
+    "desc": "Templado y muy lluvioso todo el año con fuerte influencia marina; veranos suaves e inviernos frescos."
   },
   "AS-01CN": {
     "tipo": "Variado",
