@@ -614,6 +614,188 @@
         }
         .puntaje-barra button:hover { background: #fff; color: #5a4510; }
 
+        /* ===== Sistema multijugador ===== */
+        .fase { display: none; }
+        .fase.activa { display: block; }
+
+        /* Fase Setup (elegir jugadores) */
+        .setup-titulo { font-size: 16px; font-weight: 900; letter-spacing: -0.3px; margin: 4px 0 2px; color: var(--texto); text-align: center; }
+        .setup-sub { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gris); text-align: center; margin-bottom: 14px; font-weight: 700; }
+        .setup-grupo { margin-bottom: 14px; }
+        .setup-grupo label.encabezado {
+            display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.3px;
+            text-transform: uppercase; color: var(--gris); margin-bottom: 6px; text-align: left;
+        }
+        .setup-numero {
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+        }
+        .setup-numero button {
+            padding: 10px 0; border-radius: 10px; border: 2px solid var(--borde);
+            background: #fff; color: var(--texto); font-weight: 800; font-size: 16px;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .setup-numero button:hover { border-color: #b8d4f0; }
+        .setup-numero button.activo {
+            background: linear-gradient(135deg, #27ae60 0%, #1e8e4e 100%);
+            color: #fff; border-color: transparent;
+            box-shadow: 0 4px 12px rgba(39,174,96,0.35);
+        }
+        .setup-nombres { display: flex; flex-direction: column; gap: 8px; }
+        .setup-nombres input {
+            padding: 10px 12px; border: 2px solid var(--borde); border-radius: 10px;
+            font-family: inherit; font-size: 14px; color: var(--texto);
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .setup-nombres input:focus {
+            outline: none; border-color: var(--azul);
+            box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.15);
+        }
+        .btn-comenzar {
+            display: block; width: 100%; margin-top: 14px;
+            padding: 13px 0; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #27ae60 0%, #1e8e4e 100%);
+            color: #fff; font-family: inherit; font-weight: 800;
+            font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; box-shadow: 0 6px 16px rgba(39,174,96,0.3);
+            transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+        }
+        .btn-comenzar:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(39,174,96,0.4); filter: brightness(1.05); }
+        .btn-comenzar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Fase Juego - tabla de jugadores */
+        .tabla-jugadores {
+            display: flex; flex-direction: column; gap: 4px;
+            margin: 26px 44px 10px 0;
+            max-height: 140px; overflow-y: auto; padding-right: 4px;
+        }
+        .jugador-fila {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 6px 10px; border-radius: 8px; background: #f7f9fc;
+            border: 1.5px solid transparent;
+            font-size: 12px;
+        }
+        .jugador-fila.activo {
+            background: linear-gradient(135deg, #fff1b8 0%, #ffd966 100%);
+            border-color: #e0b84c;
+            box-shadow: 0 3px 8px rgba(240, 196, 76, 0.25);
+        }
+        .jugador-fila .nombre {
+            font-weight: 700; color: var(--texto);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            max-width: 60%;
+        }
+        .jugador-fila.activo .nombre::before {
+            content: '▶'; margin-right: 5px; color: #d4a017;
+        }
+        .jugador-fila .puntos {
+            font-weight: 900; font-size: 15px; color: var(--azul);
+            background: #fff; padding: 1px 10px; border-radius: 999px;
+            min-width: 28px; text-align: center;
+        }
+        .encabezado-turno {
+            text-align: center; margin: 4px 0 10px;
+            font-size: 10.5px; letter-spacing: 1.3px; text-transform: uppercase;
+            color: var(--gris); font-weight: 700;
+        }
+        .encabezado-turno strong { color: #d4a017; font-size: 13px; letter-spacing: 0; }
+        .cartas-restantes {
+            text-align: center; margin: 4px 0 12px;
+            font-size: 9.5px; letter-spacing: 1.4px; text-transform: uppercase;
+            color: var(--gris); font-weight: 700;
+        }
+        .cartas-restantes strong { color: var(--azul); font-size: 12px; letter-spacing: 0; }
+
+        .accion-robar {
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            padding: 20px 10px;
+        }
+        .btn-robar-carta {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #2874f0 0%, #1e5bc7 100%);
+            color: #fff; font-family: inherit; font-weight: 800;
+            font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; box-shadow: 0 6px 16px rgba(40,116,240,0.3);
+            transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+        }
+        .btn-robar-carta:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(40,116,240,0.4); filter: brightness(1.05); }
+        .btn-robar-carta svg { width: 16px; height: 16px; }
+
+        .acciones-turno {
+            display: flex; justify-content: center; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+        }
+        .btn-siguiente {
+            padding: 10px 22px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #27ae60 0%, #1e8e4e 100%);
+            color: #fff; font-family: inherit; font-weight: 800;
+            font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(39,174,96,0.3);
+            transition: all 0.15s;
+        }
+        .btn-siguiente:hover { transform: translateY(-1px); filter: brightness(1.05); }
+        .btn-finalizar {
+            padding: 8px 16px; border-radius: 999px; border: 1.5px solid #e5e7eb;
+            background: #fff; color: var(--gris);
+            font-family: inherit; font-weight: 700; font-size: 10px;
+            letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .btn-finalizar:hover { border-color: #e74c3c; color: #e74c3c; }
+
+        /* Fase Final - Podio */
+        .podio-titulo {
+            text-align: center; font-size: 22px; font-weight: 900; letter-spacing: -0.5px;
+            color: var(--texto); margin: 10px 0 4px;
+        }
+        .podio-sub {
+            text-align: center; font-size: 10.5px; letter-spacing: 1.6px; text-transform: uppercase;
+            color: var(--gris); margin-bottom: 18px; font-weight: 700;
+        }
+        .podio-ganador {
+            text-align: center; padding: 14px 10px; border-radius: 14px;
+            background: linear-gradient(135deg, #fff1b8 0%, #ffd966 100%);
+            border: 2px solid #e0b84c;
+            box-shadow: 0 6px 18px rgba(240, 196, 76, 0.3);
+            margin-bottom: 14px;
+        }
+        .podio-ganador .corona { font-size: 26px; margin-bottom: 2px; }
+        .podio-ganador .ganador-nombre {
+            font-size: 18px; font-weight: 900; color: #7a5f10;
+            letter-spacing: -0.3px;
+        }
+        .podio-ganador .ganador-pts {
+            font-size: 12px; font-weight: 800; color: #8a6d1a;
+            letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px;
+        }
+        .podio-ganador .ganador-pts strong { font-size: 18px; color: var(--azul); letter-spacing: 0; }
+
+        .ranking {
+            display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
+        }
+        .ranking-fila {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 12px; border-radius: 10px; background: #f7f9fc;
+            font-size: 13px;
+        }
+        .ranking-fila .pos {
+            display: inline-block; width: 22px; height: 22px;
+            border-radius: 50%; background: #fff; border: 1.5px solid var(--borde);
+            text-align: center; line-height: 19px;
+            font-size: 11px; font-weight: 800; color: var(--gris);
+            margin-right: 8px;
+        }
+        .ranking-fila .nombre { flex: 1; font-weight: 700; color: var(--texto); }
+        .ranking-fila .puntos { font-weight: 900; color: var(--azul); }
+        .btn-nueva-partida {
+            display: block; width: 100%; padding: 12px 0; border-radius: 12px; border: none;
+            background: linear-gradient(135deg, #27ae60 0%, #1e8e4e 100%);
+            color: #fff; font-family: inherit; font-weight: 800;
+            font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+            cursor: pointer; box-shadow: 0 6px 16px rgba(39,174,96,0.3);
+            transition: transform 0.15s, filter 0.15s;
+        }
+        .btn-nueva-partida:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
         /* Puntaje destacado en la página principal */
         .puntaje-principal {
             display: inline-flex; align-items: center; gap: 12px;
@@ -640,8 +822,9 @@
             text-transform: uppercase; color: #8a6d1a;
         }
         .puntaje-principal .valor {
-            font-size: 26px; font-weight: 900; color: #1e4a8f;
+            font-size: 15px; font-weight: 900; color: #1e4a8f;
             font-variant-numeric: tabular-nums;
+            letter-spacing: -0.2px;
         }
         .puntaje-principal .btn-reset-principal {
             background: rgba(255,255,255,0.7); border: 1px solid #e0b84c; color: #8a6d1a;
@@ -736,17 +919,16 @@
 
     <!-- Botón "A jugar" (bajo el buscador) -->
     <div class="caja-jugar">
-        <div class="puntaje-principal" id="puntajePrincipal">
+        <div class="puntaje-principal" id="puntajePrincipal" style="display:none;">
             <span class="icono" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2l2.39 5.32L20 8.27l-4.06 3.94L17.18 18 12 15.27 6.82 18l1.24-5.79L4 8.27l5.61-.95L12 2z"/>
                 </svg>
             </span>
             <div class="texto">
-                <span class="etiqueta">Puntaje total</span>
-                <span class="valor" id="puntajePrincipalValor">0</span>
+                <span class="etiqueta" id="puntajePrincipalEtiqueta">Partida activa</span>
+                <span class="valor" id="puntajePrincipalValor">—</span>
             </div>
-            <button type="button" class="btn-reset-principal" id="btnReiniciarPuntajePrincipal" title="Reiniciar puntaje">Reiniciar</button>
         </div>
         <button id="btnJugar" class="btn-jugar-grande" type="button">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -847,83 +1029,129 @@
         </div>
     </div>
 
-    <!-- Modal: A jugar — carta sacada al azar -->
+    <!-- Modal: A jugar — multijugador -->
     <div class="modal-overlay" id="modalJugar" role="dialog" aria-modal="true" aria-labelledby="tituloJugar">
         <div class="modal-caja modal-caja-jugar">
             <button class="btn-cerrar-modal" id="btnCerrarJugar" title="Cerrar" aria-label="Cerrar">✕</button>
 
-            <div class="puntaje-barra" id="puntajeBarra">
-                <span class="etiqueta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M12 2l2.39 5.32L20 8.27l-4.06 3.94L17.18 18 12 15.27 6.82 18l1.24-5.79L4 8.27l5.61-.95L12 2z"/>
-                    </svg>
-                    Puntaje total
-                </span>
-                <span class="total" id="puntajeTotal">0</span>
-                <button type="button" id="btnReiniciarPuntaje" title="Reiniciar puntaje">Reiniciar</button>
-            </div>
+            <!-- ========= FASE 1: SETUP ========= -->
+            <div class="fase" id="faseSetup">
+                <h1 class="setup-titulo">Nueva partida</h1>
+                <span class="setup-sub">Banderas del Mundo · Ludolab</span>
 
-            <span class="etiqueta-tipo" id="tipoCartaRobada">Carta de país</span>
-            <h1 id="tituloJugar">Te tocó…</h1>
-
-            <!-- Vista 'adivina': solo bandera -->
-            <div class="carta-robada-wrap" id="zonaBandera" style="display:none;">
-                <img id="banderaAdivina" class="bandera-adivina" src="" alt="">
-            </div>
-
-            <!-- Vista carta completa -->
-            <div class="carta-robada-wrap" id="zonaCarta">
-                <img id="cartaRobada" class="carta-robada" src="" alt="">
-            </div>
-
-            <!-- Quiz (solo cartas de país) -->
-            <form class="quiz" id="quizPais" style="display:none;" autocomplete="off">
-                <p class="quiz-intro">Mira la bandera y adivina:</p>
-                <div class="quiz-campo" id="campoPais">
-                    <label for="respPais">1. ¿De qué país es?</label>
-                    <div class="input-wrap">
-                        <input type="text" id="respPais" name="respPais" placeholder="Nombre del país">
-                        <span class="marca" id="marcaPais"></span>
+                <div class="setup-grupo">
+                    <label class="encabezado">¿Cuántos jugadores?</label>
+                    <div class="setup-numero" id="setupNumero">
+                        <button type="button" data-n="1">1</button>
+                        <button type="button" data-n="2">2</button>
+                        <button type="button" data-n="3">3</button>
+                        <button type="button" data-n="4">4</button>
+                        <button type="button" data-n="5">5</button>
                     </div>
-                    <span class="respuesta-correcta">Respuesta: <strong id="correctoPais"></strong></span>
                 </div>
-                <div class="quiz-campo" id="campoCap">
-                    <label for="respCap">2. ¿Qué capital tiene?</label>
-                    <div class="input-wrap">
-                        <input type="text" id="respCap" name="respCap" placeholder="Nombre de la capital">
-                        <span class="marca" id="marcaCap"></span>
-                    </div>
-                    <span class="respuesta-correcta">Respuesta: <strong id="correctoCap"></strong></span>
-                </div>
-                <div class="quiz-campo" id="campoCont">
-                    <label for="respCont">3. ¿Qué continente es?</label>
-                    <div class="input-wrap">
-                        <input type="text" id="respCont" name="respCont">
-                        <span class="marca" id="marcaCont"></span>
-                    </div>
-                    <span class="respuesta-correcta">Respuesta: <strong id="correctoCont"></strong></span>
-                </div>
-                <button type="submit" class="btn-comprobar" id="btnComprobar">Comprobar</button>
-            </form>
 
-            <div class="resultado-ronda" id="resultadoRonda">
-                <span class="puntos-ronda" id="puntosRonda">0 / 3</span>
-                <span id="textoRonda">Respuestas correctas</span>
+                <div class="setup-grupo">
+                    <label class="encabezado">Nombres de los jugadores</label>
+                    <div class="setup-nombres" id="setupNombres"></div>
+                </div>
+
+                <button type="button" class="btn-comenzar" id="btnComenzar">Comenzar juego</button>
             </div>
 
-            <p class="descripcion-carta" id="descCartaRobada"></p>
+            <!-- ========= FASE 2: JUEGO ========= -->
+            <div class="fase" id="faseJuego">
+                <div class="tabla-jugadores" id="tablaJugadores"></div>
 
-            <div class="acciones-jugar">
-                <button id="btnOtraCarta" class="btn-instrucciones jugar" type="button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 12a9 9 0 0 1 15.5-6.3M21 12a9 9 0 0 1-15.5 6.3"/>
-                        <path d="M18 3v4.5h-4.5M6 21v-4.5h4.5"/>
-                    </svg>
-                    Otra carta
-                </button>
-                <button id="btnVerDetalleRobada" class="btn-instrucciones secundario" type="button">
-                    Ver detalle
-                </button>
+                <div class="encabezado-turno">Turno de <strong id="turnoNombre">—</strong></div>
+                <div class="cartas-restantes">Cartas restantes: <strong id="cartasRestantes">46</strong></div>
+
+                <!-- Antes de robar -->
+                <div class="accion-robar" id="accionRobar">
+                    <span class="etiqueta-tipo">Es tu turno</span>
+                    <button type="button" class="btn-robar-carta" id="btnRobarCarta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="3.5"/>
+                            <circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/>
+                            <circle cx="16" cy="16" r="1.4" fill="currentColor" stroke="none"/>
+                            <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+                        </svg>
+                        Robar carta
+                    </button>
+                </div>
+
+                <!-- Zona de carta (bandera / carta completa) -->
+                <div id="zonaRonda" style="display:none;">
+                    <span class="etiqueta-tipo" id="tipoCartaRobada">Carta de país</span>
+                    <h1 id="tituloJugar">Adivina</h1>
+
+                    <div class="carta-robada-wrap" id="zonaBandera" style="display:none;">
+                        <img id="banderaAdivina" class="bandera-adivina" src="" alt="">
+                    </div>
+                    <div class="carta-robada-wrap" id="zonaCarta" style="display:none;">
+                        <img id="cartaRobada" class="carta-robada" src="" alt="">
+                    </div>
+
+                    <form class="quiz" id="quizPais" style="display:none;" autocomplete="off">
+                        <p class="quiz-intro">Mira la bandera y adivina:</p>
+                        <div class="quiz-campo" id="campoPais">
+                            <label for="respPais">1. ¿De qué país es?</label>
+                            <div class="input-wrap">
+                                <input type="text" id="respPais" name="respPais" placeholder="Nombre del país">
+                                <span class="marca" id="marcaPais"></span>
+                            </div>
+                            <span class="respuesta-correcta">Respuesta: <strong id="correctoPais"></strong></span>
+                        </div>
+                        <div class="quiz-campo" id="campoCap">
+                            <label for="respCap">2. ¿Qué capital tiene?</label>
+                            <div class="input-wrap">
+                                <input type="text" id="respCap" name="respCap" placeholder="Nombre de la capital">
+                                <span class="marca" id="marcaCap"></span>
+                            </div>
+                            <span class="respuesta-correcta">Respuesta: <strong id="correctoCap"></strong></span>
+                        </div>
+                        <div class="quiz-campo" id="campoCont">
+                            <label for="respCont">3. ¿Qué continente es?</label>
+                            <div class="input-wrap">
+                                <input type="text" id="respCont" name="respCont">
+                                <span class="marca" id="marcaCont"></span>
+                            </div>
+                            <span class="respuesta-correcta">Respuesta: <strong id="correctoCont"></strong></span>
+                        </div>
+                        <button type="submit" class="btn-comprobar" id="btnComprobar">Comprobar</button>
+                    </form>
+
+                    <div class="resultado-ronda" id="resultadoRonda">
+                        <span class="puntos-ronda" id="puntosRonda">0 / 3</span>
+                        <span id="textoRonda">Respuestas correctas</span>
+                    </div>
+
+                    <p class="descripcion-carta" id="descCartaRobada"></p>
+
+                    <div class="acciones-turno" id="accionesTurno" style="display:none;">
+                        <button type="button" class="btn-siguiente" id="btnSiguienteTurno">Siguiente jugador</button>
+                        <button type="button" id="btnVerDetalleRobada" class="btn-instrucciones secundario">Ver detalle</button>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-top:16px;">
+                    <button type="button" class="btn-finalizar" id="btnFinalizarJuego">Finalizar juego ahora</button>
+                </div>
+            </div>
+
+            <!-- ========= FASE 3: RESULTADO FINAL ========= -->
+            <div class="fase" id="faseFinal">
+                <h1 class="podio-titulo">¡Fin del juego!</h1>
+                <span class="podio-sub" id="podioMotivo">Banderas del Mundo · Ludolab</span>
+
+                <div class="podio-ganador">
+                    <div class="corona">★</div>
+                    <div class="ganador-nombre" id="ganadorNombre">—</div>
+                    <div class="ganador-pts">Puntaje: <strong id="ganadorPuntaje">0</strong></div>
+                </div>
+
+                <div class="ranking" id="rankingFinal"></div>
+
+                <button type="button" class="btn-nueva-partida" id="btnNuevaPartida">Nueva partida</button>
             </div>
         </div>
     </div>
@@ -1230,21 +1458,23 @@
             if (e.key === 'Escape' && modalJugar.classList.contains('visible')) cerrarModalJugar();
         });
 
-        // --- Simulación de juego: "A jugar" -----------------------------
-        // Mazo real: 72 cartas de país + 8 cartas especiales (Pierde 3, Descarta 3, Robo 2)
+        // ======================================================
+        //       SIMULACIÓN DE JUEGO MULTIJUGADOR
+        // ======================================================
 
-        // Normaliza texto: minúsculas, sin tildes, sin puntuación repetida, trim
+        // --- Normalización y alias de respuestas ---
         function normalizar(s) {
             return (s || '').toString().toLowerCase()
                 .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
                 .replace(/\./g, '').replace(/\s+/g, ' ').trim();
         }
-        // Alias para nombres con múltiples variantes aceptables
         const ALIAS_PAIS = {
             "AM-10US": ["estados unidos", "ee uu", "eeuu", "usa", "estados unidos de america"],
             "EU-07GB": ["reino unido", "uk", "gran bretana", "inglaterra"],
             "EU-08NL": ["paises bajos", "holanda", "netherlands"],
             "AS-04KR": ["corea del sur", "corea", "sur corea"],
+            "OC-03PG": ["papua nueva guinea", "papua"],
+            "OC-02NZ": ["nueva zelanda", "nueva zelandia"],
         };
         function respuestasValidas(p) {
             const base = [normalizar(p.nombre)];
@@ -1252,44 +1482,162 @@
             return [...new Set([...base, ...extra])];
         }
 
-        // Puntaje acumulado (localStorage)
-        const KEY_PUNTAJE = 'banderas_puntaje_total';
-        function leerPuntaje() {
-            try { return parseInt(localStorage.getItem(KEY_PUNTAJE) || '0', 10) || 0; }
-            catch (e) { return 0; }
+        // --- Estado de la partida (persiste en localStorage) ---
+        const KEY_JUEGO = 'banderas_juego_activo';
+        let JUEGO = cargarJuego();
+
+        function cargarJuego() {
+            try {
+                const raw = localStorage.getItem(KEY_JUEGO);
+                if (!raw) return null;
+                const g = JSON.parse(raw);
+                if (!g.jugadores || !Array.isArray(g.jugadores)) return null;
+                return g;
+            } catch (e) { return null; }
         }
-        function guardarPuntaje(v) {
-            try { localStorage.setItem(KEY_PUNTAJE, String(v)); } catch (e) {}
+        function guardarJuego() {
+            try {
+                if (JUEGO) localStorage.setItem(KEY_JUEGO, JSON.stringify(JUEGO));
+                else localStorage.removeItem(KEY_JUEGO);
+            } catch (e) {}
         }
-        function actualizarPuntajeUI() {
-            const p = leerPuntaje();
-            const elModal = document.getElementById('puntajeTotal');
-            const elPrincipal = document.getElementById('puntajePrincipalValor');
-            if (elModal) elModal.innerText = p;
-            if (elPrincipal) {
-                elPrincipal.innerText = p;
-                // pequeña animación cuando cambia
-                elPrincipal.classList.remove('palpita');
-                void elPrincipal.offsetWidth;
-                elPrincipal.classList.add('palpita');
+
+        // --- Banner de estado en la página principal ---
+        function actualizarBannerPrincipal() {
+            const banner = document.getElementById('puntajePrincipal');
+            const etiqueta = document.getElementById('puntajePrincipalEtiqueta');
+            const valor = document.getElementById('puntajePrincipalValor');
+            if (!JUEGO) { banner.style.display = 'none'; return; }
+            banner.style.display = 'inline-flex';
+            if (JUEGO.estado === 'jugando') {
+                const lider = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje)[0];
+                etiqueta.innerText = 'Partida en curso';
+                valor.innerText = `${lider.nombre}: ${lider.puntaje} pts`;
+            } else if (JUEGO.estado === 'finalizado') {
+                const lider = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje)[0];
+                etiqueta.innerText = 'Última partida';
+                valor.innerText = `Ganó ${lider.nombre} · ${lider.puntaje} pts`;
+            }
+            valor.classList.remove('palpita');
+            void valor.offsetWidth;
+            valor.classList.add('palpita');
+        }
+
+        // --- Fases de la modal ---
+        function mostrarFase(nombreFase) {
+            ['faseSetup', 'faseJuego', 'faseFinal'].forEach(f => {
+                document.getElementById(f).classList.toggle('activa', f === nombreFase);
+            });
+        }
+
+        // ========== FASE SETUP ==========
+        let setupNum = 2;
+        function renderSetup(numJugadores) {
+            setupNum = numJugadores;
+            // marcar el botón activo
+            document.querySelectorAll('#setupNumero button').forEach(b => {
+                b.classList.toggle('activo', parseInt(b.dataset.n,10) === numJugadores);
+            });
+            // generar inputs de nombre
+            const cont = document.getElementById('setupNombres');
+            const previos = [...cont.querySelectorAll('input')].map(i => i.value);
+            cont.innerHTML = '';
+            for (let i = 0; i < numJugadores; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = 18;
+                input.placeholder = `Jugador ${i+1}`;
+                input.value = previos[i] || '';
+                cont.appendChild(input);
             }
         }
-        actualizarPuntajeUI();
-
-        function reiniciarPuntaje() {
-            if (!confirm('¿Reiniciar el puntaje a 0?')) return;
-            guardarPuntaje(0);
-            actualizarPuntajeUI();
+        function comenzarJuego() {
+            const inputs = [...document.querySelectorAll('#setupNombres input')];
+            const nombres = inputs.map((inp, i) => (inp.value.trim() || `Jugador ${i+1}`));
+            JUEGO = {
+                estado: 'jugando',
+                jugadores: nombres.map(n => ({ nombre: n, puntaje: 0 })),
+                turno: 0,
+                cartasUsadas: [],
+                cartaActualId: null,
+                rondaComprobada: false,
+            };
+            guardarJuego();
+            actualizarBannerPrincipal();
+            renderFaseJuego();
         }
-        const btnResetModal = document.getElementById('btnReiniciarPuntaje');
-        const btnResetPrincipal = document.getElementById('btnReiniciarPuntajePrincipal');
-        if (btnResetModal) btnResetModal.onclick = reiniciarPuntaje;
-        if (btnResetPrincipal) btnResetPrincipal.onclick = reiniciarPuntaje;
 
-        // Sincroniza si otra pestaña cambia el puntaje
-        window.addEventListener('storage', (e) => {
-            if (e.key === KEY_PUNTAJE) actualizarPuntajeUI();
-        });
+        // ========== FASE JUEGO ==========
+        // `paisSacado` se declara antes (línea ~1352) como variable compartida del script.
+
+        function renderFaseJuego() {
+            mostrarFase('faseJuego');
+            renderTablaJugadores();
+            document.getElementById('turnoNombre').innerText = JUEGO.jugadores[JUEGO.turno].nombre;
+            document.getElementById('cartasRestantes').innerText = dbPaises.length - JUEGO.cartasUsadas.length;
+
+            const zonaRonda = document.getElementById('zonaRonda');
+            const accionRobar = document.getElementById('accionRobar');
+
+            if (JUEGO.cartaActualId) {
+                // Ya hay carta sacada: restaurar vista del quiz
+                const p = dbPaises.find(x => x.id === JUEGO.cartaActualId);
+                paisSacado = p;
+                accionRobar.style.display = 'none';
+                zonaRonda.style.display = '';
+                mostrarCartaEnRonda(p);
+                if (JUEGO.rondaComprobada) {
+                    // mostrar resultados ya comprobados (sin re-puntuar)
+                    restaurarRondaComprobada(p);
+                } else {
+                    resetQuizUI();
+                }
+            } else {
+                // Sin carta: mostrar botón robar
+                accionRobar.style.display = 'flex';
+                zonaRonda.style.display = 'none';
+                paisSacado = null;
+            }
+        }
+
+        function renderTablaJugadores() {
+            const cont = document.getElementById('tablaJugadores');
+            cont.innerHTML = '';
+            JUEGO.jugadores.forEach((j, i) => {
+                const f = document.createElement('div');
+                f.className = 'jugador-fila' + (i === JUEGO.turno ? ' activo' : '');
+                f.innerHTML = `<span class="nombre">${escapeHtml(j.nombre)}</span><span class="puntos">${j.puntaje}</span>`;
+                cont.appendChild(f);
+            });
+        }
+        function escapeHtml(s) {
+            return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function mostrarCartaEnRonda(p) {
+            const imgCarta = document.getElementById('cartaRobada');
+            const imgBan = document.getElementById('banderaAdivina');
+            imgCarta.style.animation = 'none'; void imgCarta.offsetWidth; imgCarta.style.animation = '';
+            imgBan.style.animation = 'none'; void imgBan.offsetWidth; imgBan.style.animation = '';
+
+            document.getElementById('tipoCartaRobada').innerText = 'Carta de país';
+            document.getElementById('tipoCartaRobada').classList.remove('truco');
+            document.getElementById('tituloJugar').innerText = 'Adivina';
+
+            imgBan.src = `banderas_svg/${p.iso}.svg`;
+            imgBan.alt = 'Bandera a adivinar';
+            document.getElementById('zonaBandera').style.display = 'flex';
+            document.getElementById('zonaCarta').style.display = 'none';
+            document.getElementById('descCartaRobada').style.display = 'none';
+            document.getElementById('quizPais').style.display = 'block';
+            document.getElementById('accionesTurno').style.display = 'none';
+
+            const idCarta = p.id.substring(0, 5);
+            imgCarta.src = `cartas_png/${idCarta}.png`;
+            imgCarta.alt = `Carta ${idCarta} — ${p.nombre}`;
+            imgCarta.classList.add('clickable');
+            imgCarta.onclick = () => verDetalleRobada();
+        }
 
         function resetQuizUI() {
             ['campoPais', 'campoCap', 'campoCont'].forEach(id => {
@@ -1303,75 +1651,30 @@
             btn.disabled = false;
             btn.innerText = 'Comprobar';
             document.getElementById('resultadoRonda').classList.remove('visible');
+            document.getElementById('accionesTurno').style.display = 'none';
+            setTimeout(() => { const r = document.getElementById('respPais'); if (r) r.focus(); }, 50);
         }
 
-        function sacarCartaAlAzar() {
-            const esEspecial = Math.random() < (8 / 80);
-            const imgCarta = document.getElementById('cartaRobada');
-            const imgBan = document.getElementById('banderaAdivina');
-            const zonaCarta = document.getElementById('zonaCarta');
-            const zonaBan = document.getElementById('zonaBandera');
-            const quiz = document.getElementById('quizPais');
-            const desc = document.getElementById('descCartaRobada');
+        function robarCarta() {
+            const disponibles = dbPaises.filter(p => !JUEGO.cartasUsadas.includes(p.id));
+            if (disponibles.length === 0) { finalizarJuego('mazo'); return; }
+            const p = disponibles[Math.floor(Math.random() * disponibles.length)];
+            JUEGO.cartaActualId = p.id;
+            JUEGO.cartasUsadas.push(p.id);
+            JUEGO.rondaComprobada = false;
+            guardarJuego();
+            paisSacado = p;
 
-            // reinicia animación
-            imgCarta.style.animation = 'none'; void imgCarta.offsetWidth; imgCarta.style.animation = '';
-            imgBan.style.animation = 'none'; void imgBan.offsetWidth; imgBan.style.animation = '';
-
+            document.getElementById('accionRobar').style.display = 'none';
+            document.getElementById('zonaRonda').style.display = '';
+            document.getElementById('cartasRestantes').innerText = dbPaises.length - JUEGO.cartasUsadas.length;
+            mostrarCartaEnRonda(p);
             resetQuizUI();
-
-            if (esEspecial) {
-                const totalPeso = cartasEspeciales.reduce((s, c) => s + c.peso, 0);
-                let r = Math.random() * totalPeso;
-                let carta = cartasEspeciales[0];
-                for (const c of cartasEspeciales) {
-                    r -= c.peso;
-                    if (r <= 0) { carta = c; break; }
-                }
-                paisSacado = null;
-                document.getElementById('tipoCartaRobada').innerText = 'Carta de truco';
-                document.getElementById('tipoCartaRobada').classList.add('truco');
-                document.getElementById('tituloJugar').innerText = '¡Carta especial!';
-                imgCarta.src = `cartas_especiales_png/${carta.archivo}`;
-                imgCarta.alt = carta.nombre;
-                imgCarta.classList.remove('clickable');
-                imgCarta.onclick = null;
-                desc.innerHTML = carta.desc;
-                desc.style.display = '';
-                zonaBan.style.display = 'none';
-                zonaCarta.style.display = '';
-                quiz.style.display = 'none';
-                document.getElementById('btnVerDetalleRobada').style.display = 'none';
-            } else {
-                const p = dbPaises[Math.floor(Math.random() * dbPaises.length)];
-                paisSacado = p;
-                document.getElementById('tipoCartaRobada').innerText = 'Carta de país';
-                document.getElementById('tipoCartaRobada').classList.remove('truco');
-                document.getElementById('tituloJugar').innerText = 'Adivina';
-
-                // En modo adivina: solo bandera visible, carta oculta
-                imgBan.src = `banderas_svg/${p.iso}.svg`;
-                imgBan.alt = 'Bandera a adivinar';
-                zonaBan.style.display = 'flex';
-                zonaCarta.style.display = 'none';
-                desc.style.display = 'none';
-                quiz.style.display = 'block';
-                document.getElementById('btnVerDetalleRobada').style.display = 'none';
-
-                // Preparar la carta completa por si luego se revela
-                const idCarta = p.id.substring(0, 5);
-                imgCarta.src = `cartas_png/${idCarta}.png`;
-                imgCarta.alt = `Carta ${idCarta} — ${p.nombre}`;
-                imgCarta.classList.add('clickable');
-                imgCarta.onclick = () => verDetalleRobada();
-
-                setTimeout(() => document.getElementById('respPais').focus(), 50);
-            }
         }
 
         function comprobarQuiz(ev) {
             ev.preventDefault();
-            if (!paisSacado) return;
+            if (!paisSacado || !JUEGO) return;
             const p = paisSacado;
             const resp = {
                 pais:  normalizar(document.getElementById('respPais').value),
@@ -1384,7 +1687,6 @@
                 cont:  resp.cont.length > 0 && resp.cont === normalizar(p.cont),
             };
 
-            // Marcas y feedback por campo
             const campos = [
                 { id: 'campoPais', ok: ok.pais, correcta: p.nombre, marca: 'marcaPais', target: 'correctoPais' },
                 { id: 'campoCap',  ok: ok.cap,  correcta: p.cap,    marca: 'marcaCap',  target: 'correctoCap'  },
@@ -1399,31 +1701,108 @@
             });
 
             const puntos = (ok.pais ? 1 : 0) + (ok.cap ? 1 : 0) + (ok.cont ? 1 : 0);
-            const nuevoTotal = leerPuntaje() + puntos;
-            guardarPuntaje(nuevoTotal);
-            actualizarPuntajeUI();
+            JUEGO.jugadores[JUEGO.turno].puntaje += puntos;
+            JUEGO.rondaComprobada = true;
+            guardarJuego();
+            renderTablaJugadores();
+            actualizarBannerPrincipal();
 
             document.getElementById('puntosRonda').innerText = `${puntos} / 3`;
-            const msg = puntos === 3 ? '¡Todas correctas! +3 puntos'
-                      : puntos === 2 ? 'Muy bien, +2 puntos'
-                      : puntos === 1 ? 'Te llevas +1 punto'
-                      : 'Sigue intentando, 0 puntos esta ronda';
+            const nombre = JUEGO.jugadores[JUEGO.turno].nombre;
+            const msg = puntos === 3 ? `¡${nombre} acertó todas! +3 puntos`
+                      : puntos === 2 ? `Muy bien ${nombre}, +2 puntos`
+                      : puntos === 1 ? `${nombre} se lleva +1 punto`
+                      : `${nombre} no sumó esta ronda`;
             document.getElementById('textoRonda').innerText = msg;
             document.getElementById('resultadoRonda').classList.add('visible');
 
-            // Revelar carta completa
             document.getElementById('zonaBandera').style.display = 'none';
             document.getElementById('zonaCarta').style.display = 'flex';
-            document.getElementById('btnVerDetalleRobada').style.display = 'inline-flex';
+            document.getElementById('accionesTurno').style.display = 'flex';
 
             const btn = document.getElementById('btnComprobar');
             btn.disabled = true;
             btn.innerText = 'Comprobado';
-        }
-        document.getElementById('quizPais').addEventListener('submit', comprobarQuiz);
 
+            // Si fue la última carta, avisa para cerrar al presionar "Siguiente"
+            if (JUEGO.cartasUsadas.length >= dbPaises.length) {
+                document.getElementById('btnSiguienteTurno').innerText = 'Ver resultado final';
+            }
+        }
+
+        function restaurarRondaComprobada(p) {
+            // Cuando el usuario reabre la modal tras comprobar, restauramos visualmente
+            // (no se re-puntúa). Caso bordes: para simplicidad, limpiamos a estado quiz y listo.
+            resetQuizUI();
+        }
+
+        function siguienteTurno() {
+            if (!JUEGO) return;
+            // ¿terminó el mazo?
+            if (JUEGO.cartasUsadas.length >= dbPaises.length) {
+                finalizarJuego('mazo');
+                return;
+            }
+            JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
+            JUEGO.cartaActualId = null;
+            JUEGO.rondaComprobada = false;
+            guardarJuego();
+            paisSacado = null;
+            renderFaseJuego();
+        }
+
+        // ========== FASE FINAL ==========
+        function finalizarJuego(motivo) {
+            if (!JUEGO) return;
+            JUEGO.estado = 'finalizado';
+            guardarJuego();
+            renderFinal(motivo);
+        }
+        function renderFinal(motivo) {
+            mostrarFase('faseFinal');
+            const ordenados = [...JUEGO.jugadores].sort((a,b) => b.puntaje - a.puntaje);
+            const ganador = ordenados[0];
+            const empate = ordenados.length > 1 && ordenados[1].puntaje === ganador.puntaje;
+
+            document.getElementById('podioMotivo').innerText =
+                motivo === 'mazo' ? 'Se acabaron las cartas del mazo' : 'Juego finalizado por los jugadores';
+
+            if (empate) {
+                const empatados = ordenados.filter(j => j.puntaje === ganador.puntaje).map(j => j.nombre).join(' · ');
+                document.getElementById('ganadorNombre').innerText = `Empate: ${empatados}`;
+            } else {
+                document.getElementById('ganadorNombre').innerText = ganador.nombre;
+            }
+            document.getElementById('ganadorPuntaje').innerText = ganador.puntaje;
+
+            const rk = document.getElementById('rankingFinal');
+            rk.innerHTML = '';
+            ordenados.forEach((j, i) => {
+                const f = document.createElement('div');
+                f.className = 'ranking-fila';
+                f.innerHTML = `<span><span class="pos">${i+1}</span><span class="nombre">${escapeHtml(j.nombre)}</span></span><span class="puntos">${j.puntaje} pts</span>`;
+                rk.appendChild(f);
+            });
+            actualizarBannerPrincipal();
+        }
+        function nuevaPartida() {
+            JUEGO = null;
+            guardarJuego();
+            actualizarBannerPrincipal();
+            renderSetup(2);
+            mostrarFase('faseSetup');
+        }
+
+        // ========== APERTURA DE LA MODAL ==========
         function abrirModalJugar() {
-            sacarCartaAlAzar();
+            if (!JUEGO) {
+                renderSetup(2);
+                mostrarFase('faseSetup');
+            } else if (JUEGO.estado === 'jugando') {
+                renderFaseJuego();
+            } else if (JUEGO.estado === 'finalizado') {
+                renderFinal('mazo');
+            }
             modalJugar.classList.add('visible');
             document.body.style.overflow = 'hidden';
         }
@@ -1437,11 +1816,35 @@
             mostrarDetalle(paisSacado);
         }
 
+        // ========== BINDINGS ==========
         btnJugar.onclick = abrirModalJugar;
         document.getElementById('btnCerrarJugar').onclick = cerrarModalJugar;
-        document.getElementById('btnOtraCarta').onclick = sacarCartaAlAzar;
-        document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
         modalJugar.addEventListener('click', (e) => { if (e.target === modalJugar) cerrarModalJugar(); });
+
+        // Setup
+        document.querySelectorAll('#setupNumero button').forEach(b => {
+            b.addEventListener('click', () => renderSetup(parseInt(b.dataset.n, 10)));
+        });
+        document.getElementById('btnComenzar').onclick = comenzarJuego;
+
+        // Juego
+        document.getElementById('btnRobarCarta').onclick = robarCarta;
+        document.getElementById('quizPais').addEventListener('submit', comprobarQuiz);
+        document.getElementById('btnSiguienteTurno').onclick = siguienteTurno;
+        document.getElementById('btnVerDetalleRobada').onclick = verDetalleRobada;
+        document.getElementById('btnFinalizarJuego').onclick = () => {
+            if (confirm('¿Finalizar la partida ahora y ver el resultado?')) finalizarJuego('manual');
+        };
+
+        // Final
+        document.getElementById('btnNuevaPartida').onclick = nuevaPartida;
+
+        // Click en banner principal abre modal de juego
+        document.getElementById('puntajePrincipal').onclick = abrirModalJugar;
+        document.getElementById('puntajePrincipal').style.cursor = 'pointer';
+
+        // Estado inicial
+        actualizarBannerPrincipal();
 
         // ============== Modal significado bandera / escudo ==============
         const modalSimbolo = document.getElementById('modalSimbolo');
