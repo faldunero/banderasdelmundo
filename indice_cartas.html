@@ -19,12 +19,12 @@
 </head>
 <body>
     <h1>Banderas <span>del Mundo</span></h1>
-    <p class="sub">Índice · 42 cartas · Ludolab</p>
+    <p class="sub">Índice · 52 cartas · Ludolab</p>
 
-    <h2>América (16)</h2>
+    <h2>América (19)</h2>
     <div class="grid" id="g-AM"></div>
 
-    <h2>Europa (12)</h2>
+    <h2>Europa (15)</h2>
     <div class="grid" id="g-EU"></div>
 
     <h2>Asia (8)</h2>
@@ -32,6 +32,9 @@
 
     <h2>África (6)</h2>
     <div class="grid" id="g-AF"></div>
+
+    <h2>Oceanía (4)</h2>
+    <div class="grid" id="g-OC"></div>
 
 <script>
 const cartas = [
@@ -47,7 +50,8 @@ const cartas = [
     ["EU-15","Irlanda"],["AS-01","China"],["AS-02","Japón"],
     ["AS-03","India"],["AS-04","Corea del Sur"],["AS-05","Turquía"],["AS-06","Tailandia"],
     ["AS-07","Israel"],["AS-08","Vietnam"],["AF-01","Egipto"],["AF-02","Sudáfrica"],
-    ["AF-03","Marruecos"],["AF-04","Nigeria"],["AF-05","Kenia"],["AF-06","Senegal"]
+    ["AF-03","Marruecos"],["AF-04","Nigeria"],["AF-05","Kenia"],["AF-06","Senegal"],
+    ["OC-01","Australia"],["OC-02","Nueva Zelanda"],["OC-03","Papúa Nueva Guinea"],["OC-04","Fiji"]
 ];
 cartas.forEach(([id, nombre]) => {
     const cont = document.getElementById("g-" + id.split("-")[0]);

@@ -44,6 +44,9 @@ CATALOGO = {
     "AM-14": "pe",  # Perú
     "AM-15": "py",  # Paraguay
     "AM-16": "uy",  # Uruguay
+    "AM-17": "ve",  # Venezuela
+    "AM-18": "do",  # Rep. Dominicana
+    "AM-19": "hn",  # Honduras
     # Europa
     "EU-01": "de",  # Alemania
     "EU-02": "es",  # España
@@ -57,6 +60,9 @@ CATALOGO = {
     "EU-10": "se",  # Suecia
     "EU-11": "no",  # Noruega
     "EU-12": "pl",  # Polonia
+    "EU-13": "be",  # Bélgica
+    "EU-14": "at",  # Austria
+    "EU-15": "ie",  # Irlanda
     # Asia
     "AS-01": "cn",  # China
     "AS-02": "jp",  # Japón
@@ -73,6 +79,11 @@ CATALOGO = {
     "AF-04": "ng",  # Nigeria
     "AF-05": "ke",  # Kenia
     "AF-06": "sn",  # Senegal
+    # Oceanía
+    "OC-01": "au",  # Australia
+    "OC-02": "nz",  # Nueva Zelanda
+    "OC-03": "pg",  # Papúa Nueva Guinea
+    "OC-04": "fj",  # Fiji
 }
 
 
