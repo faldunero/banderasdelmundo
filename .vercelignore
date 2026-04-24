@@ -1,0 +1,20 @@
+# Scripts y fuentes de generación — no van al sitio público
+*.py
+__pycache__/
+BD_banderas.xlsx
+documentos/
+publicar.sh
+
+# Plantillas de generación de cartas (no son páginas navegables)
+plantilla_carta.html
+plantilla_carta_especial.html
+cartas_banderas.html
+
+# Sistema
+.DS_Store
+.git/
+.vscode/
+.idea/
+.venv/
+venv/
+.ms-playwright/
