@@ -3,84 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de cartas — Banderas del Mundo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Catálogo de cartas — Banderas del Mundo · Ludolab</title>
+    <meta name="description" content="Catálogo completo de las 52 cartas del juego Banderas del Mundo de Ludolab.cl — donde la curiosidad se convierte en conocimiento.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================================
+           Brand Book Ludolab — paleta "Tech-Vital"
+           ============================================================ */
         :root {
-            --texto: #1e272e; --gris: #718093; --azul: #0984e3;
-            --borde: #f1f2f6;
+            --azul-profundo: #0052D4;
+            --verde-cian:    #43C6AC;
+            --blanco:        #FFFFFF;
+            --gris-neutro:   #F1F5F9;
+            --texto:         #0F172A;          /* tinte oscuro derivado de azul profundo */
+            --texto-suave:   #475569;
+            --gris-borde:    #E2E8F0;
+            --grad-marca:    linear-gradient(135deg, #0052D4 0%, #43C6AC 100%);
+            --sombra-card:   0 8px 24px rgba(15, 23, 42, 0.08);
+            --sombra-hover:  0 18px 40px rgba(0, 82, 212, 0.22);
+            --sombra-cta:    0 8px 22px rgba(0, 82, 212, 0.32);
         }
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; color: var(--texto); margin: 0; padding: 0 20px 40px; background: #fff; }
 
-        /* Banner: igual que en index */
-        .hero { width: 100vw; margin-left: calc(-50vw + 50%); display: flex; justify-content: center; background: #fff; }
-        .hero img { display: block; width: 100%; max-width: 480px; height: auto; }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Poppins', system-ui, sans-serif;
+            color: var(--texto);
+            margin: 0;
+            padding: 0 20px 40px;
+            background: var(--blanco);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================================
+           Hero / banner — degradado de marca como acento superior
+           ============================================================ */
+        .hero {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--blanco);
+            position: relative;
+            padding: 0 0 8px;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--grad-marca);
+        }
+        .hero img { display: block; width: 100%; max-width: 480px; height: auto; padding-top: 14px; }
         @media (max-width: 520px) { .hero img { max-width: 70%; } }
 
         .contenedor { max-width: 1200px; margin: 0 auto; }
 
-        /* Cabecera de la página */
-        .cabecera-pag { text-align: center; margin: 10px 0 6px; }
-        .cabecera-pag h1 { font-size: 32px; margin: 0 0 6px; letter-spacing: -0.5px; }
+        /* ============================================================
+           Cabecera
+           ============================================================ */
+        .cabecera-pag { text-align: center; margin: 18px 0 8px; }
+        .cabecera-pag h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 38px;
+            margin: 0 0 8px;
+            letter-spacing: -0.6px;
+            color: var(--azul-profundo);
+            background: var(--grad-marca);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .cabecera-pag .sub {
-            display: block; font-size: 11px; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--gris);
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            color: var(--texto-suave);
+        }
+        .cabecera-pag .lema {
+            display: block;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--texto-suave);
+            font-style: italic;
         }
 
-        /* Barra de navegación (arriba y abajo del contenido) */
+        /* ============================================================
+           Botones de navegación
+           ============================================================ */
         .nav-acciones {
-            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-            margin: 26px auto;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 28px auto;
         }
         .btn-nav {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 12px 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 13px 24px;
             border-radius: 14px;
-            border: 1px solid var(--borde);
-            background: #fff;
-            font-family: inherit;
+            border: 1.5px solid var(--gris-borde);
+            background: var(--blanco);
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 1px;
+            font-size: 12px;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
             color: var(--texto);
             cursor: pointer;
             text-decoration: none;
-            transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s, color 0.2s;
         }
-        .btn-nav:hover { background: #f9fafb; transform: translateY(-1px); }
+        .btn-nav:hover {
+            background: var(--gris-neutro);
+            border-color: var(--azul-profundo);
+            color: var(--azul-profundo);
+            transform: translateY(-1px);
+        }
         .btn-nav.primario {
-            background: var(--azul); border-color: var(--azul); color: #fff;
-            box-shadow: 0 6px 16px rgba(9,132,227,0.25);
+            background: var(--grad-marca);
+            border-color: transparent;
+            color: var(--blanco);
+            box-shadow: var(--sombra-cta);
         }
-        .btn-nav.primario:hover { background: #0779c8; border-color: #0779c8; box-shadow: 0 8px 20px rgba(9,132,227,0.35); }
+        .btn-nav.primario:hover {
+            background: var(--grad-marca);
+            color: var(--blanco);
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 82, 212, 0.42);
+        }
 
-        /* Títulos de sección */
+        /* ============================================================
+           Títulos de sección por continente
+           ============================================================ */
         h2 {
-            font-size: 15px; font-weight: 800; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--texto);
-            border-bottom: 1px solid var(--borde);
-            padding-bottom: 10px;
-            margin: 40px 0 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            color: var(--azul-profundo);
+            border-bottom: 2px solid var(--gris-neutro);
+            padding-bottom: 12px;
+            margin: 44px 0 22px;
+            position: relative;
         }
-        h2 small { color: var(--gris); font-weight: 600; letter-spacing: 1px; }
+        h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 64px;
+            height: 2px;
+            background: var(--grad-marca);
+        }
+        h2 small {
+            color: var(--texto-suave);
+            font-weight: 600;
+            letter-spacing: 1.4px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
 
-        /* Grid de cartas */
+        /* ============================================================
+           Grid de cartas
+           ============================================================ */
         .grid-cartas {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 28px;
-            /* Espacio extra para que el efecto lupa no quede recortado */
-            padding: 10px 6px;
+            padding: 14px 6px 20px;
         }
         .carta-item {
             cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
             transition: transform 0.3s ease, z-index 0s linear 0.3s;
             transform-origin: center center;
             position: relative;
             z-index: 1;
+            background: var(--gris-neutro);
+            padding: 14px 12px 12px;
+            border-radius: 18px;
+            border: 1px solid transparent;
         }
         .carta-item.estatica { cursor: default; }
         .carta-item img {
@@ -88,44 +205,106 @@
             max-width: 200px;
             height: auto;
             display: block;
-            border-radius: 14px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            border-radius: 12px;
+            box-shadow: var(--sombra-card);
             transition: box-shadow 0.3s ease;
         }
-        /* Efecto lupa: la carta crece sobre los vecinos al pasar el mouse */
         .carta-item:hover {
             transform: scale(1.45);
             z-index: 30;
             transition: transform 0.3s ease, z-index 0s;
+            background: var(--blanco);
+            border-color: var(--verde-cian);
+            box-shadow: var(--sombra-hover);
         }
-        .carta-item:hover img { box-shadow: 0 22px 44px rgba(0,0,0,0.28); }
+        .carta-item.estatica:hover {
+            transform: scale(1.15);
+        }
+        .carta-item:hover img { box-shadow: 0 22px 44px rgba(0, 82, 212, 0.28); }
         .carta-item .etiqueta {
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
         }
-        .carta-item .id-carta { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: var(--texto); }
-        .carta-item .nombre-pais { font-size: 12px; color: var(--gris); font-weight: 500; text-align: center; }
+        .carta-item .id-carta {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--azul-profundo);
+            background: var(--blanco);
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--gris-borde);
+        }
+        .carta-item:hover .id-carta {
+            background: var(--azul-profundo);
+            color: var(--blanco);
+            border-color: var(--azul-profundo);
+        }
+        .carta-item .nombre-pais {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            color: var(--texto);
+            font-weight: 500;
+            text-align: center;
+        }
 
         @media (max-width: 520px) {
-            .grid-cartas { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
-            .cabecera-pag h1 { font-size: 24px; }
-            .carta-item:hover { transform: scale(1.3); }
+            .grid-cartas { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 18px; }
+            .cabecera-pag h1 { font-size: 28px; }
+            .carta-item:hover { transform: scale(1.25); }
         }
 
-        /* Footer global */
+        /* ============================================================
+           Footer — aplicación de marca según Brand Book
+           ============================================================ */
         .creditos {
             width: 100%;
             text-align: center;
-            padding: 36px 0 28px;
-            margin-top: 50px;
-            border-top: 1px solid var(--borde);
+            padding: 44px 0 32px;
+            margin-top: 56px;
+            border-top: 1px solid var(--gris-neutro);
+            background: var(--blanco);
+            position: relative;
         }
-        .creditos a { display: inline-block; opacity: 0.9; transition: opacity 0.2s ease, transform 0.2s ease; }
-        .creditos a:hover { opacity: 1; transform: translateY(-1px); }
-        .creditos img { height: 42px; width: auto; display: block; }
+        .creditos::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96px;
+            height: 3px;
+            background: var(--grad-marca);
+            border-radius: 3px;
+        }
+        .creditos a {
+            display: inline-block;
+            opacity: 0.95;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .creditos a:hover { opacity: 1; transform: translateY(-2px); }
+        .creditos img { height: 46px; width: auto; display: block; margin: 0 auto; }
+        .creditos .firma {
+            display: block;
+            margin-top: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--azul-profundo);
+        }
         .creditos .tagline {
-            display: block; margin-top: 12px;
-            font-size: 10px; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; color: var(--gris);
+            display: block;
+            margin-top: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            color: var(--texto-suave);
         }
     </style>
 </head>
@@ -139,6 +318,7 @@
         <div class="cabecera-pag">
             <h1>Catálogo de cartas</h1>
             <span class="sub">52 países · 3 cartas de truco</span>
+            <span class="lema">Donde la curiosidad se convierte en conocimiento.</span>
         </div>
 
         <div class="nav-acciones">
@@ -174,7 +354,8 @@
         <a href="https://ludolab.cl" target="_blank" rel="noopener" title="ludolab.cl">
             <img src="imagenes/logotipo.png" alt="ludolab.cl — Juega, Aprende, Explora">
         </a>
-        <span class="tagline">© Ludolab · Juega · Aprende · Explora</span>
+        <span class="firma">Una experiencia de Ludolab.cl</span>
+        <span class="tagline">Juega · Aprende · Explora</span>
     </footer>
 
     <script>
