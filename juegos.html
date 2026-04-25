@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos · Ludolab — Catálogo</title>
+    <meta name="description" content="Catálogo de juegos Ludolab. Aventuras educativas para aprender jugando: geografía, historia, ciencia y cultura para niños, niñas y jóvenes.">
+    <meta property="og:title" content="Juegos · Ludolab">
+    <meta property="og:description" content="Donde la curiosidad se convierte en conocimiento. Catálogo de juegos educativos Ludolab.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ludolab.cl/juegos.html">
+    <link rel="icon" type="image/png" href="imagenes/logotipo.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ludo-azul': '#0052D4',
+                        'ludo-azul-dark': '#003B9F',
+                        'ludo-cian': '#43C6AC',
+                        'ludo-gris': '#F1F5F9',
+                    },
+                    fontFamily: {
+                        'title': ['Montserrat', 'sans-serif'],
+                        'body': ['Poppins', 'sans-serif'],
+                        'sans': ['Poppins', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'ludo-gradient': 'linear-gradient(90deg, #0052D4 0%, #43C6AC 100%)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+:root {
+    --ludo-azul:       #0052D4;
+    --ludo-azul-dark:  #003B9F;
+    --ludo-cian:       #43C6AC;
+    --ludo-gris:       #F1F5F9;
+    --slate-100:       #f1f5f9;
+    --slate-200:       #e2e8f0;
+    --slate-300:       #cbd5e1;
+    --slate-400:       #94a3b8;
+    --slate-500:       #64748b;
+    --slate-600:       #475569;
+    --slate-700:       #334155;
+    --slate-800:       #1e293b;
+    --slate-900:       #0f172a;
+    --grad-marca:      linear-gradient(90deg, #0052D4 0%, #43C6AC 100%);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    color: var(--slate-900);
+    background: var(--ludo-gris);
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-title { font-family: 'Montserrat', sans-serif; }
+
+/* ============ TOP STRIPE (logo y mini-nav) ============ */
+.top-stripe {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid var(--slate-100);
+}
+.top-stripe-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.top-stripe-logo img { height: 36px; width: auto; display: block; }
+.top-nav { display: flex; gap: 6px; }
+.top-nav a {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--slate-700);
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    transition: background .2s, color .2s;
+}
+.top-nav a:hover { background: var(--ludo-gris); color: var(--ludo-azul); }
+.top-nav a.activo { background: var(--ludo-azul); color: #fff; }
+
+/* ============ HERO BANNER ============ */
+.hero {
+    width: 100%;
+    background:
+        radial-gradient(1200px 380px at 80% -20%, rgba(67,198,172,0.18), transparent 60%),
+        radial-gradient(900px 320px at 10% 110%, rgba(0,82,212,0.16), transparent 55%),
+        linear-gradient(180deg, #ffffff 0%, var(--ludo-gris) 100%);
+    border-bottom: 1px solid var(--slate-200);
+}
+.hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 24px 56px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+.hero-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: var(--ludo-cian);
+    margin: 0;
+}
+.hero-h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 0;
+    color: var(--slate-900);
+    letter-spacing: -0.01em;
+}
+.hero-h1 .acento {
+    background: var(--grad-marca);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.hero-sub {
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: var(--slate-600);
+    max-width: 680px;
+    line-height: 1.55;
+    margin: 0;
+}
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate-700);
+    background: #ffffff;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--slate-200);
+    box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+}
+.hero-tag::before {
+    content: "";
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ludo-cian);
+    box-shadow: 0 0 0 4px rgba(67,198,172,0.2);
+}
+
+/* ============ FILTROS (chips de categoría) ============ */
+.filtros {
+    max-width: 1200px;
+    margin: -24px auto 32px;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.chip-filtro {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: #ffffff;
+    color: var(--slate-700);
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--slate-200);
+    cursor: pointer;
+    transition: all .2s;
+}
+.chip-filtro:hover { transform: translateY(-1px); border-color: var(--ludo-cian); color: var(--ludo-azul); }
+.chip-filtro.activo {
+    background: var(--ludo-azul);
+    border-color: var(--ludo-azul);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0,82,212,0.25);
+}
+
+/* ============ GRID DE PRODUCTOS ============ */
+.catalogo {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+}
+.catalogo-titulo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(20px, 2.4vw, 26px);
+    color: var(--slate-900);
+    margin: 0 0 6px;
+}
+.catalogo-bajada {
+    font-size: 14px;
+    color: var(--slate-500);
+    margin: 0 0 28px;
+}
+.grid-juegos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+/* ============ TARJETA DE PRODUCTO ============ */
+.tarjeta-juego {
+    background: #ffffff;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--slate-200);
+    box-shadow: 0 4px 16px rgba(15,23,42,0.04);
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+    display: flex;
+    flex-direction: column;
+}
+.tarjeta-juego:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,82,212,0.14);
+    border-color: var(--ludo-cian);
+}
+.tarjeta-portada {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background:
+        linear-gradient(180deg, var(--slate-100) 0%, var(--slate-200) 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tarjeta-portada img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s ease;
+}
+.tarjeta-juego:hover .tarjeta-portada img { transform: scale(1.04); }
+.tarjeta-portada-fallback {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--slate-400);
+    text-align: center;
+    padding: 24px;
+    letter-spacing: 0.05em;
+}
+.cinta {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--grad-marca);
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0,82,212,0.3);
+}
+.cinta.proximo { background: linear-gradient(90deg, #f59e0b 0%, #f97316 100%); box-shadow: 0 4px 12px rgba(249,115,22,0.3); }
+.cinta.nuevo   { background: linear-gradient(90deg, #fd79a8 0%, #c026d3 100%); box-shadow: 0 4px 12px rgba(192,38,211,0.3); }
+
+.tarjeta-cuerpo {
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+.tarjeta-cat {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ludo-cian);
+}
+.tarjeta-titulo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    line-height: 1.15;
+    color: var(--slate-900);
+    margin: 0;
+}
+.tarjeta-subtitulo {
+    font-size: 13px;
+    color: var(--slate-500);
+    margin: 0;
+    font-weight: 500;
+}
+.tarjeta-desc {
+    font-size: 14px;
+    color: var(--slate-700);
+    line-height: 1.55;
+    margin: 4px 0 0;
+}
+.tarjeta-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+.meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ludo-gris);
+    color: var(--slate-700);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--slate-200);
+}
+.meta-pill svg { width: 13px; height: 13px; stroke: var(--slate-500); }
+.tarjeta-acciones {
+    display: flex;
+    gap: 8px;
+    padding: 0 22px 22px;
+}
+.btn-juego {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .15s, background .15s;
+    cursor: pointer;
+    border: none;
+}
+.btn-juego.primario {
+    background: var(--ludo-azul);
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(0,82,212,0.3);
+}
+.btn-juego.primario:hover { background: var(--ludo-azul-dark); transform: translateY(-1px); }
+.btn-juego.secundario {
+    background: #ffffff;
+    color: var(--ludo-azul);
+    border: 1.5px solid var(--ludo-azul);
+}
+.btn-juego.secundario:hover { background: var(--ludo-gris); }
+.btn-juego.deshabilitado {
+    background: var(--slate-200);
+    color: var(--slate-500);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.btn-juego svg { width: 14px; height: 14px; }
+
+/* ============ TARJETA "PRÓXIMAMENTE" ============ */
+.tarjeta-juego.placeholder {
+    background:
+        repeating-linear-gradient(45deg, #ffffff 0 12px, var(--ludo-gris) 12px 24px);
+    border-style: dashed;
+    border-color: var(--slate-300);
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+    min-height: 380px;
+}
+.tarjeta-juego.placeholder:hover { transform: none; box-shadow: 0 4px 16px rgba(15,23,42,0.04); border-color: var(--ludo-cian); }
+.placeholder-icon {
+    width: 56px; height: 56px;
+    background: var(--grad-marca);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(0,82,212,0.25);
+}
+.placeholder-icon svg { width: 28px; height: 28px; stroke: #fff; }
+.placeholder-titulo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--slate-700);
+    margin: 0 0 6px;
+}
+.placeholder-bajada {
+    font-size: 13px;
+    color: var(--slate-500);
+    margin: 0;
+    max-width: 220px;
+    line-height: 1.5;
+}
+
+/* ============ MANIFIESTO ============ */
+.manifiesto {
+    max-width: 1100px;
+    margin: 0 auto 80px;
+    padding: 48px 32px;
+    background: #ffffff;
+    border-radius: 24px;
+    border: 1px solid var(--slate-200);
+    box-shadow: 0 6px 24px rgba(15,23,42,0.05);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.manifiesto::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--grad-marca);
+}
+.manifiesto-eyebrow {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--ludo-cian);
+    margin: 0 0 14px;
+}
+.manifiesto h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: clamp(24px, 3vw, 32px);
+    color: var(--slate-900);
+    margin: 0 0 16px;
+    line-height: 1.2;
+}
+.manifiesto p {
+    font-size: 16px;
+    color: var(--slate-600);
+    line-height: 1.65;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* ============ FOOTER ============ */
+footer.creditos {
+    width: 100%;
+    background: var(--slate-900);
+    color: var(--slate-300);
+    padding: 56px 24px 28px;
+    text-align: center;
+}
+.creditos-tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+    margin: 0 0 18px;
+    letter-spacing: 0.02em;
+}
+.creditos-logo img {
+    height: 40px;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    margin-bottom: 18px;
+}
+.creditos-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    margin: 0 0 24px;
+}
+.creditos-links a {
+    color: var(--slate-400);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color .2s;
+}
+.creditos-links a:hover { color: var(--ludo-cian); }
+.creditos-fina {
+    font-size: 12px;
+    color: var(--slate-500);
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 720px) {
+    .top-stripe-inner { padding: 12px 18px; }
+    .top-nav a { font-size: 10px; padding: 6px 10px; letter-spacing: 0.12em; }
+    .hero-inner { padding: 44px 20px 40px; }
+    .filtros { margin-top: -16px; }
+    .grid-juegos { grid-template-columns: 1fr; gap: 18px; }
+    .catalogo { padding: 0 18px 60px; }
+    .manifiesto { margin: 0 18px 60px; padding: 36px 22px; border-radius: 18px; }
+}
+    </style>
+</head>
+<body>
+
+    <!-- Top stripe con logo + nav -->
+    <div class="top-stripe">
+        <div class="top-stripe-inner">
+            <a href="https://ludolab.cl" class="top-stripe-logo" title="Ir a Ludolab">
+                <img src="imagenes/logotipo.png" alt="Ludolab.cl">
+            </a>
+            <nav class="top-nav" aria-label="Navegación principal">
+                <a href="https://ludolab.cl">Inicio</a>
+                <a href="juegos.html" class="activo">Juegos</a>
+                <a href="https://ludolab.cl#contacto">Contacto</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-inner">
+            <span class="hero-tag">Catálogo · <span id="totalJuegos">—</span>&nbsp;juegos disponibles</span>
+            <p class="hero-eyebrow">Colección Ludolab</p>
+            <h1 class="hero-h1">Juegos para <span class="acento">aprender jugando</span></h1>
+            <p class="hero-sub">Aventuras educativas que combinan diseño cuidado, contenidos verificados y mecánicas que enganchan. Pensadas para niños, niñas, jóvenes y familias curiosas.</p>
+        </div>
+    </header>
+
+    <!-- Filtros (placeholder, listos para crecer) -->
+    <div class="filtros" role="tablist" aria-label="Filtrar por categoría">
+        <button class="chip-filtro activo" data-cat="todos" type="button">Todos</button>
+        <button class="chip-filtro" data-cat="atlas" type="button">Atlas mundial</button>
+        <button class="chip-filtro" data-cat="historia" type="button">Historia</button>
+        <button class="chip-filtro" data-cat="ciencia" type="button">Ciencia</button>
+        <button class="chip-filtro" data-cat="cultura" type="button">Cultura</button>
+    </div>
+
+    <!-- CATÁLOGO -->
+    <main class="catalogo">
+        <h2 class="catalogo-titulo">Nuestros juegos</h2>
+        <p class="catalogo-bajada">Cada juego viene con su set de cartas, instrucciones y experiencia online complementaria.</p>
+
+        <div class="grid-juegos" id="gridJuegos">
+            <!-- Las tarjetas se renderizan vía JS desde el array JUEGOS -->
+        </div>
+    </main>
+
+    <!-- MANIFIESTO -->
+    <section class="manifiesto">
+        <p class="manifiesto-eyebrow">Nuestra filosofía</p>
+        <h2>Donde la curiosidad se convierte en conocimiento</h2>
+        <p>En Ludolab diseñamos experiencias lúdicas que respetan la inteligencia de quien juega. Cada carta, cada pregunta y cada ilustración pasa por un proceso de investigación, validación y diseño para que aprender se sienta como una aventura, no como una tarea.</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="creditos">
+        <p class="creditos-tagline">Donde la curiosidad se convierte en conocimiento</p>
+        <a href="https://ludolab.cl" target="_blank" rel="noopener" title="Ir a ludolab.cl" class="creditos-logo">
+            <img src="imagenes/logotipo.png" alt="Ludolab.cl">
+        </a>
+        <div class="creditos-links">
+            <a href="https://ludolab.cl">Inicio</a>
+            <a href="juegos.html">Juegos</a>
+            <a href="https://ludolab.cl#nosotros">Nosotros</a>
+            <a href="https://ludolab.cl#contacto">Contacto</a>
+        </div>
+        <p class="creditos-fina">© Ludolab.cl · Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+    // =========================================================
+    //   CATÁLOGO DE JUEGOS · estructura editable
+    //   Para agregar un nuevo juego, copia un objeto del array.
+    // =========================================================
+    const JUEGOS = [
+        {
+            id: 'banderas',
+            categoria: 'atlas',
+            categoriaLabel: 'Atlas mundial',
+            titulo: 'Banderas del Mundo',
+            subtitulo: 'Una aventura global para jóvenes exploradores',
+            descripcion: 'Explora 52 banderas seleccionadas y descubre sus países, capitales, datos geográficos y curiosidades. Un mazo de 60 cartas con modos de juego para 1 a 5 jugadores.',
+            portada: 'imagenes/portada_banderas.svg',
+            cinta: { texto: 'Disponible', clase: '' },
+            meta: [
+                { icono: 'users',  texto: '1–5 jugadores' },
+                { icono: 'clock',  texto: '25–35 min' },
+                { icono: 'cards',  texto: '60 cartas' },
+                { icono: 'age',    texto: '+8 años' },
+            ],
+            acciones: [
+                { tipo: 'primario',  texto: 'Jugar online', href: 'index.html', icono: 'play' },
+                { tipo: 'secundario',texto: 'Ver cartas',   href: 'cartas.html', icono: 'eye' },
+            ],
+        },
+        {
+            id: 'mujeres',
+            categoria: 'historia',
+            categoriaLabel: 'Historia · Cultura',
+            titulo: 'Mujeres que cambiaron el mundo',
+            subtitulo: 'Colección Grandes Líderes',
+            descripcion: 'Conoce a las mujeres que transformaron la ciencia, el arte, la política y los derechos humanos. Cartas ilustradas con biografías breves y dinámicas para descubrir y debatir.',
+            portada: 'imagenes/portada_mujeres.svg',
+            cinta: { texto: 'Disponible', clase: '' },
+            meta: [
+                { icono: 'users',  texto: '2–6 jugadores' },
+                { icono: 'clock',  texto: '20–30 min' },
+                { icono: 'cards',  texto: 'Mazo ilustrado' },
+                { icono: 'age',    texto: '+10 años' },
+            ],
+            acciones: [
+                { tipo: 'primario',  texto: 'Jugar online', href: 'https://ludolab.cl/juegos/mujeres', icono: 'play' },
+                { tipo: 'secundario',texto: 'Conocer más',  href: 'https://ludolab.cl/juegos/mujeres#detalle', icono: 'info' },
+            ],
+        },
+        // 👇 Ejemplo de tarjeta "próximamente" — descomenta y edita cuando tengas el siguiente juego.
+        // {
+        //     id: 'ciencia',
+        //     categoria: 'ciencia',
+        //     categoriaLabel: 'Ciencia',
+        //     titulo: 'Mentes Brillantes',
+        //     subtitulo: 'Grandes científicas y científicos de la historia',
+        //     descripcion: 'Descripción breve del juego...',
+        //     portada: 'imagenes/portada_ciencia.png',
+        //     cinta: { texto: 'Próximamente', clase: 'proximo' },
+        //     meta: [{ icono: 'clock', texto: '20 min' }],
+        //     acciones: [{ tipo: 'deshabilitado', texto: 'Próximamente', href: '#', icono: 'lock' }],
+        // },
+    ];
+
+    // =========================================================
+    //   ICONOS (SVG inline minimalista)
+    // =========================================================
+    const ICONOS = {
+        users:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        clock:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        cards:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/></svg>',
+        age:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+        play:   '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>',
+        eye:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+        info:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+        lock:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+        plus:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
+    };
+
+    // =========================================================
+    //   RENDER
+    // =========================================================
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function renderTarjeta(j) {
+        const portadaHTML = j.portada
+            ? `<img src="${escapeHtml(j.portada)}" alt="${escapeHtml(j.titulo)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'tarjeta-portada-fallback\\'>${escapeHtml(j.titulo).replace(/'/g,'&#39;')}</div>';">`
+            : `<div class="tarjeta-portada-fallback">${escapeHtml(j.titulo)}</div>`;
+
+        const cintaHTML = j.cinta && j.cinta.texto
+            ? `<span class="cinta ${j.cinta.clase || ''}">${escapeHtml(j.cinta.texto)}</span>`
+            : '';
+
+        const metaHTML = (j.meta || []).map(m =>
+            `<span class="meta-pill">${ICONOS[m.icono] || ''}${escapeHtml(m.texto)}</span>`
+        ).join('');
+
+        const accionesHTML = (j.acciones || []).map(a => {
+            const cls = a.tipo === 'deshabilitado' ? 'btn-juego deshabilitado' : `btn-juego ${a.tipo}`;
+            const tag = a.tipo === 'deshabilitado'
+                ? `<button class="${cls}" type="button" disabled>${ICONOS[a.icono] || ''}${escapeHtml(a.texto)}</button>`
+                : `<a class="${cls}" href="${escapeHtml(a.href)}">${ICONOS[a.icono] || ''}${escapeHtml(a.texto)}</a>`;
+            return tag;
+        }).join('');
+
+        return `
+            <article class="tarjeta-juego" data-categoria="${escapeHtml(j.categoria || 'todos')}">
+                <div class="tarjeta-portada">
+                    ${portadaHTML}
+                    ${cintaHTML}
+                </div>
+                <div class="tarjeta-cuerpo">
+                    <span class="tarjeta-cat">${escapeHtml(j.categoriaLabel || '')}</span>
+                    <h3 class="tarjeta-titulo">${escapeHtml(j.titulo)}</h3>
+                    <p class="tarjeta-subtitulo">${escapeHtml(j.subtitulo || '')}</p>
+                    <p class="tarjeta-desc">${escapeHtml(j.descripcion || '')}</p>
+                    <div class="tarjeta-meta">${metaHTML}</div>
+                </div>
+                <div class="tarjeta-acciones">${accionesHTML}</div>
+            </article>
+        `;
+    }
+
+    function renderPlaceholder() {
+        return `
+            <article class="tarjeta-juego placeholder" data-categoria="todos">
+                <div class="placeholder-icon">${ICONOS.plus}</div>
+                <h3 class="placeholder-titulo">Más juegos en camino</h3>
+                <p class="placeholder-bajada">Estamos diseñando nuevas aventuras. Síguenos para ser parte del lanzamiento.</p>
+            </article>
+        `;
+    }
+
+    function renderGrid(filtro = 'todos') {
+        const grid = document.getElementById('gridJuegos');
+        const lista = filtro === 'todos' ? JUEGOS : JUEGOS.filter(j => j.categoria === filtro);
+        let html = lista.map(renderTarjeta).join('');
+        if (filtro === 'todos') html += renderPlaceholder();
+        if (lista.length === 0) {
+            html = `<p style="grid-column:1/-1; text-align:center; color:var(--slate-500); padding:48px;">No hay juegos en esta categoría todavía.</p>` + renderPlaceholder();
+        }
+        grid.innerHTML = html;
+    }
+
+    // Filtros
+    document.querySelectorAll('.chip-filtro').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.chip-filtro').forEach(b => b.classList.remove('activo'));
+            btn.classList.add('activo');
+            renderGrid(btn.dataset.cat);
+        });
+    });
+
+    // Contador en hero
+    const totalEl = document.getElementById('totalJuegos');
+    if (totalEl) totalEl.textContent = JUEGOS.length;
+
+    // Render inicial
+    renderGrid('todos');
+    </script>
+</body>
+</html>
