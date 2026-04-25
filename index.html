@@ -959,6 +959,70 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
     color: var(--ludo-azul);
     font-weight: 900;
 }
+.streak-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: rgba(67, 198, 172, 0.18);
+    color: #0d8267;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    vertical-align: middle;
+}
+.fase-indicador {
+    display: flex; justify-content: center; margin: 8px 0 14px;
+}
+.fase-indicador span {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+.fase-indicador.repesca span {
+    background: rgba(67, 198, 172, 0.18);
+    color: #0d8267;
+}
+.fase-indicador.desempate span {
+    background: rgba(253, 121, 168, 0.18);
+    color: #c2185b;
+}
+.fase-indicador.individual span {
+    background: rgba(0, 82, 212, 0.12);
+    color: var(--ludo-azul-dark);
+}
+.decision-fin-mazo {
+    background: var(--ludo-gris);
+    border: 1px solid var(--slate-200);
+    border-radius: 24px;
+    padding: 22px 18px 20px;
+    margin: 18px 0;
+    text-align: center;
+}
+.decision-fin-mazo h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ludo-azul-dark);
+    margin: 0 0 6px;
+}
+.decision-fin-mazo p {
+    color: var(--slate-600);
+    font-size: 13px;
+    margin: 0 0 14px;
+}
+.aviso-decision {
+    margin-top: 12px !important;
+    color: var(--slate-500);
+    font-size: 11px;
+    font-style: italic;
+}
 .cartas-restantes {
     text-align: center;
     font-family: 'Poppins', sans-serif;
@@ -1360,10 +1424,26 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
             <!-- ========= FASE 2: JUEGO ========= -->
             <div class="fase" id="faseJuego">
+                <div class="fase-indicador" id="faseIndicador" style="display:none;"></div>
                 <div class="tabla-jugadores" id="tablaJugadores"></div>
 
-                <div class="encabezado-turno">Turno de <strong id="turnoNombre">—</strong></div>
-                <div class="cartas-restantes">Cartas restantes: <strong id="cartasRestantes">46</strong></div>
+                <div class="encabezado-turno">Turno de <strong id="turnoNombre">—</strong> <span class="streak-badge" id="streakBadge" style="display:none;">2º turno consecutivo</span></div>
+                <div class="cartas-restantes">Cartas restantes: <strong id="cartasRestantes">60</strong></div>
+
+                <!-- Decisión al acabarse el mazo -->
+                <div class="decision-fin-mazo" id="decisionFinMazo" style="display:none;">
+                    <h2>Se acabó el mazo</h2>
+                    <p>Los jugadores deben elegir una opción:</p>
+                    <div class="opciones-botones">
+                        <button type="button" class="btn-opcion-segura" id="btnTerminarPartida">
+                            Terminar partida<small>Ver el resultado final</small>
+                        </button>
+                        <button type="button" class="btn-opcion-riesgo" id="btnIniciarRepesca">
+                            Jugar repesca<small>Sólo banderas del pozo</small>
+                        </button>
+                    </div>
+                    <p class="aviso-decision" id="avisoDecision"></p>
+                </div>
 
                 <!-- Antes de sacar -->
                 <div class="accion-robar" id="accionRobar">
@@ -1484,7 +1564,12 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
                 <div class="ranking" id="rankingFinal"></div>
 
-                <button type="button" class="btn-nueva-partida" id="btnNuevaPartida">Nueva partida</button>
+                <div class="acciones-turno" id="accionesFinales" style="justify-content:center; margin-top:18px;">
+                    <button type="button" class="btn-opcion-riesgo" id="btnDesempate" style="display:none;">
+                        Jugar ronda de desempate<small>Una carta del pozo</small>
+                    </button>
+                    <button type="button" class="btn-nueva-partida" id="btnNuevaPartida">Nueva partida</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1512,85 +1597,93 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
             <div class="meta">
                 <div class="celda"><span>Jugadores</span><span>2 a 5 (ideal 3–4)</span></div>
-                <div class="celda"><span>Duración</span><span>20 – 30 min</span></div>
+                <div class="celda"><span>Duración</span><span>25 – 35 min</span></div>
+                <div class="celda"><span>Mazo</span><span>60 cartas (52 + 8 trucos)</span></div>
             </div>
 
             <h2>Objetivo</h2>
-            <p>Ser el jugador con más cartas al final de la partida.</p>
-
-            <h2>Componentes</h2>
-            <ul>
-                <li>46 cartas de países de los 5 continentes: América, Europa, Asia, África y Oceanía.</li>
-                <li>8 cartas especiales.</li>
-                <li>1 pozo común (espacio para cartas descartadas).</li>
-                <li>Código QR en cada carta (contenido educativo opcional).</li>
-            </ul>
+            <p>Ser el jugador con más cartas ganadas al final de la partida, demostrando conocimiento sobre países, continentes y capitales.</p>
 
             <h2>Preparación</h2>
             <ol>
                 <li>Barajar todas las cartas.</li>
-                <li>Colocar el mazo boca abajo al centro.</li>
-                <li>Dejar un espacio al lado para el pozo.</li>
-                <li>Elegir al jugador inicial (por ejemplo, el último que vio un mapa).</li>
+                <li>Colocar el mazo boca abajo al centro de la mesa.</li>
+                <li>Dejar un espacio para el pozo (cartas descartadas).</li>
+                <li>Elegir al jugador inicial.</li>
             </ol>
 
             <h2>Cómo se juega</h2>
-            <p>En cada turno, el jugador saca 1 carta y la da vuelta. Debe decir en voz alta:</p>
-            <ul>
-                <li>País</li>
-                <li>Capital</li>
-                <li>Continente</li>
-            </ul>
+            <p>En su turno, cada jugador saca la carta superior del mazo, la muestra a todos y debe decir en voz alta: <strong>país</strong>, <strong>continente</strong> y <strong>capital</strong>.</p>
 
             <h2>Resultados del turno</h2>
 
             <div class="escenario">
                 <h3>3 respuestas correctas</h3>
-                <p>El jugador se queda con la carta y <strong>juega otro turno inmediatamente</strong>.</p>
+                <p>Gana la carta y juega un turno extra (<strong>máximo 2 turnos consecutivos</strong>).</p>
             </div>
 
             <div class="escenario">
                 <h3>2 respuestas correctas</h3>
-                <p>El jugador se queda con la carta y termina su turno.</p>
+                <p>Gana la carta y termina su turno.</p>
             </div>
 
             <div class="escenario amarilla">
                 <h3>1 respuesta correcta</h3>
-                <p>El jugador debe elegir una de estas opciones:</p>
+                <p>El jugador elige una opción:</p>
                 <div class="opcion">
-                    <strong>Opción segura:</strong> la carta va al pozo y termina su turno.
+                    <strong>Segura:</strong> la carta va al pozo y termina su turno.
                 </div>
                 <div class="opcion">
-                    <strong>Opción riesgo:</strong> intenta acertar una de las dos respuestas que falló.
-                    Si acierta, se queda con la carta. Si falla, la carta va al pozo y <strong>pierde su próximo turno</strong>.
+                    <strong>Riesgo:</strong> elige uno de los datos incorrectos e intenta responder nuevamente. Si acierta, gana la carta; si falla, la carta va al pozo y <strong>pierde su próximo turno</strong>.
                 </div>
             </div>
 
             <div class="escenario roja">
                 <h3>0 respuestas correctas</h3>
-                <p>La carta va al pozo y termina su turno.</p>
+                <p>La carta va al pozo.</p>
             </div>
 
-            <h2>Cartas especiales</h2>
-            <p>Cuando un jugador saca una carta especial, esta se activa inmediatamente.</p>
+            <h2>Validación de respuestas</h2>
+            <p>Las respuestas se validan por <strong>consenso del grupo</strong>. Se permiten respuestas equivalentes o aproximadas (por ejemplo, "Estados Unidos" o "EE.UU."). En caso de desacuerdo, la decisión se toma por mayoría.</p>
+
+            <h2>Cartas de truco</h2>
+            <p>Las cartas de truco se activan inmediatamente al ser robadas, reemplazan el turno y luego se descartan al pozo.</p>
             <ul>
-                <li><strong>Pierde turno (3 cartas):</strong> el siguiente jugador pierde su turno.</li>
-                <li><strong>Descarta carta (3 cartas):</strong> el jugador elige a otro jugador, que debe poner 1 carta ganada en el pozo.</li>
-                <li><strong>Robo de turno (2 cartas):</strong> el jugador juega otro turno inmediato.</li>
+                <li><strong>Robo de turno (2 cartas):</strong> el jugador juega un turno adicional inmediato (respetando el máximo de 2 turnos consecutivos).</li>
+                <li><strong>Pierde turno (3 cartas):</strong> el siguiente jugador pierde su turno. Este efecto <strong>no se acumula</strong> (máximo 1 turno perdido por jugador).</li>
+                <li><strong>Descarta carta (3 cartas):</strong> el jugador elige a un oponente, quien debe enviar 1 carta ganada al pozo. Si no tiene cartas, no ocurre nada.</li>
             </ul>
 
             <h2>Regla del pozo</h2>
-            <p>Todas las cartas no ganadas van al pozo.</p>
-
-            <h2>Regla especial opcional</h2>
-            <p>Cuando un jugador saca una carta especial, puede intentar:</p>
-            <ul>
-                <li>Decir correctamente el país de una carta del pozo.</li>
-                <li>Si acierta, la recupera y se la queda.</li>
-            </ul>
+            <p>Todas las cartas no ganadas o descartadas se colocan en el pozo, boca abajo. Las cartas se agregan al fondo del pozo.</p>
 
             <h2>Fin del juego</h2>
-            <p>El juego termina cuando se acaba el mazo principal. Gana el jugador con más cartas ganadas.</p>
+            <p>Cuando se acaba el mazo, los jugadores eligen una de las siguientes opciones:</p>
+            <ul>
+                <li>Terminar la partida inmediatamente.</li>
+                <li>Jugar la fase de repesca.</li>
+            </ul>
+
+            <h2>Fase de repesca <small>(opcional)</small></h2>
+            <p>Se juega solo si la mayoría de los jugadores está de acuerdo. Se barajan las cartas del pozo (solo cartas de banderas) para formar un nuevo mazo.</p>
+            <p>En esta fase:</p>
+            <ul>
+                <li>Cada jugador juega turnos normales.</li>
+                <li>Con <strong>1 o más respuestas correctas</strong>, gana la carta.</li>
+                <li>Con <strong>0 respuestas correctas</strong>, la carta vuelve al pozo.</li>
+                <li>No existe opción de riesgo ni turnos extra.</li>
+                <li>Las cartas de truco no participan.</li>
+            </ul>
+            <p>La fase termina cuando se acaba este nuevo mazo.</p>
+
+            <h2>Ganador</h2>
+            <p>Gana el jugador que tenga más cartas al final de la partida.</p>
+
+            <h2>Empate</h2>
+            <p>En caso de empate, los jugadores empatados juegan una <strong>ronda adicional con una carta del pozo</strong>. Quien logre más respuestas correctas gana.</p>
+
+            <h2>Modo individual</h2>
+            <p>Se juega con las 52 cartas de banderas, sin cartas de truco. El objetivo es acumular la mayor cantidad de respuestas correctas posibles.</p>
         </div>
     </div>
 
@@ -1892,11 +1985,14 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
                 cont.appendChild(input);
             }
         }
-        function generarBaraja() {
+        function generarBaraja(opts) {
+            opts = opts || {};
             const deck = dbPaises.map(p => ({ tipo: 'pais', id: p.id }));
-            cartasEspeciales.forEach(c => {
-                for (let i = 0; i < c.peso; i++) deck.push({ tipo: 'especial', id: c.id });
-            });
+            if (!opts.sinTrucos) {
+                cartasEspeciales.forEach(c => {
+                    for (let i = 0; i < c.peso; i++) deck.push({ tipo: 'especial', id: c.id });
+                });
+            }
             // Fisher-Yates
             for (let i = deck.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1908,19 +2004,25 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
         function comenzarJuego() {
             const inputs = [...document.querySelectorAll('#setupNombres input')];
             const nombres = inputs.map((inp, i) => (inp.value.trim() || `Jugador ${i+1}`));
+            const modoIndividual = nombres.length === 1;
             JUEGO = {
                 estado: 'jugando',
+                fase: 'normal',          // 'normal' | 'repesca' | 'desempate' | 'decision-fin-mazo'
+                modoIndividual,
                 jugadores: nombres.map(n => ({
                     nombre: n,
-                    cartas: [],        // IDs de cartas de país ganadas
-                    saltar: false,     // pierde su próximo turno
+                    cartas: [],          // IDs de cartas de país ganadas
+                    aciertos: 0,         // total de aciertos (modo individual)
+                    saltar: false,       // pierde su próximo turno
                 })),
                 turno: 0,
-                mazo: generarBaraja(),  // pila boca abajo (paises + especiales)
-                pozo: [],               // cartas no ganadas (solo IDs de país)
-                cartaActual: null,      // { tipo: 'pais'|'especial', id }
+                turnosConsecutivos: 1,   // turnos jugados de seguido por el jugador actual (máx 2)
+                mazo: generarBaraja({ sinTrucos: modoIndividual }),
+                pozo: [],
+                cartaActual: null,
                 rondaComprobada: false,
-                rondaDecidida: true,    // false cuando queda pendiente segura/riesgo
+                rondaDecidida: true,
+                desempate: null,
             };
             guardarJuego();
             actualizarBannerPrincipal();
@@ -1936,12 +2038,33 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
         function renderFaseJuego() {
             mostrarFase('faseJuego');
+            actualizarFaseIndicador();
             renderTablaJugadores();
             document.getElementById('turnoNombre').innerText = JUEGO.jugadores[JUEGO.turno].nombre;
             document.getElementById('cartasRestantes').innerText = cartasEnMazo();
 
+            // Streak badge (2º turno consecutivo)
+            const streak = document.getElementById('streakBadge');
+            if (!JUEGO.modoIndividual && JUEGO.fase === 'normal' && JUEGO.turnosConsecutivos >= 2) {
+                streak.style.display = '';
+                streak.innerText = `${JUEGO.turnosConsecutivos}º turno consecutivo (último)`;
+            } else {
+                streak.style.display = 'none';
+            }
+
             const zonaRonda = document.getElementById('zonaRonda');
             const accionRobar = document.getElementById('accionRobar');
+            const decision = document.getElementById('decisionFinMazo');
+
+            if (JUEGO.fase === 'decision-fin-mazo') {
+                accionRobar.style.display = 'none';
+                zonaRonda.style.display = 'none';
+                decision.style.display = 'block';
+                document.getElementById('avisoDecision').innerText =
+                    `Cartas en el pozo: ${pozoBanderasCount()} de banderas disponibles para repesca.`;
+                return;
+            }
+            decision.style.display = 'none';
 
             if (JUEGO.cartaActual) {
                 accionRobar.style.display = 'none';
@@ -1961,6 +2084,31 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
                 zonaRonda.style.display = 'none';
                 paisSacado = null;
             }
+        }
+
+        function actualizarFaseIndicador() {
+            const ind = document.getElementById('faseIndicador');
+            ind.classList.remove('repesca', 'desempate', 'individual');
+            if (JUEGO.modoIndividual) {
+                ind.classList.add('individual');
+                ind.innerHTML = '<span>Modo individual · 52 cartas</span>';
+                ind.style.display = 'flex';
+            } else if (JUEGO.fase === 'repesca') {
+                ind.classList.add('repesca');
+                ind.innerHTML = '<span>Fase de repesca</span>';
+                ind.style.display = 'flex';
+            } else if (JUEGO.fase === 'desempate') {
+                ind.classList.add('desempate');
+                ind.innerHTML = '<span>Ronda de desempate</span>';
+                ind.style.display = 'flex';
+            } else {
+                ind.style.display = 'none';
+            }
+        }
+
+        function pozoBanderasCount() {
+            if (!JUEGO) return 0;
+            return JUEGO.pozo.filter(id => typeof id === 'string' && !id.startsWith('ES-')).length;
         }
 
         function renderTablaJugadores() {
@@ -2028,7 +2176,7 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
         function robarCarta() {
             if (!JUEGO) return;
-            if (JUEGO.mazo.length === 0) { finalizarJuego('mazo'); return; }
+            if (JUEGO.mazo.length === 0) { manejarMazoVacio(); return; }
             // Saca la carta de arriba (boca abajo)
             const entry = JUEGO.mazo.shift();
             JUEGO.cartaActual = entry;
@@ -2137,26 +2285,37 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
             const acciones = document.getElementById('accionesTruco');
 
             if (idEsp === 'ES-01') {
-                // Robo de turno: mismo jugador saca otra carta
+                // Robo de turno: respeta el máximo de 2 turnos consecutivos
                 JUEGO.cartaActual = null;
                 JUEGO.rondaComprobada = false;
-                guardarJuego();
                 acciones.style.display = 'none';
-                if (JUEGO.mazo.length === 0) { finalizarJuego('mazo'); return; }
+                if (JUEGO.turnosConsecutivos >= 2) {
+                    alert(`${JUEGO.jugadores[JUEGO.turno].nombre} ya jugó 2 turnos consecutivos. La carta de Robo se descarta y avanza el turno.`);
+                    document.getElementById('btnSiguienteTurno').dataset.accion = 'avanzar';
+                    guardarJuego();
+                    siguienteTurno();
+                    return;
+                }
+                if (JUEGO.mazo.length === 0) { guardarJuego(); manejarMazoVacio(); return; }
+                JUEGO.turnosConsecutivos += 1;
+                guardarJuego();
+                renderFaseJuego();
                 robarCarta();
                 return;
             }
 
             if (idEsp === 'ES-02') {
-                // El siguiente jugador pierde su turno (saltar=true en el que venga)
+                // El siguiente jugador pierde su turno. NO se acumula (máx 1 por jugador).
                 const next = (JUEGO.turno + 1) % JUEGO.jugadores.length;
-                JUEGO.jugadores[next].saltar = true;
+                if (JUEGO.jugadores[next].saltar) {
+                    alert(`${JUEGO.jugadores[next].nombre} ya tenía un turno perdido pendiente. El efecto no se acumula y la carta se descarta.`);
+                } else {
+                    JUEGO.jugadores[next].saltar = true;
+                }
                 JUEGO.cartaActual = null;
                 JUEGO.rondaComprobada = false;
                 guardarJuego();
                 acciones.style.display = 'none';
-                // Avanzar normal: siguienteTurno consumirá el saltar y avanzará de nuevo
-                // Forzamos accion "avanzar" para el contador
                 document.getElementById('btnSiguienteTurno').dataset.accion = 'avanzar';
                 siguienteTurno();
                 return;
@@ -2252,12 +2411,55 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
             const accionesTurno = document.getElementById('accionesTurno');
             const opcionesRonda = document.getElementById('opcionesRonda');
 
+            // === Modo individual: solo cuenta aciertos, sin opciones ni turnos extra ===
+            if (JUEGO.modoIndividual) {
+                JUEGO.jugadores[0].aciertos = (JUEGO.jugadores[0].aciertos || 0) + puntos;
+                if (puntos > 0) JUEGO.jugadores[0].cartas.push(p.id);
+                else JUEGO.pozo.push(p.id);
+                document.getElementById('textoRonda').innerText =
+                    `Acertaste ${puntos} de 3. Total: ${JUEGO.jugadores[0].aciertos} aciertos.`;
+                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente carta' : 'Ver resultado final';
+                siguienteBtn.dataset.accion = 'avanzar';
+                opcionesRonda.style.display = 'none';
+                accionesTurno.style.display = 'flex';
+                guardarJuego(); renderTablaJugadores(); actualizarBannerPrincipal();
+                return;
+            }
+
+            // === Fase de repesca: ≥1 acertada gana carta; sin riesgo ni turno extra ===
+            if (JUEGO.fase === 'repesca') {
+                if (puntos >= 1) {
+                    JUEGO.jugadores[JUEGO.turno].cartas.push(p.id);
+                    document.getElementById('textoRonda').innerText =
+                        `${nombre} acertó ${puntos} de 3. Recupera la carta del pozo.`;
+                } else {
+                    JUEGO.pozo.push(p.id);
+                    document.getElementById('textoRonda').innerText =
+                        `${nombre} no acertó ninguna. La carta vuelve al pozo.`;
+                }
+                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+                siguienteBtn.dataset.accion = 'avanzar';
+                opcionesRonda.style.display = 'none';
+                accionesTurno.style.display = 'flex';
+                guardarJuego(); renderTablaJugadores(); actualizarBannerPrincipal();
+                return;
+            }
+
+            // === Fase normal multijugador ===
             if (puntos === 3) {
-                // Se queda con la carta y juega otro turno
                 JUEGO.jugadores[JUEGO.turno].cartas.push(p.id);
-                document.getElementById('textoRonda').innerText = `¡${nombre} acertó todas! Se queda con la carta y juega otro turno.`;
-                siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Jugar otro turno' : 'Ver resultado final';
-                siguienteBtn.dataset.accion = 'otroTurno';
+                const yaJugoMax = JUEGO.turnosConsecutivos >= 2;
+                if (yaJugoMax) {
+                    document.getElementById('textoRonda').innerText =
+                        `¡${nombre} acertó todas! Se queda con la carta. (Ya jugó 2 turnos consecutivos: termina su turno).`;
+                    siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
+                    siguienteBtn.dataset.accion = 'avanzar';
+                } else {
+                    document.getElementById('textoRonda').innerText =
+                        `¡${nombre} acertó todas! Se queda con la carta y juega otro turno.`;
+                    siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Jugar otro turno' : 'Ver resultado final';
+                    siguienteBtn.dataset.accion = 'otroTurno';
+                }
                 opcionesRonda.style.display = 'none';
                 accionesTurno.style.display = 'flex';
             } else if (puntos === 2) {
@@ -2274,7 +2476,6 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
                 opcionesRonda.style.display = 'block';
                 accionesTurno.style.display = 'none';
             } else {
-                // 0/3 → al pozo
                 JUEGO.pozo.push(p.id);
                 document.getElementById('textoRonda').innerText = `${nombre} no acertó ninguna. La carta va al pozo.`;
                 siguienteBtn.innerText = cartasEnMazo() > 0 ? 'Siguiente jugador' : 'Ver resultado final';
@@ -2379,9 +2580,15 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 
         function siguienteTurno() {
             if (!JUEGO) return;
-            // ¿terminó el mazo?
+
+            // Desempate: lleva su propio flujo
+            if (JUEGO.fase === 'desempate') {
+                avanzarDesempate();
+                return;
+            }
+
             if (cartasEnMazo() <= 0) {
-                finalizarJuego('mazo');
+                manejarMazoVacio();
                 return;
             }
 
@@ -2391,11 +2598,22 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
             JUEGO.rondaDecidida = true;
             paisSacado = null;
 
-            if (accion === 'otroTurno') {
-                // Mismo jugador vuelve a sacar una carta
+            // Modo individual: siempre es el mismo jugador
+            if (JUEGO.modoIndividual) {
+                JUEGO.turnosConsecutivos = 1;
                 guardarJuego();
                 renderFaseJuego();
                 return;
+            }
+
+            if (accion === 'otroTurno' && JUEGO.fase === 'normal') {
+                if (JUEGO.turnosConsecutivos < 2) {
+                    JUEGO.turnosConsecutivos += 1;
+                    guardarJuego();
+                    renderFaseJuego();
+                    return;
+                }
+                // Si por alguna razón pasó, forzamos avance
             }
 
             // Avanza al próximo jugador. Saltamos a todos los que tengan saltar=true
@@ -2410,10 +2628,53 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
                 }
                 break;
             }
+            JUEGO.turnosConsecutivos = 1;
             guardarJuego();
             if (saltados.length > 0) {
                 setTimeout(() => alert(`${saltados.join(' y ')} pierde${saltados.length>1?'n':''} el turno.`), 50);
             }
+            renderFaseJuego();
+        }
+
+        // Cuando el mazo se vacía, decide cómo terminar según la fase actual
+        function manejarMazoVacio() {
+            if (!JUEGO) return;
+            if (JUEGO.modoIndividual) { finalizarJuego('mazo'); return; }
+            if (JUEGO.fase === 'repesca') { finalizarJuego('repesca'); return; }
+            if (JUEGO.fase === 'desempate') { finalizarJuego('desempate'); return; }
+            // Fase normal: ofrecer decisión (terminar o repesca)
+            JUEGO.fase = 'decision-fin-mazo';
+            JUEGO.cartaActual = null;
+            JUEGO.rondaComprobada = false;
+            JUEGO.rondaDecidida = true;
+            paisSacado = null;
+            guardarJuego();
+            renderFaseJuego();
+        }
+
+        function iniciarRepesca() {
+            if (!JUEGO) return;
+            const banderasPozo = JUEGO.pozo.filter(id => typeof id === 'string' && !id.startsWith('ES-'));
+            if (banderasPozo.length === 0) {
+                alert('No hay cartas de banderas en el pozo. Se termina la partida.');
+                finalizarJuego('mazo');
+                return;
+            }
+            for (let i = banderasPozo.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [banderasPozo[i], banderasPozo[j]] = [banderasPozo[j], banderasPozo[i]];
+            }
+            JUEGO.mazo = banderasPozo.map(id => ({ tipo: 'pais', id }));
+            JUEGO.pozo = [];
+            JUEGO.fase = 'repesca';
+            JUEGO.turnosConsecutivos = 1;
+            JUEGO.jugadores.forEach(j => { j.saltar = false; });
+            JUEGO.turno = (JUEGO.turno + 1) % JUEGO.jugadores.length;
+            JUEGO.cartaActual = null;
+            JUEGO.rondaComprobada = false;
+            JUEGO.rondaDecidida = true;
+            paisSacado = null;
+            guardarJuego();
             renderFaseJuego();
         }
 
@@ -2426,15 +2687,43 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
         }
         function renderFinal(motivo) {
             mostrarFase('faseFinal');
+
+            const btnDesempate = document.getElementById('btnDesempate');
+            btnDesempate.style.display = 'none';
+
+            // Modo individual: contamos aciertos
+            if (JUEGO.modoIndividual) {
+                const j = JUEGO.jugadores[0];
+                const aciertos = j.aciertos || (j.cartas ? j.cartas.length : 0);
+                const total = (j.cartas ? j.cartas.length : 0) + (JUEGO.pozo ? JUEGO.pozo.length : 0);
+                document.getElementById('podioMotivo').innerText = 'Modo individual · partida finalizada';
+                document.getElementById('ganadorNombre').innerText = j.nombre;
+                document.getElementById('ganadorPuntaje').innerText = `${aciertos} aciertos${total ? ' de ' + total : ''}`;
+                const rkSolo = document.getElementById('rankingFinal');
+                rkSolo.innerHTML = '';
+                const f = document.createElement('div');
+                f.className = 'ranking-fila';
+                f.innerHTML = `<span><span class="pos">1</span><span class="nombre">${escapeHtml(j.nombre)}</span></span><span class="puntos">${aciertos} aciertos</span>`;
+                rkSolo.appendChild(f);
+                actualizarBannerPrincipal();
+                return;
+            }
+
+            // Modo multijugador: ranking por cartas ganadas
             const contar = j => (j.cartas ? j.cartas.length : 0);
             const ordenados = [...JUEGO.jugadores].sort((a,b) => contar(b) - contar(a));
             const ganador = ordenados[0];
             const empate = ordenados.length > 1 && contar(ordenados[1]) === contar(ganador);
 
-            document.getElementById('podioMotivo').innerText =
-                motivo === 'mazo' ? 'Se acabaron las cartas del mazo' : 'Juego finalizado por los jugadores';
+            const motivoTxt = {
+                'mazo':      'Se acabaron las cartas del mazo',
+                'repesca':   'Se acabaron las cartas de la repesca',
+                'desempate': 'Resultado tras la ronda de desempate',
+                'manual':    'Partida finalizada por los jugadores'
+            }[motivo] || 'Juego finalizado';
+            document.getElementById('podioMotivo').innerText = motivoTxt;
 
-            if (empate) {
+            if (empate && motivo !== 'desempate') {
                 const empatados = ordenados.filter(j => contar(j) === contar(ganador)).map(j => j.nombre).join(' · ');
                 document.getElementById('ganadorNombre').innerText = `Empate: ${empatados}`;
             } else {
@@ -2450,7 +2739,97 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
                 f.innerHTML = `<span><span class="pos">${i+1}</span><span class="nombre">${escapeHtml(j.nombre)}</span></span><span class="puntos">${contar(j)} cartas</span>`;
                 rk.appendChild(f);
             });
+
+            // Si hay empate y hay banderas en el pozo y no estamos viniendo de un desempate -> ofrecer desempate
+            const hayBanderasPozo = (JUEGO.pozo || []).some(id => typeof id === 'string' && !id.startsWith('ES-'));
+            if (empate && hayBanderasPozo && motivo !== 'desempate') {
+                btnDesempate.style.display = '';
+            }
             actualizarBannerPrincipal();
+        }
+
+        // ========== RONDA DE DESEMPATE ==========
+        function iniciarDesempate() {
+            if (!JUEGO) return;
+            const contar = j => (j.cartas ? j.cartas.length : 0);
+            const max = Math.max(...JUEGO.jugadores.map(contar));
+            const empatados = JUEGO.jugadores
+                .map((j, idx) => ({ idx, nombre: j.nombre, cartas: contar(j) }))
+                .filter(j => j.cartas === max);
+            if (empatados.length < 2) {
+                alert('No hay empate que resolver.');
+                return;
+            }
+            const banderasPozo = (JUEGO.pozo || []).filter(id => typeof id === 'string' && !id.startsWith('ES-'));
+            if (banderasPozo.length === 0) {
+                alert('No hay cartas de banderas en el pozo para el desempate.');
+                return;
+            }
+            // Una carta por jugador empatado (o las que haya, mínimo 1)
+            for (let i = banderasPozo.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [banderasPozo[i], banderasPozo[j]] = [banderasPozo[j], banderasPozo[i]];
+            }
+            const cartasUsadas = banderasPozo.slice(0, Math.min(empatados.length, banderasPozo.length));
+            JUEGO.desempate = {
+                jugadoresIdx: empatados.map(e => e.idx),
+                cartas: cartasUsadas,
+                aciertos: empatados.map(() => 0),
+                cursor: 0,
+            };
+            JUEGO.estado = 'jugando';
+            JUEGO.fase = 'desempate';
+            JUEGO.turno = empatados[0].idx;
+            JUEGO.turnosConsecutivos = 1;
+            JUEGO.cartaActual = { tipo: 'pais', id: cartasUsadas[0] };
+            JUEGO.mazo = []; // las cartas vienen del pozo, no del mazo
+            JUEGO.pozo = JUEGO.pozo.filter(id => !cartasUsadas.includes(id));
+            JUEGO.rondaComprobada = false;
+            JUEGO.rondaDecidida = false;
+            paisSacado = (typeof dbPaises !== 'undefined') ? dbPaises.find(p => p.id === cartasUsadas[0]) : null;
+            guardarJuego();
+            renderFaseJuego();
+        }
+
+        function avanzarDesempate() {
+            if (!JUEGO || !JUEGO.desempate) { finalizarJuego('desempate'); return; }
+            const d = JUEGO.desempate;
+            // Capturar acierto del jugador actual (si la ronda fue comprobada y ganó la carta)
+            // El acierto se traduce en que la carta quedó en el pozo del jugador actual.
+            // Comprobamos por si acaso: si el jugador tiene la carta de esta ronda en su mano, +1 acierto.
+            const jugadorActual = JUEGO.jugadores[JUEGO.turno];
+            const cartaRonda = d.cartas[d.cursor];
+            if (jugadorActual.cartas && jugadorActual.cartas.includes(cartaRonda)) {
+                d.aciertos[d.cursor] = (d.aciertos[d.cursor] || 0) + 1;
+                // Devolvemos la carta al pozo - no se queda como punto
+                jugadorActual.cartas = jugadorActual.cartas.filter(c => c !== cartaRonda);
+            }
+            d.cursor += 1;
+            // ¿Quedan jugadores empatados por jugar?
+            if (d.cursor < d.jugadoresIdx.length && d.cursor < d.cartas.length) {
+                JUEGO.turno = d.jugadoresIdx[d.cursor];
+                JUEGO.cartaActual = { tipo: 'pais', id: d.cartas[d.cursor] };
+                JUEGO.rondaComprobada = false;
+                JUEGO.rondaDecidida = false;
+                JUEGO.turnosConsecutivos = 1;
+                paisSacado = (typeof dbPaises !== 'undefined') ? dbPaises.find(p => p.id === d.cartas[d.cursor]) : null;
+                guardarJuego();
+                renderFaseJuego();
+                return;
+            }
+            // Resolver ganador del desempate
+            const maxAc = Math.max(...d.aciertos);
+            const ganadores = d.jugadoresIdx.filter((_, i) => d.aciertos[i] === maxAc);
+            // Otorgar 1 carta extra (simbólica) al/los ganador(es) del desempate para reflejarlo en el ranking
+            ganadores.forEach(idx => {
+                // Usamos un id ficticio para no perder el conteo de la ronda de desempate
+                JUEGO.jugadores[idx].cartas.push('DES-' + idx);
+            });
+            JUEGO.fase = 'normal';
+            JUEGO.desempate = null;
+            JUEGO.estado = 'finalizado';
+            guardarJuego();
+            renderFinal('desempate');
         }
         function nuevaPartida() {
             JUEGO = null;
@@ -2509,9 +2888,15 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
         document.getElementById('btnFinalizarJuego').onclick = () => {
             if (confirm('¿Finalizar la partida ahora y ver el resultado?')) finalizarJuego('manual');
         };
+        // Decisión al acabarse el mazo
+        const btnTerminarPartida = document.getElementById('btnTerminarPartida');
+        if (btnTerminarPartida) btnTerminarPartida.onclick = () => finalizarJuego('manual');
+        const btnIniciarRepesca = document.getElementById('btnIniciarRepesca');
+        if (btnIniciarRepesca) btnIniciarRepesca.onclick = iniciarRepesca;
 
         // Final
         document.getElementById('btnNuevaPartida').onclick = nuevaPartida;
+        document.getElementById('btnDesempate').onclick = iniciarDesempate;
 
         // Click en banner principal abre modal de juego
         document.getElementById('puntajePrincipal').onclick = abrirModalJugar;
