@@ -70,6 +70,59 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* ============ Barra de navegación Ludolab (breadcrumb superior) ============ */
+.ludo-topbar {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #ffffff;
+    border-bottom: 1px solid var(--slate-200);
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--slate-600);
+}
+.ludo-topbar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ludo-azul);
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background .15s ease, color .15s ease;
+}
+.ludo-topbar-link:hover {
+    background: var(--slate-100);
+    color: var(--ludo-azul-dark);
+}
+.ludo-topbar-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+.ludo-topbar-sep {
+    color: var(--slate-400);
+    font-weight: 400;
+}
+.ludo-topbar-actual {
+    margin-left: auto;
+    color: var(--slate-500);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+}
+@media (max-width: 600px) {
+    .ludo-topbar { font-size: 11px; padding: 8px 14px; }
+    .ludo-topbar-actual { display: none; }
+    .ludo-topbar-link span { display: inline; }
+}
+
 h1, h2, h3, h4, .font-title { font-family: 'Montserrat', sans-serif; }
 
 /* ============ HEADER TÍTULO (homologado con sitio mujeres) ============ */
@@ -114,51 +167,69 @@ h1, h2, h3, h4, .font-title { font-family: 'Montserrat', sans-serif; }
     .hero-subtitulo { font-size: 16px; }
 }
 
-/* ============ FOOTER (homologado con sitio mujeres) ============ */
-.creditos {
+/* ============ FOOTER ESTILO CATÁLOGO (OSCURO) ============ */
+footer {
     width: 100%;
-    max-width: 1400px;
-    margin: 80px auto 0;
-    border-top: 1px solid var(--slate-200);
-    padding: 48px 16px 80px;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+    padding: 60px 5% 40px;
+    background: #0a111f; /* Azul profundo de Ludo Lab */
+    color: #ffffff;
     text-align: center;
-    flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 80px;
 }
-@media (min-width: 768px) {
-    .creditos { flex-direction: row; text-align: left; }
-}
-.creditos a { display: inline-block; transition: opacity 0.2s; opacity: 1; }
-.creditos a:hover { opacity: 0.8; }
-.creditos-logo img { height: 40px; width: auto; display: block; }
-.creditos-tagline {
-    margin: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--slate-400);
-    order: 2;
-}
-@media (min-width: 768px) {
-    .creditos-tagline { order: 1; }
-    .creditos-logo { order: 2; }
-}
-.creditos-mapa {
-    width: 100%;
-    margin: 12px 0 0;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    color: var(--slate-300);
-    order: 3;
-}
-.creditos-mapa a { color: inherit; text-decoration: underline; }
 
+.footer-content {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    height: 50px;
+    width: auto;
+    margin: 0 auto 15px;
+    filter: brightness(1.2);
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+    transform: scale(1.05);
+}
+
+.footer-tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    color: #43C6AC; /* Cian de la marca */
+    margin-bottom: 25px;
+    text-transform: none;
+}
+
+.footer-legal p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.8;
+    margin: 4px 0;
+}
+
+.footer-legal a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.footer-legal a:hover {
+    color: #43C6AC;
+    border-color: #43C6AC;
+}
+
+.osm-credits {
+    margin-top: 10px;
+    font-size: 11px !important;
+}
 /* ============ BÚSQUEDA (rounded-full + focus ring) ============ */
 .caja-busqueda { width: 100%; max-width: 480px; position: relative; margin: 8px 0 28px; }
 #entradaBusqueda {
@@ -1244,6 +1315,24 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
 </head>
 <body>
 
+    <!-- ============ Barra de navegación Ludolab (volver al sitio / catálogo) ============ -->
+    <nav class="ludo-topbar" aria-label="Navegación Ludolab">
+        <a href="https://ludolab.cl/" class="ludo-topbar-link" aria-label="Ir a Ludolab.cl">
+            <svg class="ludo-topbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12L12 4l9 8"/><path d="M5 10v10h14V10"/>
+            </svg>
+            <span>Ludolab.cl</span>
+        </a>
+        <span class="ludo-topbar-sep" aria-hidden="true">/</span>
+        <a href="https://ludolab.cl/juegos.html" class="ludo-topbar-link">
+            <svg class="ludo-topbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="7" height="16" rx="1.5"/><rect x="14" y="4" width="7" height="16" rx="1.5"/>
+            </svg>
+            <span>Catálogo de juegos</span>
+        </a>
+        <span class="ludo-topbar-actual" aria-current="page">Banderas del Mundo</span>
+    </nav>
+
     <div class="w-full bg-white border-b border-slate-100 mb-8">
         <div class="max-w-[1400px] mx-auto h-[120px] md:h-[150px] flex justify-center items-center overflow-hidden">
             <img src="imagenes/banner_04.png"
@@ -1687,14 +1776,22 @@ iframe { position: absolute; top: -22px; left: 0; width: 100%; height: calc(100%
         </div>
     </div>
 
-    <footer class="creditos">
-        <p class="creditos-tagline">Donde la curiosidad se convierte en conocimiento</p>
-        <a href="https://ludolab.cl" target="_blank" rel="noopener" title="Ir a ludolab.cl" class="creditos-logo">
-            <img src="imagenes/logotipo.png" alt="Ludolab.cl">
+    <footer>
+    <div class="footer-content">
+        <a href="https://ludolab.cl" class="footer-logo-link">
+            <!-- La ruta ../../ sube a la raíz para buscar la imagen central -->
+            <img src="../../imagen/logotipo.svg" alt="Ludo Lab" class="footer-logo">
         </a>
-        <p class="creditos-mapa">Mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</p>
-    </footer>
-
+        <p class="footer-tagline">Donde la curiosidad se convierte en conocimiento</p>
+        
+        <div class="footer-legal">
+            <p>© 2026 Ludo Lab Chile. Todos los derechos reservados.</p>
+            <p class="osm-credits">
+                Mapas © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors
+            </p>
+        </div>
+    </div>
+</footer>
     <script src="significados.js"></script>
     <script src="materias.js"></script>
     <script src="fronteras.js"></script>
